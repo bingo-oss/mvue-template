@@ -1,0 +1,28 @@
+.J-global-loading{
+  width: 100%;
+  height: 60px;
+  text-align: center;
+}
+.global-loading{
+  background: url(~src/images/loading-mini.gif) no-repeat center;
+  background-size: 50px 37px;
+  z-index: 4400;
+  height: 73px;
+  width: 100px;
+  display: inline-block;
+  transform: rotateY(180deg);
+}
+.fixed{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  .global-loading{
+    position: fixed;
+    top: 50%;
+    margin-top: -30px;
+    background-size: 70px 51px;
+  }
+}

@@ -1,0 +1,63 @@
+/*
+* @Author: notgreenl
+* @Date:   2016-12-31 11:06:58
+* @Last Modified by:   notgreenl
+* @Last Modified time: 2016-12-31 11:13:42
+* config 文件里面包含 function 与 utils 文件里的所有方法与 mixin 
+*/
+
+@charset 'UTF-8';
+
+// conf.scss 文件里的变量不允许随意修改
+// 规范地址：http://wiki.corp.vipshop.com/download/attachments/49882209/WAP%E8%A7%84%E8%8C%83%202.png?version=1&modificationDate=1439789944000&api=v2
+
+// font相关
+//-----------------------------------------------------
+$font-size:                       14 !default;
+$font-line-height:                1.5 !default;
+$font-family:                     "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif !default;
+
+
+// 主色
+//-----------------------------------------------------
+$color-primary:                            #e80080 !default; // 唯品红
+$color-danger:                             #ec5042 !default; // 危险
+$color-success:                            #46c33b !default; // 成功
+$color-warning:                            #f60 !default; // 警告，规范里暂无此颜色
+$color-blue:                               #157efa !default; // 系统蓝，用于待链接可点击文字或图案
+
+$color-primary-active:                     darken($color-primary, 10%) !default;
+$color-danger-active:                      darken($color-danger, 10%) !default;
+$color-warning-active:                     darken($color-warning, 10%) !default;
+$color-success-active:                     darken($color-success, 10%) !default;
+
+$color-border:                             #dbdbdb !default;  // 分割线的颜色
+$color-bg:                                 #f3f4f5 !default; // 背景色
+$color-text:                               #222 !default; // 文案色
+$color-text-secondary:                     #585c64 !default; // 次级文案
+$color-text-gray:                          #98989f !default; // 灰色文案
+$color-text-gray-light:                    #ccc !default; // 更灰色文案
+
+
+// 链接色
+$color-link:                               $color-text !default; // 链接色有可能不同于主色
+$color-link-active:                        darken($color-text, 10%) !default; // 链接色有可能不同于主色
+
+
+// z-index
+//-----------------------------------------------------
+// $zindex-dropdown:          1000 !default;
+// $zindex-navbar-fixed:      1020 !default;
+// $zindex-backdrop:          1030 !default;
+// $zindex-popup:             1040 !default;
+// $zindex-modal:             1050 !default;
+// $zindex-popover:           1060 !default;
+// $zindex-dialog:            1070 !default;
+// $zindex-loader:            1080 !default;
+// $zindex-toast:             1090 !default;
+
+@import "~sass/function/_colors.scss";
+@import "~sass/function/_z-index.scss";
+@import "~sass/utils/_mixin.scss";
+@import "~sass/utils/_border-mixin.scss";
+@import "~sass/utils/_media-queries.scss";

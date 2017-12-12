@@ -1,0 +1,35 @@
+export default {
+    methods:{
+        //表单记录扩展数据填充，如选择用户之后用户名称存储、选项类型其他选项对应的填写值等
+        exDataChanged:function(newValue,dataField,exDataKey){
+            if(dataField&&exDataKey){
+                this.formData.$data[dataField]=this.formData.$data[dataField]||{};
+                this.formData.$data[dataField][exDataKey]=this.formData.$data[dataField][exDataKey]||{};
+                this.formData.$data[dataField][exDataKey]=newValue;
+            }
+        }
+    },
+    components:{
+        MetaSingleLineText:require("views/metad/view/meta_form/control_tmpl/single_line_text"),
+        MetaMultiLineText:require("views/metad/view/meta_form/control_tmpl/multi_line_text"),
+        MetaRadioButton:require("views/metad/view/meta_form/control_tmpl/radio_button"),
+        MetaDescription:require("views/metad/view/meta_form/control_tmpl/description"),
+        MetaDivisionLine:require("views/metad/view/meta_form/control_tmpl/division_line"),
+        MetaCheckboxGroup:require("views/metad/view/meta_form/control_tmpl/checkbox_group"),
+        MetaSingleSelect:require("views/metad/view/meta_form/control_tmpl/single_select"),
+        MetaDate:require("views/metad/view/meta_form/control_tmpl/date"),
+        MetaTime:require("views/metad/view/meta_form/control_tmpl/time"),
+        MetaDateTime:require("views/metad/view/meta_form/control_tmpl/datetime"),
+        MetaNumberInput:require("views/metad/view/meta_form/control_tmpl/number_input"),
+        MetaFileUpload:require("views/metad/view/meta_form/control_tmpl/file_upload"),
+        MetaPictureUpload:require("views/metad/view/meta_form/control_tmpl/picture_upload"),
+        MetaSingleUserSelect:require("views/metad/view/meta_form/control_tmpl/single_user_select"),
+        MetaSingleOrgSelect:require("views/metad/view/meta_form/control_tmpl/single_org_select"),
+        MetaMultiUserSelect:require("views/metad/view/meta_form/control_tmpl/multi_user_select"),
+        MetaMultiOrgSelect:require("views/metad/view/meta_form/control_tmpl/multi_org_select"),
+        MetaCascadeSelect:require("views/metad/view/meta_form/control_tmpl/cascade_select"),
+        MetaRefEntity:require("views/metad/view/meta_form/control_tmpl/ref_entity"),
+        MetaBoolean:require("views/metad/view/meta_form/control_tmpl/boolean"),
+        MetaGroup:require("views/metad/view/meta_form/control_tmpl/group"),
+    }
+}

@@ -1,0 +1,7 @@
+$colors : (
+	vipRed : #e80080
+);
+
+@function colors( $key ) {
+    @return map-get($colors, $key);
+}
