@@ -12,6 +12,11 @@ var data = [
           name:"devGuide",
           component: "guide/home.vue",
           route_path:"guide/index"
+        },
+        {
+          name:"entityManage",
+          component: "metabase/home.vue",
+          route_path:"metabase/index"
         }
       ]
     }

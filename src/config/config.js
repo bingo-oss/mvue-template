@@ -74,7 +74,7 @@ mergedConfig.getSSOVersion=function () {
 mergedConfig.getOAuth2FlowType=function () {
   var key="oauth2Flow";
   var type= getConfigVal(key);
-  if(type!=null || type.length>0){
+  if(!_.isEmpty(type)){
     return type;
   }
   //计算type的默认值
@@ -120,9 +120,9 @@ mergedConfig.getAuthAccessCodeProxyUrl=function () {
  */
 mergedConfig.getApiBaseUrl=function () {
   var url="";
-  var key="apiEndPoint";
+  var key="apiBaseUrl";
   url=getConfigVal(key);
-  if(url!=null || url.length>0){
+  if(!_.isEmpty(url)){
     return url;
   }
   //未配置时，使用配置的基地址为api地址
@@ -137,7 +137,7 @@ mergedConfig.getGatewayUrl=function () {
   var url="";
   var key="gatewayUrl";
   url=getConfigVal(key);
-  if(url!=null || url.length>0){
+  if(!_.isEmpty(url)){
     return url;
   }
   //未配置时，使用配置的基地址为网关地址
