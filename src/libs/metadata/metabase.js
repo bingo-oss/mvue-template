@@ -2,33 +2,49 @@
  * 元数据管理
  * Created by fulsh on 2017/12/12.
  */
+var store=require("store2");
+require("store2/cache");
+
 var Config=require("src/config/config.js");
+var mbCacheKey="_mb_";
 var mbModule={};
+
 var metabase={
-  inited:false,
-  entities:{},
+  synced:false,
+  entities:null,
+  lastUpdate:new Date().getTime()
 };
+if(store.has(mbCacheKey)){
+  metabase=store.get(mbCacheKey);
+  metabase.synced=false;
+}
 
 /**
  * 同步初始化Mb
  */
 function  initMetabase(){
-  if(metabase.inited){
+  if(metabase.synced){
     return ;
   }
+  var ajaxAsync=true;
+  if(metabase.entities==null){
+    ajaxAsync=false;
+  }
+
   var swagger=Config.getApiBaseUrl()+"/swagger.json";
   jQuery.ajax({
     url:swagger,
     dataType:"json",
-    async:false,
+    async:ajaxAsync,
     statusCode:{404:function () {
         alert("加载元数据定义失败，请确认以下配置是否正确："+swagger);
       }},
     success:function (swaggerJson) {
-      if(metabase.inited){
+      if(metabase.synced){
         return ;
       }
       loadMetabase(swaggerJson);
+      console.log("async("+ajaxAsync+")load metabase from "+swagger);
     }
   });
 }
@@ -47,7 +63,10 @@ function loadMetabase(swagger){
     entities[key]=metaEntity;
   });
   metabase.entities=entities;
-  metabase.inited=true;
+  metabase.synced=true;
+  metabase.lastUpdate=new Date().getTime();
+
+  store.set(mbCacheKey,metabase);
 }
 
 /**
@@ -80,7 +99,6 @@ function loadMetaEntityFromMode(context,modelName,model){
   });
   return metaEntity;
 }
-
 
 /**
  * 获取第一个非undefined的参数
@@ -181,5 +199,9 @@ module.exports={
   },
   entities:function () {
     return metabase.entities;
+  },
+  refresh:function () {
+    metabase.synced=false;
+    initMetabase();
   }
 }

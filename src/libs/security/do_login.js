@@ -1,5 +1,6 @@
 //获取全局配置
 var Config=require("src/config/config.js");
+var session=require("store2").session;
 //封装原生ajax，
 //TODO 可以考虑替换
 var _ajax = function(opt) {
@@ -35,9 +36,7 @@ var _ajax = function(opt) {
       opt.success(xmlHttp.responseText);
     }
     if (xmlHttp.status == 401) {
-      if(sessionStorage["AccessToken"]){
-        sessionStorage.removeItem("AccessToken")
-      }
+      session.remove("AccessToken");
       doLoginAndSaveAccessToken();
       opt.error(xmlHttp.responseText);
       return;
@@ -76,7 +75,7 @@ var getAccessToken = function (code, token,ticket,callback) {
     contentType: "application/json",
     success:function (data) {
       var token = JSON.parse(data)["token"];
-      sessionStorage["AccessToken"] = token;
+      session.set("AccessToken", token);
       window.location.href=sessionStorage["RedirectUri"];
       if(callback){
         callback();
@@ -103,7 +102,7 @@ function doLoginAndSaveAccessToken(callback) {
 }
 //如果AccessToken已经设置代表已经成功登录过，如果过期由程序内部ajax处理登录跳转
 var doLogin = function (callback) {
-  var at = sessionStorage["AccessToken"];
+  var at = session.get("AccessToken");
   if(at&&callback){
     callback();
   }else{

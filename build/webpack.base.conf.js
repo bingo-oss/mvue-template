@@ -44,7 +44,8 @@ module.exports = {
       components : resolve('src') + '/components',
       services : resolve('src')  + '/services',
       images : resolve('src')  + '/images',
-      paas: resolve('src')  + '/module/console/view/paas'
+      paas: resolve('src')  + '/module/console/view/paas',
+      'store2/cache': 'store2/src/store.cache.js'
     }
   },
   module: {
@@ -144,7 +145,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       jQuery: "jquery",
       $: "jquery",
-      _: "lodash"
+      _: "lodash",
+      'window.store': 'store2',
+      'store': 'store2'
     }),
 
 
