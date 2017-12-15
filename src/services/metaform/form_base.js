@@ -103,7 +103,6 @@ export default {
     methods:{
         //begin 处理脚本
         handleFormScript(){
-            debugger
             var logistics=this.metaForm.logistics;
             if(logistics.script){
                 let fun= new Function(logistics.script);

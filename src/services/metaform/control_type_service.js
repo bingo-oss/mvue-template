@@ -129,7 +129,8 @@ function buildFormItemByComponentType(componentType){
     return formItem;
 }
 //格式化输出组件的数据显示
-function formatData(componentType,item,metaField){
+function formatData(item,metaField){
+    let componentType=metaField.inputType;
     let fieldName=metaField.name;
     let initValue=item[fieldName];
     for(let type of allType){
