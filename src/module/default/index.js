@@ -18,6 +18,10 @@ function appStart() {
     window.iView = iview;
     Vue.use(iView);
     Vue.component("Multiselect",Multiselect.Multiselect);
+    //引入新版grid依赖的组件
+    Vue.component('meta-render-html',require("components/grid/render_html"));
+    Vue.component('meta-operation-btn',require("components/grid/operation_btn"));
+    Vue.component('meta-img-title',require("components/grid/img_title"));
     //注册自定义全局指令
     var CustomDirectives = require("libs/extend/custom_directives.js");
     new CustomDirectives(Vue);

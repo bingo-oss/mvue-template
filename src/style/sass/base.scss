@@ -235,6 +235,36 @@ body{
   left: $dis5;
   top: 10px;
 }
+.data-table-list{
+  .ivu-table-row{
+    a.colorgray{
+      color: $bk4;
+    }
+    h5{
+      margin: 0;
+    }
+    .imgBox{
+      margin: 0px 15px;
+      i{
+        background: $grayf3;
+      }
+    }
+    &:nth-child(even){
+      .imgBox{
+        i{
+          background: $yellow;
+        }
+      }
+    }
+    &:nth-child(1){
+      .imgBox{
+        i{
+          background: $redfe;
+        }
+      }
+    }
+  }
+}
 .tableBox{
   margin-top: $dis10;
   width: 100%;

@@ -16,7 +16,7 @@
                 <dt class="clearfix">
                 <div v-if="showMultiSelect&&!singleSelect" class="listSpan width5 textalignL"><input type="checkbox"
                                                                                       v-model="allChecked"/></div>
-                <div v-for="(col,index) in headerColModel" :key="index" :class="'listSpan '+ col.class">
+                <div v-for="(col,index) in innerHeaderColModel" :key="index" :class="'listSpan '+ col.class">
                     <div class="header-col-title">
                         <span>{{ col.text }}</span>
                         <sortbale v-model="sortbaleQueryOptions"
@@ -30,7 +30,7 @@
                                v-if="showMultiSelect&&showCheckFun(item)" @change="checkChange"/>
                         <span v-else> </span>
                     </div>
-                        <rowitems @reloadevt="reload" :row-model="bodyColModel" :body-fields="bodyFields" :item="item"></rowitems>
+                        <rowitems @reloadevt="reload" :row-model="innerBodyColModel" :body-fields="innerBodyFields" :item="item"></rowitems>
                 </dd>
                 <dd v-if="nodata" class="textalignC">没有相应的数据!</dd>
             </dl>
@@ -56,6 +56,9 @@
 <script>
   module.exports = {
     props: {
+      columns:{
+        type: Array
+      },
       "pagerSizes": {
         type: Array,
         required: false,
@@ -116,15 +119,15 @@
       },
       "headerColModel": {
         type: Array,
-        required: true,
+        required: false,
       },
       "bodyFields": {
         type: Array,
-        required: true
+        required: false
       },
       "bodyColModel": {
         type: Object,
-        required: true
+        required: false
       },
       "createRouteName": {
         type: String,
@@ -150,6 +153,54 @@
       }
     },
     data: function () {
+      let _headerColModel=[];
+      let _bodyFields=[];
+      let _bodyColModel={};
+      //简化grid的构造函数，通过columns构造其他三个内部渲染所需数据
+      if(this.columns){
+        _.each(this.columns,function(col,index){
+          if(col.type==="operation"){
+            col.key="__operation";
+          }
+          //构造bodyFields
+          if(!col.key){
+            console.log("未指定column的key");
+            console.log(col);
+            return;
+          }
+          _bodyFields.push(col.key);
+          
+          //构造headerColModel
+          _headerColModel.push({
+            text:col.title,
+            class:`width${col.width?col.width:10} textalign${col.align=='left'?'L':(col.align=='center'?'C':'R')}`
+          });
+          //构造bodyColModel
+          _bodyColModel[col.key]=_.extend({
+            type:col.type,
+            class:`width${col.width?col.width:10} textalign${col.align=='left'?'L':(col.align=='center'?'C':'R')}${index===0?' clearfix':''}`
+          },col.params||{});
+        });
+      }else{
+        if(this.headerColModel){
+          _headerColModel=this.headerColModel;
+        }else{
+          console.log("未定义columns");
+          return;
+        }
+        if(this.bodyColModel){
+          _bodyColModel=this.bodyColModel;
+        }else{
+          console.log("未定义columns");
+          return;
+        }
+        if(this.bodyFields){
+          _bodyFields=this.bodyFields;
+        }else{
+          console.log("未定义columns");
+          return;
+        }
+      }
       return {
         search: "",
         searchEmpty: [],
@@ -163,6 +214,10 @@
         changedQueue: [],
         queryOptionsObject: {},
         sortbaleQueryOptions: {},
+
+        innerHeaderColModel:_.cloneDeep(_headerColModel),
+        innerBodyFields:_.cloneDeep(_bodyFields),
+        innerBodyColModel:_.cloneDeep(_bodyColModel)
       }
     },
     watch: {
@@ -271,7 +326,6 @@
           console.log("请配置远程查询地址queryUrl或者queryResource");
           return;
         }
-
         var _queryOptions = _this.queryOptions ? _.cloneDeep(_this.queryOptions) : {}; //这里是克隆查询参数，避免查询参数污
         if (_this.pager) {//如果支持分页
           if (!_this.pageIndex) {
@@ -389,24 +443,25 @@
       },
       setfilteredData: function () {   // 提取过滤条件数据
         var _this = this;
-        var _bodyColModel = _this.bodyColModel;   // 提取过滤条件
-        var _bodyFields = _this.bodyFields;
+        var _bodyColModel = _this.innerBodyColModel;   // 提取过滤条件
+        var _bodyFields = _this.innerBodyFields;
         for (var i = 0; i < _bodyFields.length; i++) {
           var _name = _bodyFields[i];
+          var _hcm=_this.innerHeaderColModel[i];
           if (_bodyColModel[_name] && _bodyColModel[_name]["searchable"]) {
-            _this.$set(_this.headerColModel[i], 'searchable', _name);
+            _this.$set(_hcm, 'searchable', _name);
             if (_bodyColModel[_name]["searchable"]["filters"]) {
-              _this.$set(_this.headerColModel[i], 'filters', _bodyColModel[_name]["searchable"]["filters"]);
+              _this.$set(_hcm, 'filters', _bodyColModel[_name]["searchable"]["filters"]);
             }
           }
           if (_bodyColModel[_name] && _bodyColModel[_name]["sortable"]) {
-            _this.$set(_this.headerColModel[i], 'sortable', _name);
+            _this.$set(_hcm, 'sortable', _name);
           }
 
           if (_bodyColModel[_name] && _bodyColModel[_name]["searchable"]) {
-            _this.$set(_this.headerColModel[i], 'searchable', _name);
+            _this.$set(_hcm, 'searchable', _name);
           }
-          _bodyColModel[_name]["type"] && _this.$set(_this.headerColModel[i], 'type', _bodyColModel[_name]["type"]);  //导入类型
+          _bodyColModel[_name]["type"] && _this.$set(_hcm, 'type', _bodyColModel[_name]["type"]);  //导入类型
         }
       },
       createFunc: function () {
