@@ -1,0 +1,130 @@
+<template>
+    <div :style="{width:formItem.componentParams.width+'%'}">
+        <div v-if="formItem.componentParams.layout===controlTypeService.componentLayout.vertical" class="form-group" :class="{'ivu-form-item-required':formItem.componentParams.required}">
+            <label class="ivu-form-item-label" v-text="formItem.componentParams.title"></label>
+            <Multiselect v-model="selectedItem"
+                        :options="dataItems"
+                        placeholder="选择部门"
+                        :disabled="disabled"
+                        select-label="按enter键选择"
+                        selected-label="已选"
+                        deselect-label="按enter键取消选择"
+                        :show-no-results="false"
+                        label="name"
+                        @select="onSelect"
+                        @search-change="searchChange"
+                        :track-by="getIdField()">
+                <template slot="option" slot-scope="props">
+                    <div class="option__desc">
+                        <span class="option__title">{{ props.option.name }}</span>
+                    </div>
+                </template>
+            </Multiselect>
+            <span class="colorRed" v-show="validator&&validator.errorBag&&validator.errorBag.has(formItem.dataField)">{{ validator&&validator.errorBag&&validator.errorBag.first(formItem.dataField) }}</span>
+            <p class="colorGrey" v-show="formItem.componentParams.description" v-text="formItem.componentParams.description"></p>
+        </div>
+        <div v-if="formItem.componentParams.layout===controlTypeService.componentLayout.horizontal" class="form-horizontal">
+            <div class="form-group" :class="{'ivu-form-item-required':formItem.componentParams.required}">
+                <label v-text="formItem.componentParams.title" class="ivu-form-item-label control-label col-md-2" :style="{width:labelWidth}"></label>
+                <div class="col-md-10" :style="{width:controlWidth}">
+                    
+                    <span class="colorRed" v-show="validator&&validator.errorBag&&validator.errorBag.has(formItem.dataField)">{{ validator&&validator.errorBag&&validator.errorBag.first(formItem.dataField) }}</span>
+                    <p class="colorGrey" v-show="formItem.componentParams.description" v-text="formItem.componentParams.description"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import controlBase from 'services/metaform/control_base';
+export default {
+    mixins: [controlBase],
+    props: {
+        "value":{type:String,default:null}
+    },
+    data: function(){
+        return {
+            selectedItem:null,//已经选择的项
+            dataItems:[],//远程获取的数据项
+            entityResource:null,//获取部门数据的操作resource
+            queryFields:"id,name,ecode"//查询的冗余数据
+        };
+    },
+    computed:{
+        dataItemsMap:function(){
+            var idField=this.getIdField();
+            return _.keyBy(this.dataItems,idField);
+        }
+    },
+    watch:{
+        value:function(newV,oldV){
+            if(newV){
+                this.selectedItem=this.dataItemsMap[newV]||null;
+            }else{
+                this.selectedItem=null;
+            }
+        },
+        dataItems:function(){
+            if(this.value){
+                this.selectedItem=this.dataItemsMap[this.value]||null;
+            }
+        },
+        "paths.projectEngineBaseUrl":function(newValue,oldValue){//监听engine地址，一旦设置值，用户操作的resource就可以构造了
+            var _this=this;
+            if(newValue){
+                this.entityResource= Vue.resource("api/organization",null,null,{root:newValue});
+                this.doSearch();
+            }
+        }
+    },
+    methods: {
+        onSelect:function(selectItem){
+            var idField=this.getIdField();
+            this.emitExData(selectItem[idField],_.cloneDeep(selectItem));
+            this.$emit('input',selectItem[idField]);
+        },
+        searchChange:function(keyword){
+            var _this=this;
+            this.doSearch(keyword,function(){
+                _this.selectedItem=null;
+            });
+        },
+        doSearch:function(keyword,callback){
+            var _this=this;
+            var params={select:_this.queryFields};
+            if(!keyword){
+                if(this.value){
+                    let idField=this.getIdField();
+                    params.filters=`${idField} eq ${this.value}`;
+                }else{
+                    params.limit=50;
+                }
+            }else{
+                params.filters=`status eq 1 and name like %${keyword}%`;
+            }
+            if(this.entityResource){
+                Utils.smartSearch(_this,function(){
+                    _this.entityResource.query(params)
+                    .then(function({data}){
+                        _this.dataItems=data;
+                        callback&&callback();
+                    });
+                });
+            }
+        },
+        getIdField:function(){
+            return "id";
+        },
+        emitExData:function(id,data){
+            var exData={};
+            exData[id]=data;
+            this.$emit("exDataChanged",exData,this.formItem.dataField,"organization");
+        }
+    }
+}
+</script>
+<style lang="scss" scoped>
+
+</style>
+
+
