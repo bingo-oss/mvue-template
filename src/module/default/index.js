@@ -48,6 +48,10 @@ function appStart() {
     var router = new VueRouter({
       routes: routes
     });
+    var session=require("libs/security/session");
+    router.beforeEach(function(to, from, next) {
+      session.doFilter(to,from,next);
+    });
     router.afterEach(function (transition) {
       console.log('-----------------Router Start');
       console.log(transition);
@@ -118,5 +122,6 @@ function appStart() {
   });
 }
 //登录校验
-var doLogin = require("libs/security/do_login.js");
-doLogin(appStart);
+//var doLogin = require("libs/security/do_login.js");
+//doLogin(appStart);
+appStart();

@@ -2,6 +2,7 @@
  * 封装AJAX请求相关操作
  * Created by yulongsheng on 2016/10/28.
  */
+var session=require("libs/security/session");
 
 var ax = {};
 ax.ajax = function (params) {
@@ -51,13 +52,11 @@ ax.callAjax = function (type, url, data, success, error, _options) {
       // 遇到401，进行用户重登
       if (xhr.status == 401) {
         var hideError = false;
-        if (sessionStorage["AccessToken"] == null || sessionStorage["AccessToken"] == "undefined") {
+        if (_.isEmpty(session.getToken())) {
           hideError = true;
         }
-        if (sessionStorage["AccessToken"]) {
-          sessionStorage.removeItem("AccessToken")
-        }
-        ax.doRedirect(hideError);
+        session.doLogout();
+        session.gotoLogin(window.location.href);
         return;
       }
       //如果用户自定义了异常处理，用用户自定义的
@@ -93,9 +92,8 @@ ax.callAjax = function (type, url, data, success, error, _options) {
     }
   };
   // accessToken加到请求头
-  var token = sessionStorage["AccessToken"];
-
-  if (token && token != "null") {
+  var token = session.getToken();
+  if (!_.isEmpty(token)) {
     params["header"] = {
       "Authorization": "Bearer " + token,
       "version": "3.6.0"
@@ -129,70 +127,5 @@ ax.delete = function (url, data, success, error, options) {
 
 ax.patch = function (url, data, success, error, options) {
   ax.callAjax("PATCH", url, data, success, error, options);
-}
-
-//重定向到sso
-ax.doRedirect = function (hideError) {
-  //获取sso相关的基础信息
-
-  function resolveParams(url) {
-    if (!url) return;
-    url = url + '';
-    var index = url.indexOf('?');
-    if (index > -1) {
-      url = url.substring(index + 1, url.length);
-    }
-    var pairs = url.split('&'), params = {};
-    for (var i = 0; i < pairs.length; i++) {
-      var pair = pairs[i];
-      var indexEq = pair.indexOf('='), key = pair, value = null;
-      if (indexEq > 0) {
-        key = pair.substring(0, indexEq);
-        value = pair.substring(indexEq + 1, pair.length);
-      }
-      params[key] = value;
-    }
-    return params;
-  }
-
-  var reqUrl = Config.contextPath.authUrl;
-  var params = resolveParams(window.location.hash) || {};
-  var authCode = params.code;
-  var authToken = params.id_token;
-  var ticket = params["openid.ex.service_ticket"];
-  if (!authCode && !authToken && !ticket) {
-    ax.get(reqUrl, null, function (data) {
-      //记录下鉴权之前的地址
-      sessionStorage["RedirectUri"] = window.location.href;
-      //重定向到sso
-      window.location.href = data["tplLoginUrl"].replace("{redirect_uri}", encodeURIComponent(window.location.href));
-    }, function (error) {
-      console.log(error);
-    });
-  }
-}
-
-//获取AT接口(必须同步)
-ax.getAccessToken = function (code, token) {
-  var reqUrl = Config.contextPath.tokenUrl;
-  var response = $.ajax({
-    url: reqUrl,
-    data: {code: code, token: token},
-    async: false,
-    cache: false,
-    contentType: "application/json"
-  });
-  var status = response.status;
-  if (status == 200) {
-    return eval("(" + response.responseText + ")")["token"];
-  } else if ((status >= 500 && status < 600) || (status >= 300 && status < 400)) {
-    iview$Modal.error({
-      title: "系统提示",
-      content: "获取Token失败！"
-    });
-  } else {
-    console.error(response);
-    return null;
-  }
 }
 module.exports = ax

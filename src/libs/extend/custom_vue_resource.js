@@ -1,3 +1,4 @@
+var session=require("libs/security/session");
 module.exports=function CustomVueResource(Vue,VueResource){
     //Vue.http.options.root = _.trimEnd(Config.contextPath.serverUrl,"/");
     Vue.resource.actions.update={ method: 'PATCH' };
@@ -7,7 +8,7 @@ module.exports=function CustomVueResource(Vue,VueResource){
             // 请求发送前的处理逻辑
             loading.showDom();
         }
-        var token = sessionStorage["AccessToken"];
+        var token = session.getToken();
         if (token) {
             request.headers.set('Authorization','Bearer '+ token);
             request.headers.set('version','3.6.0');
@@ -20,7 +21,7 @@ module.exports=function CustomVueResource(Vue,VueResource){
             var isError=false;
             if(response.status === 401) {
                 isError=true;
-                ax.doRedirect();
+                session.gotoLogin(window.location.href);
             }else if(response.status==404){
                 isError=true;
             }else if (response.status>=400){
