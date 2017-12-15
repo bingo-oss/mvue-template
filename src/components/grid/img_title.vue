@@ -20,10 +20,12 @@
 export default {
     props:{
         params:{
-            type:Object
+            type:Object,
+            required:true
         },
         item:{
-            type:Object
+            type:Object,
+            required:true
         }
     },
     data: function(){

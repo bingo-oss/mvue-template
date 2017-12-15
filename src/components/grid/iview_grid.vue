@@ -266,9 +266,29 @@ export default {
             var _col=_.cloneDeep(col);
             //如果column有定义额外的metaParams参数，则采用自定义的渲染方式
             if(col.metaParams&&(col.metaParams.type||col.metaParams.metaField)){
-                if(col.metaParams.type==="imgTitle"){//标题列特殊处理
+                if(col.metaParams.metaField//图片上传显示
+                    &&controlTypeService.isPictureUpload(col.metaParams.metaField.inputType)){
+                        _col.render=function(h,params){
+                            return h("meta-grid-pictures",{
+                                props:{
+                                    params:col.metaParams,
+                                    item:params.row
+                                }
+                            });
+                        }
+                }else if(col.metaParams.metaField//文件上传显示
+                    &&controlTypeService.isFileUpload(col.metaParams.metaField.inputType)){
+                                _col.render=function(h,params){
+                                    return h("meta-grid-files",{
+                                        props:{
+                                            params:col.metaParams,
+                                            item:params.row
+                                        }
+                                    });
+                                }
+                }else if(col.metaParams.type==="imgTitle"){//标题列特殊处理
                     _col.render=function(h,params){
-                        return h("meta-img-title",{
+                        return h("meta-grid-img-title",{
                             props:{
                                 params:col.metaParams,
                                 item:params.row
@@ -283,7 +303,7 @@ export default {
                 }else if(col.metaParams.type==="operation"){//操作列特殊处理
                     let btns=col.metaParams.btns;
                     _col.render=function(h,params){
-                        return h("meta-operation-btn",{
+                        return h("meta-grid-operation-btn",{
                             props:{
                                 btns:btns
                             },
@@ -298,7 +318,7 @@ export default {
                     _col.render=function(h,params){
                         var metaField=_this.columnMetaField(col);
                         var value=controlTypeService.formatData(params.row,metaField);
-                        return h("meta-render-html",{
+                        return h("meta-grid-render-html",{
                             props:{
                                 value:value
                             }
