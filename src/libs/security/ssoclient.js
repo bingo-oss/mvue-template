@@ -204,12 +204,27 @@ function getClientAuth() {
   return "Basic "+Base64.encode(clientId+":"+clientSecret);
 }
 
+function ssoLogout(returnUrl) {
+  var url=Config.getSSOServerUrl();
+  if(Config.getSSOVersion()=="v2"){
+    url+="/v2?openid.mode=logout";
+    url+="&openid.return_to="+encodeURIComponent(returnUrl);
+  }else{
+    url+="/oauth2/logout?post_logout_redirect_uri="+encodeURIComponent(returnUrl);
+  }
+  window.location=url;
+}
+
+
 module.exports={
   gotoLogin:function(returnUrl)  {
     gotoLogin(returnUrl);
   },
   onSSOCallback:function (callback) {
     onSSOCallback(callback);
+  },
+  ssoLogout:function (returnUrl) {
+    ssoLogout(returnUrl);
   }
 }
 

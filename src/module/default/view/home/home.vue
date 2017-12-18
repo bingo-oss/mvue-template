@@ -23,7 +23,7 @@
               <MenuItem name="3-3">配置管理</MenuItem>
             </MenuGroup>
             <MenuGroup title="系统">
-              <MenuItem name="3-4">退出</MenuItem>
+              <MenuItem name="3-4"><span @click="logout">退出</span></MenuItem>
               <MenuItem name="3-5">流失用户</MenuItem>
             </MenuGroup>
           </Submenu>
@@ -47,6 +47,7 @@
 </template>
 <script>
   var menu = require('../../menu/home_menu_base.js');
+  var session=require("libs/security/session");
   module.exports = {
     data: function () {
       return {
@@ -57,6 +58,9 @@
     methods: {
       doShrink:function(shrinkNavBar){
         this.shrinkNavBar=shrinkNavBar;
+      },
+      logout:function(){
+        session.doLogout();
       }
     },
     components:{

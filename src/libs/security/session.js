@@ -58,9 +58,13 @@ function signIn(tokenInfo){
   sessionStore.set(sessionKey,session);
 }
 
-function signOut() {
+function signOut(returnUrl) {
   session=_.extend({},anonymousSession);
   sessionStore.remove(sessionKey);
+  if(_.isEmpty(returnUrl)){
+    returnUrl=window.location.href;
+  }
+  ssoclient.ssoLogout(returnUrl);
 }
 
 module.exports={
@@ -76,8 +80,11 @@ module.exports={
   doSignIn:function (tokenInfo) {
     signIn(tokenInfo);
   },
-  doLogout:function () {
-    signOut();
+  doLogout:function (returnUrl) {
+    signOut(returnUrl);
+  },
+  doLogin:function (returnUrl) {
+    ssoclient.gotoLogin(returnUrl);
   },
   getCurrentUser:function(){
     return session.user;
