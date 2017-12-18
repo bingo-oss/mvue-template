@@ -6,6 +6,7 @@ var store=require("store2");
 require("store2/cache");
 
 var Config=require("src/config/config.js");
+var MetaEntityCls=require("libs/metadata/metaentity");
 var mbCacheKey="_mb_";
 var mbModule={};
 
@@ -59,13 +60,16 @@ function loadMetabase(swagger){
   };
   var entities={};
   _.forEach(swagger.definitions,function(val,key){
+    var isEntity=firstNotNaN(val["x-entity"],true);
+    if(!isEntity){
+      return;
+    }
     var metaEntity=loadMetaEntityFromMode(context,key,val);
     entities[key]=metaEntity;
   });
   metabase.entities=entities;
   metabase.synced=true;
   metabase.lastUpdate=new Date().getTime();
-
   store.set(mbCacheKey,metabase);
 }
 
@@ -75,43 +79,50 @@ function loadMetabase(swagger){
  * @param model
  */
 function loadMetaEntityFromMode(context,modelName,model){
-  var metaEntity={
+  var opt={
     name:modelName,
     title:model.title,
     description:modelName.description,
-    isRemote:false,
-    tableDroppable:false,
-    tableFieldAddable:false,
-    fields:{},
-    relations:{},
     _model:model
   };
-  var createFieldContext=_.extend({
+  var metaEntity=MetaEntityCls(opt);
+  var propertyContext=_.extend({
     metaEntity:metaEntity,
     model:model
   },context);
   var index=0;
+  var relations=[];
   _.forEach(model.properties,function (val,key) {
-    var metaField=loadMetaFieldFromProperty(createFieldContext,key,val);
+    var isRelation=firstNotNaN(val["x-relation"],false);
+    if(isRelation){
+      var metaRelation=loadMetaRelationFromProperty(propertyContext,key,val);
+      relations.push(metaRelation);
+      return;
+    }
+    var metaField=loadMetaFieldFromProperty(propertyContext,key,val);
     metaField["displayOrder"]=index;
     metaEntity.fields[key]=metaField;
     index++;
   });
-  return metaEntity;
-}
 
-/**
- * 获取第一个非undefined的参数
- */
-function firstNotNaN(){
-  var reval;
-  _.forEach(arguments,function (item,index) {
-    if(!_.isNaN(item)){
-      reval=item;
-      return false;
-    }
+  _.forEach(relations,function (metaRelation,i) {
+    _.forEach(metaRelation.joinFields,function(joinField,index){
+      var relationField=null;
+      if(_.isString(joinField)){
+        var relationField=metaEntity[joinField];
+      }
+      if(relationField==null && _.isPlainObject(joinField) && !_.isEmpty(joinField["local"])){
+        var relationField=metaEntity[joinField["local"]];
+      }
+      if(relationField!=null){
+        relationField.isRelationField=true;
+        relationField.relations.push(metaRelation);
+      }
+    });
+
+      metaEntity.relations[metaRelation.name]=metaRelation;
   });
-  return reval;
+  return metaEntity;
 }
 
 /**
@@ -131,17 +142,17 @@ function loadMetaFieldFromProperty(context,propertyName,property){
     isSystem:true,
     isDisplay:true,
     displayOrder:0,
-    identity:false,
+    identity:firstNotNaN(property["x-identity"],false),
     autoIncrement:false,
-    unique:firstNotNaN(property["uniqueItems"],false),
+    unique:firstNotNaN(property["x-unique"],property["uniqueItems"],false),
     required:false,
     creatable:firstNotNaN(property["x-creatable"],true),
     updatable:firstNotNaN(property["x-updatable"],property["readOnly"],true),
     sortable:firstNotNaN(property["x-sortable"],false),
     filterable:firstNotNaN(property["x-filterable"],false),
-    inputType:"SingleLineText",
+    inputType:firstNotNaN(property["x-input"],"SingleLineText"),
     inputTypeParams:{},
-    semantics:"",
+    semantics:property["x-meaning"],
     maxLength:property["maxLength"],
     minLength:property["minLength"],
     pattern:property["pattern"],
@@ -150,6 +161,8 @@ function loadMetaFieldFromProperty(context,propertyName,property){
     enum:property["enum"],
     type:property["type"],
     format:property["format"],
+    isRelationField:false,
+    relations:[],
     _property:property
   };
   //设置required属性
@@ -188,7 +201,59 @@ function fillInputTypeParams(metaField,property) {
   if(_.isNaN(property["format"])){
     metaField.inputTypeParams["format"]=property["format"];
   }
+  if(_.isNaN(property["x-options"])){
+    var options=[];
+    _.forEach(property["x-options"],function(items,key){
+      if(key!="items"){
+        return;
+      }
+      _.forEach(items,function (item,index) {
+        options.push({
+          id:item["value"],
+          text:item["title"],
+          chcked:false
+        });
+      });
+    });
+    metaField.inputTypeParams["options"]=options;
+  }
 }
+
+/**
+ * 根据关系属性构造关系
+ * @param context
+ * @param propertyName
+ * @param property
+ */
+function loadMetaRelationFromProperty(context,propertyName,property){
+  var metaRelation={
+    name:propertyName,
+    type:firstNotNaN(property["x-relation-type"],"many-to-one"),
+    sourceEntity:context.metaEntity.name,
+    targetEntity:property["x-target-entity"],
+    joinEntity:property["x-join-entity"],
+    joinFields:property["x-join-fields"],     //[{"local":"updatedBy","target":"userId"}]
+    expandable:firstNotNaN(property["x-expandable"],false),
+    _property:property
+  };
+  return metaRelation;
+}
+
+
+/**
+ * 获取第一个非undefined的参数
+ */
+function firstNotNaN(){
+  var reval;
+  _.forEach(arguments,function (item,index) {
+    if(!_.isNaN(item)){
+      reval=item;
+      return false;
+    }
+  });
+  return reval;
+}
+
 
 //初始化metabase
 initMetabase();
