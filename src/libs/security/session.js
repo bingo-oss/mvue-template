@@ -90,14 +90,24 @@ module.exports={
     return session.user;
   },
   doFilter:function(to,from,next){
-    if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+    //因为to.matched会从父到子放置所有匹配的路由，所以从最后一个路由向上判断是否定义了requiresAuth就可以确定了
+    let len=to.matched.length;
+    let requiresAuth=false;
+    for(let i=len-1;i>=0;--i){
+      let m=to.matched[i];
+      if(m.meta.requiresAuth){
+        requiresAuth=true;
+        break;
+      }
+    }
+    if(requiresAuth){
       if (this.hasToken()) {  // 通过vuex state获取当前的token是否存在
         next();
       }else {
         //中转
         ssoclient.gotoLogin(to.fullPath);
       }
-    }else {
+    }else{
       next();
     }
   }

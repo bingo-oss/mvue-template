@@ -42,7 +42,7 @@ function toRealRouteData(_data, _moduleName, r) {
     if (item.name) {
       obj.name = item.name;
     }
-    obj.path = item.route_path;
+    obj.path = item.path||item.route_path;
     //这个地方引用组件通过动态的r函数require，由各模块自己提供
     if (item.component) {
       obj.component = r(item.component);

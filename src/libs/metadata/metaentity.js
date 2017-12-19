@@ -28,7 +28,7 @@ module.exports=function (options) {
   /**
    * 第一个语义为的title字段
    */
-  metaEntity:firstTitleField=function () {
+  metaEntity.firstTitleField=function () {
     return firstSemanticsField("title");
   };
 
