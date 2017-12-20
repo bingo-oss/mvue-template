@@ -55,6 +55,7 @@ export default {
     mounted: function() {
         this.filterMenusWithPermissions();
         //TODO：没效的样子
+        /*先注释掉，会导致浏览器直接输入路径无法到达路由
         var activeMenu=null;
         for (var i = 0; i < this.localMenus.length; i++) {
             this.openNames.push(this.localMenus[i].id);
@@ -65,7 +66,7 @@ export default {
         if(activeMenu!=null){
           this.activeName=activeMenu.link.name;
           router.push({name:activeMenu.link.name});
-        }
+        }*/
     },
     methods: {
         doShrink: function() {

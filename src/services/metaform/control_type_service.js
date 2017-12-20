@@ -171,12 +171,12 @@ function getMetaFieldComponentType(metaField){
     }
     if(columnType==="varchar") {
         if(columnLength<=200){
-            return textTypes.SingleLineText.id;
+            return componentTypes.SingleLineText.id;
         }else if(columnLength>200){
-            return textTypes.MultiLineText.id;
+            return componentTypes.MultiLineText.id;
         }
     }
-    return textTypes.SingleLineText.id;
+    return componentTypes.SingleLineText.id;
 }
 //根据实体的所有字段构造默认的表单layout
 function buildFormLayoutByMetaFields(metaFields){
@@ -186,10 +186,19 @@ function buildFormLayoutByMetaFields(metaFields){
         var formItem=buildFormItemByComponentType(componentType);
         formItem.id=metaField.id;
         formItem.dataField=metaField.name;
-        formItem.componentParams.title=metaField.title;
+        formItem.componentParams.title=metaField.title||metaField.name;
         layout.push(formItem);
     });
     return layout;
+}
+//根据元数据字段构造表单组件所需的模型
+function buildFormItemByMetaField(metaField){
+    var componentType=getMetaFieldComponentType(metaField);
+    var formItem=buildFormItemByComponentType(componentType);
+    formItem.id=metaField.id;
+    formItem.dataField=metaField.name;
+    formItem.componentParams.title=metaField.title||metaField.name;
+    return formItem;
 }
 //重新获取下一个字段名
 function nextDataFieldName(formItem){
@@ -260,5 +269,6 @@ export default{
     uploadFilters:uploadType.uploadFilters,
     controlMode:{normal:"normal",design:"design"},////["design","normal"],design设计模式，组件不可操作;normal普通模式，可以填写数据
     buildFormLayoutByMetaFields:buildFormLayoutByMetaFields,
+    buildFormItemByMetaField:buildFormItemByMetaField,
     formatData:formatData
 };
