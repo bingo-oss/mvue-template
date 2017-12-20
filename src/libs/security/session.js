@@ -95,8 +95,11 @@ module.exports={
     let requiresAuth=false;
     for(let i=len-1;i>=0;--i){
       let m=to.matched[i];
-      if(m.meta.requiresAuth){
+      if(m.meta.requiresAuth){//路由配置指定了需要验证
         requiresAuth=true;
+        break;
+      }else if(m.meta.requiresAuth===false){//路由配置指定了匿名
+        requiresAuth=false;
         break;
       }
     }
