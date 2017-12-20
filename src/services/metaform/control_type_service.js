@@ -198,6 +198,27 @@ function buildFormItemByMetaField(metaField){
     formItem.id=metaField.id;
     formItem.dataField=metaField.name;
     formItem.componentParams.title=metaField.title||metaField.name;
+    //是否必填
+    formItem.componentParams.required=metaField.required;
+    //是否唯一
+    formItem.componentParams.unique=metaField.unique;
+    //验证规则
+    if(metaField.inputTypeParams["pattern"]){
+        formItem.validation={
+            validate:true,
+            rule:{
+                pattern:metaField.inputTypeParams["pattern"]
+            }
+        };
+    }
+    //长度规则
+    if(metaField.inputTypeParams["maxLength"]||metaField.inputTypeParams["minLength"]){
+        formItem.limitLength={
+            limit:true,
+            max:metaField.inputTypeParams["maxLength"],
+            min:metaField.inputTypeParams["minLength"]
+        };
+    }
     return formItem;
 }
 //重新获取下一个字段名

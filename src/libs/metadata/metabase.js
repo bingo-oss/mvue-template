@@ -79,11 +79,13 @@ function loadMetabase(swagger){
  * @param model
  */
 function loadMetaEntityFromMode(context,modelName,model){
+  var entityPath=_.snakeCase(modelName);
   var opt={
     name:modelName,
     title:model.title,
     description:modelName.description,
-    _model:model
+    _model:model,
+    resourceUrl:`${Config.getApiBaseUrl()}/${entityPath}`
   };
   var metaEntity=MetaEntityCls(opt);
   var propertyContext=_.extend({
