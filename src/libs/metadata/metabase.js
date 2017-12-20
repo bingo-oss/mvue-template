@@ -65,7 +65,7 @@ function loadMetabase(swagger){
       return;
     }
     var metaEntity=loadMetaEntityFromMode(context,key,val);
-    entities[key]=metaEntity;
+    entities[key.toLowerCase()]=metaEntity;
   });
   metabase.entities=entities;
   metabase.synced=true;
@@ -260,7 +260,10 @@ initMetabase();
 
 module.exports={
   findMetaEntity:function (metaEntityName) {
-    return metabase.entities[metaEntityName];
+    if(!metaEntityName){
+      return null;
+    }
+    return metabase.entities[metaEntityName.toLowerCase()];
   },
   entities:function () {
     return metabase.entities;
