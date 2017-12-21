@@ -31,7 +31,7 @@ function loadServerConfig(){
         alert("请确认配置服务器地址是否正确，配置地址如下："+getServerConfigUr());
       }},
     success:function (serverConfig) {
-      cachedConfig=jQuery.extend({},window.config,serverConfig);
+      cachedConfig=_.extend({},window.config,serverConfig);
     }
   });
   return cachedConfig;
@@ -48,8 +48,17 @@ function getServerConfigUr(){
   return window.config.baseServerUrl+"/conifg";
 };
 
-var mergedConfig=jQuery.extend({},window.config);
+var mergedConfig=_.extend({},window.config);
+/**
+ * 获取指定key对应的配置项值
+ * @param key
+ * @returns {*}
+ */
 mergedConfig.getConfigVal=function(key){return getConfigVal(key);}
+
+/**
+ * 从服务端加载配置项
+ */
 mergedConfig.loadServerConfig=function(){return loadServerConfig();}
 /**
  * 获取SSO服务器地址
