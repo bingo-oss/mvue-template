@@ -2,7 +2,9 @@
  * 提供元数据与grid整合的功能
  */
 import controlTypeService from 'services/metaform/control_type_service';
+import metabase from 'libs/metadata/metabase';
 import renderManager from './metagrid_render';
+import operationManager from './metagrid_operation';
 
 /**
  *  将metaField转成ivue需要的col对象
@@ -16,6 +18,7 @@ function metaFieldToCol(context,metaField) {
     _metaField: metaField,
   };
   //优先根据前端设置的type字段，设置列的渲染方式
+
   if (metaField.type == "operation") {
     col.render = renderManager.renderForOperation(context,metaField);
   }else if (metaField.type == "imgTitle") {
@@ -33,99 +36,81 @@ function metaFieldToCol(context,metaField) {
 }
 
 /**
- * 图片上传控件
- * @param metaField
- * @returns {Function}
+ * 根据元数据信息初始化Grid
+ * @param grid
  */
-function renderForPictureUpload(context,metaField) {
-  return function(h,params) {
-    return h("meta-grid-pictures", {
-      props: {
-        params: metaField,
-        item: params.row
-      }
-    });
+function initGridByMetabase(grid) {
+  intiGridProperties(grid);
+
+  initToolBar(grid);
+
+  initColumns(grid);
+}
+
+
+/**
+ * 实始化grid的基本属性
+ * @param grid
+ */
+function intiGridProperties(grid) {
+  var metaEntityObj=null;
+  if(!_.isEmpty(grid.metaEntity)){
+    metaEntityObj=metabase.findMetaEntity(grid.metaEntity);
+  }
+  if(metaEntityObj==null){
+    return;
+  }
+
+  if(_.isEmpty(grid.queryResource)){
+    grid.queryResource=metaEntityObj.dataResource;
   }
 }
 
 /**
- * 文件上传控件
- * @param metaField
- * @returns {*}
+ * 初始化列
  */
-function renderForFileUpload(context,metaField) {
-  return function(h,params) {
-    return h("meta-grid-files", {
-      props: {
-        params: metaField,
-        item: params.row
-      }
-    });
+function  initColumns(grid) {
+  var metaEntityObj=null;
+  if(!_.isEmpty(grid.metaEntity)){
+    metaEntityObj=metabase.findMetaEntity(grid.metaEntity);
   }
+  var context={
+    grid:grid,
+    metaEntity:metaEntityObj
+  };
+  _.each(grid.columns,function(col){
+    var metaParams=col.metaParams ||{};
+    var _col=_.omit(col,["metaParams"]);
+    var metaField={};
+    if(metaEntityObj!=null){
+      metaField=metaEntityObj.findField(_col.key) || {};
+    }
+    metaField=_.extend(metaField,metaParams);
+    var defaultCol=metaFieldToCol(context,metaField);
+    _col=_.extend(defaultCol,_col);
+    grid.innerColumns.push(_col);
+  });
 }
 
-/**
- * 带图片的标题头显示
- * @returns {*}
- */
-function renderForImgTitle(context,metaField) {
-  return function(h,params) {
-    return h("meta-grid-img-title", {
-      props: {
-        params: metaField,
-        item: params.row
-      },
-      on: {
-        click: function () {
-          metaField.actionFunc && metaField.actionFunc.call(context,params);
-        }
-      }
-    });
+function  initToolBar(grid) {
+  var btns=[];
+  var metaEntityObj=null;
+  if(!_.isEmpty(grid.metaEntity)){
+    metaEntityObj=metabase.findMetaEntity(grid.metaEntity);
   }
+  var context={
+    grid:grid,
+    metaEntity:metaEntityObj
+  };
+  _.forEach(grid.toolbar.btns,function (btn,index) {
+    var mergedBtn=operationManager.fillOperationByMb(context,btn);
+    btns.push(mergedBtn);
+  });
+  grid.toolbar.btns=btns;
 }
-
-/**
- * 操作列
- * @param metaField
- * @returns {Function}
- */
-function renderForOperation(context,metaField) {
-  let btns=metaField.btns;
-  return function(h,params){
-    return h("meta-grid-operation-btn",{
-      props:{
-        btns:btns
-      },
-      on:{
-        click:function(btn){
-          btn.actionFunc.call(context,params);
-        }
-      }
-    });
-  }
-}
-
-/**
- * 通用渲染
- * @param metaField
- * @returns {Function}
- */
-function renderForCommon(context,metaField) {
-  return function(h,params){
-    var value=controlTypeService.formatData(params.row,metaField);
-    return h("meta-grid-render-html",{
-      props:{
-        value:value
-      }
-    });
-  }
-}
-
-
-
 
 export default{
-  metaFieldToCol:metaFieldToCol
+  initGridByMetabase:initGridByMetabase,
 }
 
 

@@ -2,6 +2,7 @@
  * 提供内置的列的渲染
  */
 import controlTypeService from 'services/metaform/control_type_service';
+import operationManager from "./metagrid_operation";
 
 export default {
   /**
@@ -61,21 +62,30 @@ export default {
    * @param metaField
    * @returns {Function}
    */
-  renderForOperation: function (context, metaField) {
-    let btns = metaField.btns;
-    return function (h, params) {
-      return h("meta-grid-operation-btn", {
-        props: {
-          btns: btns
-        },
-        on: {
-          click: function (btn) {
-            btn.actionFunc.call(context, params);
-          }
+  /**
+   * 操作列
+   * @param metaField
+   * @returns {Function}
+   */
+  renderForOperation:function (context,metaField) {
+  let btns=[];
+  _.forEach(metaField.btns,function (btn,index) {
+    var mergedBtn=operationManager.fillOperationByMb(context,btn);
+    btns.push(mergedBtn);
+  });
+  return function(h,params){
+    return h("meta-grid-operation-btn",{
+      props:{
+        btns:btns
+      },
+      on:{
+        click:function(btn){
+          btn.onclick.call(_.extend({"op":btn},context),_.extend({"checked":params.row},params));
         }
-      });
-    }
-  },
+      }
+    });
+  }
+},
 
   /**
    * 通用渲染

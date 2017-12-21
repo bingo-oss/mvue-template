@@ -19,7 +19,7 @@ module.exports=function (options) {
     var idFields=[];
     _.forEach(this.fields,function (metaField,key) {
       if(metaField.identity){
-        idFields.push(idFields);
+        idFields.push(metaField);
       }
     });
     return idFields;
@@ -120,5 +120,24 @@ module.exports=function (options) {
     var dataResource = Vue.resource(resourceName);
     return dataResource;
   }
+
+  /**
+   * 构造默认的创建表单Path
+   */
+  metaEntity.formPathForCreate=function () {
+    var path="/entities/"+_.snakeCase(this.name)+"/create";
+    return path;
+  }
+
+  /**
+   * 默认的修改表单Path
+   * @returns {string}
+   */
+  metaEntity.formPathForEdit=function () {
+    var path="/entities/"+_.snakeCase(this.name)+"/edit";
+    return path;
+  }
+
   return metaEntity;
 }
+

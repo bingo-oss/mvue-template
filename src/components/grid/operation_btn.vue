@@ -1,9 +1,9 @@
 <template>
 <div class="operation-btn-con">
     <a v-for="(btn,index) in btns" :key="index" @click="handleClick(btn)"
-    href="javascript:void(0)" class="btn" :title="btn.text" >
-        <i :class="(btn.class&&btn.class.indexOf('ivu-icon')>-1)?btn.class:('iconfont ' + btn.class)">
-        </i></a>
+    href="javascript:void(0)" class="btn" :title="btn.title" >
+      <Icon :type="btn.icon"></Icon>
+    </a>
 </div>
 </template>
 <script>

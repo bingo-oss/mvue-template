@@ -4,11 +4,11 @@
           <Button @click="refresh()" type="ghost" icon="refresh"></Button>
           <Button v-for="(toolbarBtn,index) in toolbar.btns"  :key="index"
                   type="primary"  :icon="toolbarBtn.icon"
-                  @click="toolbarBtn.callback.call($parent,checked,data)"
+                  @click="toolbarClick(toolbarBtn)"
                   >{{toolbarBtn.title}}</Button>
         <Input v-if="toolbar.quicksearch&&toolbar.quicksearch.fields"
                v-model="quicksearchKeyword" :placeholder="toolbar.quicksearch.placeholder"
-               icon="search" style="width: 150px" autofocus="true"/>
+               icon="search" style="width: 150px" :autofocus="true"/>
         </div>
     <div class="data-table-list">
         <Table :columns="innerColumns" :data="filteredData" @on-sort-change="handleSortChange">
@@ -36,52 +36,56 @@
 import metabase from 'libs/metadata/metabase';
 import  metaGrid from "libs/metadata/metagrid";
 export default {
-    props:{
-      "metaEntity":{
-          type: String,
-          required: false
-        },
-        "pagerSizes": {
-            type: Array,
-            required: false,
-            default: function () {
-                return ["5", "10", "20", "50", "100"];
+    props: {
+      "metaEntity": {
+        type: String,
+        required: false
+      },
+      "pagerSizes": {
+        type: Array,
+        required: false,
+        default: function () {
+          return ["5", "10", "20", "50", "100"];
+        }
+      },
+      "pager": {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      "toolbar": {
+        type: Object,
+        default: function () {
+          return {
+            hide: false,
+            btns: [],
+            quicksearch: {
+              fields: null,
+              placeholder: ""
             }
-        },
-        "pager": {
-            type: Boolean,
-            required: false,
-            default: true
-        },
-        "toolbar":{
-            type:Object,
-            default:function(){
-                return {
-                    hide:false,
-                    btns:[],
-                    quicksearch:{
-                        fields:null,
-                        placeholder:""
-                    }
-                };
-            }
-        },
-        "queryUrl": {//queryUrl和queryResource二选一
-            type: String,
-            required: false
-        },
-        "queryResource": {//代表vue-resource定义的resource，用来做数据查询
-            type: Object,
-            required: false
-        },
-        "queryOptions": {//queryUrl或者queryResource查询的参数，对应api query接口的参数，包括排序、分页等参数设置
-            type: Object,
-            required: false
-        },
-        "columns": {
-            type: Array,
-            required: true,
-        },
+          };
+        }
+      },
+      "formPath": {  //创建及修改表单的路径或路由名
+        type: String,
+        required: false
+      },
+      "queryUrl": {//queryUrl和queryResource二选一
+        type: String,
+        required: false
+      },
+      "queryResource": {//代表vue-resource定义的resource，用来做数据查询
+        type: Object,
+        required: false
+      },
+      "queryOptions": {//queryUrl或者queryResource查询的参数，对应api query接口的参数，包括排序、分页等参数设置
+        type: Object,
+        required: false
+      },
+      "columns": {
+        type: Array,
+        required: true,
+      },
     },
     data:function(){
         return {
@@ -137,10 +141,7 @@ export default {
     },
     mounted:function(){
         var _this=this;
-        var _columns=this.convertColumns();
-        _.forEach(_columns,function (col,index) {
-          _this.innerColumns.push(col);
-        });
+        metaGrid.initGridByMetabase(_this);
         this.reload();
         _this.$watch('pageSize', function (newVal, oldVal) {
             if (newVal != oldVal) {
@@ -212,7 +213,7 @@ export default {
                 _this.$emit("dataloaded", _this);
             });
       },
-      refresh:function () {//刷新列表
+        refresh:function () {//刷新列表
         this.reload();
       },
       //begin 分页相关方法
@@ -240,36 +241,6 @@ export default {
           this.reload();
         }
       },
-      //end 分页相关方法
-      //begin 转换columns
-      convertColumns(){
-        var _this=this;
-        var _columns=[];
-        var metaEntityObj=null;
-        if(!_.isEmpty(_this.metaEntity)){
-          metaEntityObj=metabase.findMetaEntity(_this.metaEntity);
-        }
-        var context={
-          grid:_this,
-          metaEntity:metaEntityObj
-        };
-        _.each(this.columns,function(col){
-            var _col=_.cloneDeep(col);
-            var metaParams=col.metaParams ||{};
-            var _col=_.omit(col,["metaParams"]);
-            var metaField={};
-            if(metaEntityObj!=null){
-              metaField=metaEntityObj.findField(_col.key) || {};
-            }
-            metaField=_.extend(metaField,metaParams);
-            var defaultCol=metaGrid.metaFieldToCol(context,metaField);
-            _col=_.extend(defaultCol,_col);
-            _columns.push(_col);
-        });
-        return _columns;
-      },
-
-      //end 转换columns
       //begin 远程排序
       handleSortChange({column,key,order}){
           if(order=="normal"){
@@ -280,6 +251,15 @@ export default {
           this.reload();
       },
       //end 远程排序
+      //
+      toolbarClick:function (btn) {
+          var _self=this;
+         var context={
+           grid:_self,
+           op:btn,
+         };
+        btn.onclick.call(context,{checked:_self.checked});
+      }
     }
 }
 </script>
