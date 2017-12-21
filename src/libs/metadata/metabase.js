@@ -203,18 +203,13 @@ function fillInputTypeParams(metaField,property) {
   if(_.isNaN(property["format"])){
     metaField.inputTypeParams["format"]=property["format"];
   }
-  if(_.isNaN(property["x-options"])){
-    var options=[];
-    _.forEach(property["x-options"],function(items,key){
-      if(key!="items"){
-        return;
-      }
-      _.forEach(items,function (item,index) {
-        options.push({
-          id:item["value"],
-          text:item["title"],
-          chcked:false
-        });
+  if(property["x-options"]&&property["x-options"].items){
+    let options=[];
+    _.each(property["x-options"].items,function (item,index) {
+      options.push({
+        id:item.value,
+        text:item.title,
+        checked:metaField.default==item.value?true:false
       });
     });
     metaField.inputTypeParams["options"]=options;

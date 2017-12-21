@@ -54,10 +54,13 @@ export default {
                 let _model=Utils.reduceModelForUpdate(_this.model);
                 _this.dataResource.update({id:_this.model.id},_model).then(function({data}){
                     iview$Message.success('编辑成功');
+                    _this.$emit("on-edited");
                 });
             }else{//新建
+            debugger
                 _this.dataResource.save(_this.model).then(function({data}){
                     iview$Message.success('保存成功');
+                    _this.$emit("on-created");
                 });
             }
         },
@@ -71,6 +74,7 @@ export default {
                 onOk: () => {
                     _this.dataResource.delete(delParams).then(function(res){
                         iview$Message.success('删除成功');
+                        _this.$emit("on-deleted");
                     });
                 }
             });

@@ -69,7 +69,7 @@ export default {
     methods:{
         //表单记录扩展数据填充，如选择用户之后用户名称存储、选项类型其他选项对应的填写值等
         exDataChanged:function(newValue,dataField,exDataKey){
-            this.$emit("exDataChanged",newValue,dataField,exDataKey);
+            this.$parent.$emit("exDataChanged",newValue,dataField,exDataKey);
         },
         //初始化字段组件的验证规则
         initValidation: function(validator,formItem){

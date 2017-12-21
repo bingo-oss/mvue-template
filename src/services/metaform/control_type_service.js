@@ -219,6 +219,11 @@ function buildFormItemByMetaField(metaField){
             min:metaField.inputTypeParams["minLength"]
         };
     }
+    for(let type of allType){
+        if(type.accept(componentType)&&type.fillComponentParams){
+            type.fillComponentParams(formItem,metaField);
+        }
+    }
     return formItem;
 }
 //重新获取下一个字段名

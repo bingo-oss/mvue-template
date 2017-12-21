@@ -104,7 +104,11 @@ module.exports=function (options) {
     var model={};
     _.forEach(this.fields,function (metaField,key) {
       if(!metaField.identity&&!_.includes(["createdAt","updatedAt","createdBy","updatedBy"],metaField.semantics)){
-        model[key]=metaField.default;
+        if(metaField.inputTypeParams["options"]){//选项类型默认值由options的checked属性指定
+          model[key]=null;
+        }else{
+          model[key]=metaField.default;
+        }
       }
     });
     return model;

@@ -1,4 +1,5 @@
 const uuidv1 = require('uuid/v1');
+import constants from 'services/metaform/constants'
 
 var defaultValue=[
     {id:uuidv1(),text:"选项1",children:[]},
@@ -33,7 +34,8 @@ function formatData(componentType,item,metaField){
     if(!origin){
         return "";
     }
-    var $data=(item.$data&&item.$data[fieldName])||{};
+    let rkey=constants.entityModelRedundantKey;
+    var $data=(item[rkey]&&item[rkey][fieldName])||{};
     let optionTexts=[];
     _.each(origin,function(v){
       let optionText=$data.options&&$data.options[v];

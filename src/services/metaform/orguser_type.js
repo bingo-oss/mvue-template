@@ -1,3 +1,4 @@
+import constants from 'services/metaform/constants'
 var orgUserTypes={
     SingleUserSelect:{ 
         id: "SingleUserSelect", 
@@ -74,7 +75,8 @@ function formatData(componentType,item,metaField){
     if(!origin){
         return "";
     }
-    var $data=(item.$data&&item.$data[fieldName])||{};
+    let rkey=constants.entityModelRedundantKey;
+    var $data=(item[rkey]&&item[rkey][fieldName])||{};
     var result="";
     if(orgUserTypes.SingleUserSelect.id===componentType){
         result= $data.user&&$data.user[origin]&&$data.user[origin].name;

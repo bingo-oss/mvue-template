@@ -1,3 +1,4 @@
+import constants from 'services/metaform/constants'
 var types={
     RefEntity:{ 
         id: "RefEntity", 
@@ -22,7 +23,8 @@ function formatData(componentType,item,metaField){
     if(!origin){
         return "";
     }
-    var $data=item.$data&&item.$data[fieldName];
+    let rkey=constants.entityModelRedundantKey;
+    var $data=item[rkey]&&item[rkey][fieldName];
     var titleField=metaField.inputTypeParams&&metaField.inputTypeParams.titleField;
     titleField=titleField||"name";
     var result= $data.refEntity&&$data.refEntity[origin]&&$data.refEntity[origin].name;

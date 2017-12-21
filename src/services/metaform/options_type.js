@@ -1,4 +1,5 @@
 const uuidv1 = require('uuid/v1');
+import constants from 'services/metaform/constants'
 //定义基础组件：选项类型
 var optionsTypes={
     RadioButton:{ 
@@ -81,7 +82,8 @@ function formatData(componentType,item,metaField){
     if(!origin){
         return "";
     }
-    var $data=(item.$data&&item.$data[fieldName])||{};
+    let rkey=constants.entityModelRedundantKey;
+    var $data=(item[rkey]&&item[rkey][fieldName])||{};
     if(isSingleOption(componentType)){//单选
         let optionText=$data.options&&$data.options[origin];
         return optionText||origin;
@@ -94,6 +96,13 @@ function formatData(componentType,item,metaField){
         return optionTexts.join(",")||origin.join(",");
     }
 }
+//由swagger.json生成的metaField构造组件参数
+function fillComponentParams(formItem,metaField){
+    var options=metaField.inputTypeParams["options"];
+    if(options){
+        formItem.componentParams.options=_.cloneDeep(options);
+    }
+}
 export default{
     types:optionsTypes,
     componentParams:componentParams,
@@ -101,5 +110,6 @@ export default{
     accept:accept,
     isSingleSelect:isSingleSelect,
     isSingleOption:isSingleOption,
-    formatData:formatData
+    formatData:formatData,
+    fillComponentParams:fillComponentParams
 }
