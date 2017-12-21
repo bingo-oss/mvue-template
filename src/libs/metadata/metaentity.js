@@ -109,5 +109,12 @@ module.exports=function (options) {
     });
     return model;
   }
+  metaEntity.dataResource=function(){
+    //构造实体数据crud操作的vue-resource对象
+    var pathname=_.trim(this.resourceUrl,'/');
+    var resourceName=pathname+'{/id}';
+    var dataResource = Vue.resource(resourceName);
+    return dataResource;
+  }
   return metaEntity;
 }

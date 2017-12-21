@@ -23,12 +23,8 @@ export default {
     },
     data:function(){
         var metaEntity=metabase.findMetaEntity(this.entityName);
-        //构造实体数据crud操作的vue-resource对象
-        var pathname=_.trim(metaEntity.resourceUrl,'/');
-        var resourceName=pathname+'{/id}';
-        var dataResource = Vue.resource(resourceName);
         return {
-            dataResource:dataResource,
+            dataResource:metaEntity.dataResource(),
             changedQueue:[],//智能验证变化队列
             validator:this.$parent.$validator,
             metaEntity:metaEntity
