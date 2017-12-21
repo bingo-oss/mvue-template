@@ -86,6 +86,14 @@ module.exports=function (options) {
     });
     return relation;
   }
-
+  metaEntity.getDefaultModel=function(){
+    var model={};
+    _.forEach(this.fields,function (metaField,key) {
+      if(!metaField.identity&&!_.includes(["createdAt","updatedAt","createdBy","updatedBy"],metaField.semantics)){
+        model[key]=metaField.default;
+      }
+    });
+    return model;
+  }
   return metaEntity;
 }

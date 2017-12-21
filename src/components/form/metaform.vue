@@ -3,8 +3,8 @@
         <slot></slot>
         <div class="form-toolbar" slot="toolbar">
             <button class="ivu-btn ivu-btn-text" type="button"  @click.stop.prevent="handleCancel">取消</button>
-            <button type="button" class="ivu-btn ivu-btn-primary" @click.stop.prevent="saveFormData"><span>保存</span></button>
-            <button class="btn btn-danger" type="button" v-if="formData.id" @click.stop.prevent="onDelete">删除</button>
+            <button type="button" class="ivu-btn ivu-btn-primary" @click.stop.prevent="saveModel"><span>保存</span></button>
+            <button class="btn btn-danger" type="button" v-if="model.id" @click.stop.prevent="onDelete">删除</button>
         </div>
     </div>
 </template>
@@ -12,7 +12,7 @@
 import metabase from 'libs/metadata/metabase';
 export default {
     props:{
-        formData:{
+        model:{
             type:Object,
             required:true
         },
@@ -22,7 +22,6 @@ export default {
         }
     },
     data:function(){
-        debugger
         var metaEntity=metabase.findMetaEntity(this.entityName);
         //构造实体数据crud操作的vue-resource对象
         var pathname=_.trim(metaEntity.resourceUrl,'/');
@@ -42,12 +41,12 @@ export default {
         doValidation:function(callback){
             var _this=this;
             //启用智能校验
-            Utils.smartValidate(_this,this.formData,this.$validator,function(){
+            Utils.smartValidate(_this,this.model,this.validator,function(){
                 callback&&callback();
             });
         },
-        saveFormData:function(){
-            console.log(this.formData);
+        saveModel:function(){
+            console.log(this.model);
             var _this=this;
             this.doValidation(function(){
                 _this.doSave();
@@ -55,20 +54,20 @@ export default {
         },
         doSave(){
             var _this=this;
-            if(_this.formData.id){//更新
-                let _formData=Utils.reduceModelForUpdate(_this.formData);
-                _this.dataResource.update({id:_this.formData.id},_formData).then(function({data}){
+            if(_this.model.id){//更新
+                let _model=Utils.reduceModelForUpdate(_this.model);
+                _this.dataResource.update({id:_this.model.id},_model).then(function({data}){
                     iview$Message.success('编辑成功');
                 });
             }else{//新建
-                _this.dataResource.save(_this.formData).then(function({data}){
+                _this.dataResource.save(_this.model).then(function({data}){
                     iview$Message.success('保存成功');
                 });
             }
         },
         onDelete:function(){
             var _this = this;
-            var delParams={id:this.formData.id};
+            var delParams={id:this.model.id};
             var tips='确定删除吗?';
             iview$Modal.confirm({
                 title: '提示',

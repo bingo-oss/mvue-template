@@ -24,7 +24,6 @@ export default {
         }
     },
     data:function(){
-        debugger
         var entityName=this.entityName||this.$parent.entityName;
         var metaEntity=metabase.findMetaEntity(entityName);
         if(!metaEntity){
@@ -43,7 +42,6 @@ export default {
             return {};
         }
         var formItem=controlTypeService.buildFormItemByMetaField(metaField);
-        debugger
         this.initValidation(this.$parent.validator,formItem);
         return {
             innerValue:_.cloneDeep(this.value),

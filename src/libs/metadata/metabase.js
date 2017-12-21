@@ -124,6 +124,8 @@ function loadMetaEntityFromMode(context,modelName,model){
 
       metaEntity.relations[metaRelation.name]=metaRelation;
   });
+  //初始化实体模型数据
+  metaEntity.defaultModel=metaEntity.getDefaultModel();
   return metaEntity;
 }
 
@@ -134,20 +136,22 @@ function loadMetaEntityFromMode(context,modelName,model){
  * @param property
  */
 function loadMetaFieldFromProperty(context,propertyName,property){
+  debugger
   var metaField={
     name:propertyName,
-    title:property["title"],
+    title:property["description"]||propertyName,
     entityName:context.metaEntity.name,
     published:true,
     summary:property["description"],
     description:property["description"],
+    default:property["default"]||null,
     isSystem:true,
     isDisplay:true,
     displayOrder:0,
     identity:firstNotNaN(property["x-identity"],false),
     autoIncrement:false,
     unique:firstNotNaN(property["x-unique"],property["uniqueItems"],false),
-    required:false,
+    required:firstNotNaN(property["x-required"],false),
     creatable:firstNotNaN(property["x-creatable"],true),
     updatable:firstNotNaN(property["x-updatable"],property["readOnly"],true),
     sortable:firstNotNaN(property["x-sortable"],false),
@@ -167,10 +171,6 @@ function loadMetaFieldFromProperty(context,propertyName,property){
     relations:[],
     _property:property
   };
-  //设置required属性
-  if(context.model.required && _.includes(context.model.required,propertyName)){
-    metaField.required=true;
-  }
   //设置inputTypeParams
   fillInputTypeParams(metaField,property);
   return metaField;
