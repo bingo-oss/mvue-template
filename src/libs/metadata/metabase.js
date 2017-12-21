@@ -271,7 +271,11 @@ module.exports={
       return null;
     }
     var metaEntity= metabase.entities[metaEntityName.toLowerCase()];
-    return _.cloneDeep(metaEntity);
+    if(_.isEmpty(metaEntity)){
+      return null;
+    }
+    var metaEntityCloned =MetaEntityCls(metaEntity);
+    return metaEntityCloned;
   },
   /**
    * 获取所有实体

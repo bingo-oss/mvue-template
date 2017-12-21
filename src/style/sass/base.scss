@@ -215,11 +215,6 @@ body{
   padding: $dis20;
   @include position(relative);
 }
-.toolBar{
-  i{
-    margin-right: $dis3;
-  }
-}
 
 .inputBox{
   @include position(relative);

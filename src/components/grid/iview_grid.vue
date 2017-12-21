@@ -1,16 +1,14 @@
 <template>
 <div class="grid-con">
     <div class="toolBar" v-if="!toolbar.hide">
-            <a v-for="(toolbarBtn,index) in toolbar.btns" :key="index" href="javascript:void(0)"
-            class="btn btn-primary toolbar-btn" @click="toolbarBtn.callback.call($parent,checked,data)">
-               <i class="iconfont icon-jiahao1"
-               :class="(toolbarBtn.class&&toolbarBtn.class.indexOf('ivu-icon')>-1)?toolbarBtn.class:('iconfont ' + toolbarBtn.class)">
-               </i>{{toolbarBtn.title}}</a>
-            <span v-if="toolbar.quicksearch&&toolbar.quicksearch.fields" class="inputBox">
-                <input class="form-control" v-model="quicksearchKeyword" :placeholder="toolbar.quicksearch.placeholder" type="text">
-                <i class="iconfont icon-sousuo search"></i></span>
-            <button @click="refresh()" type="button" class="ivu-btn ivu-btn-primary ivu-btn-circle ivu-btn-icon-only" title="刷新">
-                <i class="ivu-icon ivu-icon-ios-refresh-empty" style="font-size:32px;"></i></button>
+          <Button @click="refresh()" type="ghost" icon="refresh"></Button>
+          <Button v-for="(toolbarBtn,index) in toolbar.btns"  :key="index"
+                  type="primary"  :icon="toolbarBtn.icon"
+                  @click="toolbarBtn.callback.call($parent,checked,data)"
+                  >{{toolbarBtn.title}}</Button>
+        <Input v-if="toolbar.quicksearch&&toolbar.quicksearch.fields"
+               v-model="quicksearchKeyword" :placeholder="toolbar.quicksearch.placeholder"
+               icon="search" style="width: 150px" autofocus="true"/>
         </div>
     <div class="data-table-list">
         <Table :columns="innerColumns" :data="filteredData" @on-sort-change="handleSortChange">
@@ -35,7 +33,6 @@
 </div>
 </template>
 <script>
-import controlTypeService from 'services/metaform/control_type_service';
 import metabase from 'libs/metadata/metabase';
 import  metaGrid from "libs/metadata/metagrid";
 export default {
@@ -69,28 +66,6 @@ export default {
                 };
             }
         },
-        /*"forceReload": {
-            type: Boolean,
-            required: false,
-            default: false
-        },
-        "showMultiSelect": {//全选框显示
-            type: Boolean,
-            required: false,
-            default: false
-        },
-        "singleSelect": {//是否单选
-            type: Boolean,
-            required: false,
-            default: false
-        },
-        "showCheckFun": {//每一行checkbox是否显示
-            type: Function,
-            required: false,
-            default: function () {
-            return true;
-            }
-        },*/
         "queryUrl": {//queryUrl和queryResource二选一
             type: String,
             required: false
@@ -109,9 +84,8 @@ export default {
         },
     },
     data:function(){
-        var _columns=this.convertColumns();
         return {
-            innerColumns:_columns,
+            innerColumns:[],
             data:[],//原始数据
             checked:[],//已经选择的数据
             quicksearchKeyword:"",//快捷查询输入的值
@@ -163,6 +137,10 @@ export default {
     },
     mounted:function(){
         var _this=this;
+        var _columns=this.convertColumns();
+        _.forEach(_columns,function (col,index) {
+          _this.innerColumns.push(col);
+        });
         this.reload();
         _this.$watch('pageSize', function (newVal, oldVal) {
             if (newVal != oldVal) {
@@ -265,13 +243,16 @@ export default {
       //end 分页相关方法
       //begin 转换columns
       convertColumns(){
-          debugger;
         var _this=this;
         var _columns=[];
         var metaEntityObj=null;
         if(!_.isEmpty(_this.metaEntity)){
           metaEntityObj=metabase.findMetaEntity(_this.metaEntity);
         }
+        var context={
+          grid:_this,
+          metaEntity:metaEntityObj
+        };
         _.each(this.columns,function(col){
             var _col=_.cloneDeep(col);
             var metaParams=col.metaParams ||{};
@@ -281,12 +262,13 @@ export default {
               metaField=metaEntityObj.findField(_col.key) || {};
             }
             metaField=_.extend(metaField,metaParams);
-            var defaultCol=metaGrid.metaFieldToCol(metaField);
-          _col=_.extend(defaultCol,_col);
-          _columns.push(_col);
+            var defaultCol=metaGrid.metaFieldToCol(context,metaField);
+            _col=_.extend(defaultCol,_col);
+            _columns.push(_col);
         });
         return _columns;
       },
+
       //end 转换columns
       //begin 远程排序
       handleSortChange({column,key,order}){

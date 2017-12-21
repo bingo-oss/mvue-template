@@ -107,7 +107,7 @@
     border-radius: 4px;
   }
   .layout-content-main{
-    padding: 10px;
+    padding: 0px;
   }
 
   .clearfix:after {

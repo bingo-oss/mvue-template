@@ -29,6 +29,7 @@
         queryResource:metaEntityResource,
         queryOptions:{"orderby":"updatedAt desc"},
         columns:[
+          {type:"index",width:"50px"},
           {key:"name"},
           {key:"loginName"},
           {key:"gender"},
@@ -48,14 +49,14 @@
                   text:"删除",
                   class:"ivu-icon ivu-icon-trash-a",
                   actionFunc:function(params){
-                    var _this=this;
+                    var _self=this;
                     var item=params.row;
                     iview$Modal.confirm({
                       title: '提示',
                       content: '确定删除吗?',
                       onOk: () => {
                         metaEntityResource.delete({id: item.id,cascade_delete:true}).then(function (re) {
-                          _this.$refs.gridList.reload();
+                          _self.grid.reload();
                         });
                       }
                     });
@@ -68,6 +69,7 @@
           btns:[
             {
               title:"新建",
+              icon:"plus-round",
               callback:function(checked,dataItems){
                 router.push({name:"entityCreate",params:{prjId:projectId}});
               }

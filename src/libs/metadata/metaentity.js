@@ -27,6 +27,9 @@ module.exports=function (options) {
 
   metaEntity.findField=function (fieldName) {
     var field;
+    if(_.isEmpty(fieldName)){
+      return null;
+    }
     _.forEach(this.fields,function (metaField,key) {
       if(fieldName.toLowerCase()==key.toLowerCase()){
         field=metaField;
