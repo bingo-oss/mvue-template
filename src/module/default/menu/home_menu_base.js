@@ -11,6 +11,14 @@ var homeMenu = [
         link: {
           name: 'devGuide'
         }
+      },
+      {
+        id: "0002",
+        title: '用户管理',
+        icon: 'iconfont icon-order',
+        link: {
+          name: 'userList'
+        }
       }
     ]
   },

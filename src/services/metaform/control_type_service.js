@@ -253,6 +253,7 @@ function switchableComponents(formItem){
     }
     return false;
 };
+
 export default{
     switchableComponents:switchableComponents,
     toggleComponent:toggleComponent,
