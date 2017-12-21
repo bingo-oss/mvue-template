@@ -1,6 +1,7 @@
 var session=require("libs/security/session");
+var Config=require("src/config/config.js");
 module.exports=function CustomVueResource(Vue,VueResource){
-    //Vue.http.options.root = _.trimEnd(Config.contextPath.serverUrl,"/");
+    Vue.http.options.root = _.trimEnd(Config.getApiBaseUrl(),"/");
     Vue.resource.actions.update={ method: 'PATCH' };
     Vue.http.interceptors.push(function(request, next) {
         var _this=this;

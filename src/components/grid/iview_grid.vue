@@ -3,7 +3,7 @@
     <div class="toolBar" v-if="!toolbar.hide">
             <a v-for="(toolbarBtn,index) in toolbar.btns" :key="index" href="javascript:void(0)"
             class="btn btn-primary toolbar-btn" @click="toolbarBtn.callback.call($parent,checked,data)">
-               <i class="iconfont icon-jiahao1" 
+               <i class="iconfont icon-jiahao1"
                :class="(toolbarBtn.class&&toolbarBtn.class.indexOf('ivu-icon')>-1)?toolbarBtn.class:('iconfont ' + toolbarBtn.class)">
                </i>{{toolbarBtn.title}}</a>
             <span v-if="toolbar.quicksearch&&toolbar.quicksearch.fields" class="inputBox">
@@ -36,8 +36,14 @@
 </template>
 <script>
 import controlTypeService from 'services/metaform/control_type_service';
+import metabase from 'libs/metadata/metabase';
+import  metaGrid from "libs/metadata/metagrid";
 export default {
     props:{
+      "metaEntity":{
+          type: String,
+          required: false
+        },
         "pagerSizes": {
             type: Array,
             required: false,
@@ -259,90 +265,27 @@ export default {
       //end 分页相关方法
       //begin 转换columns
       convertColumns(){
-          //var _columns=_.cloneDeep(this.columns);
+          debugger;
         var _this=this;
         var _columns=[];
+        var metaEntityObj=null;
+        if(!_.isEmpty(_this.metaEntity)){
+          metaEntityObj=metabase.findMetaEntity(_this.metaEntity);
+        }
         _.each(this.columns,function(col){
             var _col=_.cloneDeep(col);
-            //如果column有定义额外的metaParams参数，则采用自定义的渲染方式
-            if(col.metaParams&&(col.metaParams.type||col.metaParams.metaField)){
-                if(col.metaParams.metaField//图片上传显示
-                    &&controlTypeService.isPictureUpload(col.metaParams.metaField.inputType)){
-                        _col.render=function(h,params){
-                            return h("meta-grid-pictures",{
-                                props:{
-                                    params:col.metaParams,
-                                    item:params.row
-                                }
-                            });
-                        }
-                }else if(col.metaParams.metaField//文件上传显示
-                    &&controlTypeService.isFileUpload(col.metaParams.metaField.inputType)){
-                                _col.render=function(h,params){
-                                    return h("meta-grid-files",{
-                                        props:{
-                                            params:col.metaParams,
-                                            item:params.row
-                                        }
-                                    });
-                                }
-                }else if(col.metaParams.type==="imgTitle"){//标题列特殊处理
-                    _col.render=function(h,params){
-                        return h("meta-grid-img-title",{
-                            props:{
-                                params:col.metaParams,
-                                item:params.row
-                            },
-                            on:{
-                                click:function(){
-                                    col.metaParams.actionFunc&&col.metaParams.actionFunc.call(_this.$parent,params);
-                                }
-                            }
-                        });
-                    }
-                }else if(col.metaParams.type==="operation"){//操作列特殊处理
-                    let btns=col.metaParams.btns;
-                    _col.render=function(h,params){
-                        return h("meta-grid-operation-btn",{
-                            props:{
-                                btns:btns
-                            },
-                            on:{
-                                click:function(btn){
-                                    btn.actionFunc.call(_this.$parent,params);
-                                }
-                            }
-                        });
-                    }
-                }else{
-                    _col.render=function(h,params){
-                        var metaField=_this.columnMetaField(col);
-                        var value=controlTypeService.formatData(params.row,metaField);
-                        return h("meta-grid-render-html",{
-                            props:{
-                                value:value
-                            }
-                        });
-                    }
-                }
+            var metaParams=col.metaParams ||{};
+            var _col=_.omit(col,["metaParams"]);
+            var metaField={};
+            if(metaEntityObj!=null){
+              metaField=metaEntityObj.findField(_col.key) || {};
             }
-            _columns.push(_col);
+            metaField=_.extend(metaField,metaParams);
+            var defaultCol=metaGrid.metaFieldToCol(metaField);
+          _col=_.extend(defaultCol,_col);
+          _columns.push(_col);
         });
         return _columns;
-      },
-      columnMetaField(column){//由column计算出或者构造出对应的metaField
-        var metaField=null;
-        if(column.metaParams&&column.metaParams.metaField){
-            metaField=column.metaParams.metaField;
-        }else{
-            metaField={
-                name:column.key
-            };
-            if(column.metaParams.type==="date"){
-                metaField.inputType="DateTime";
-            }
-        }
-        return metaField;
       },
       //end 转换columns
       //begin 远程排序

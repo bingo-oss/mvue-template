@@ -111,10 +111,10 @@ function loadMetaEntityFromMode(context,modelName,model){
     _.forEach(metaRelation.joinFields,function(joinField,index){
       var relationField=null;
       if(_.isString(joinField)){
-        var relationField=metaEntity[joinField];
+        relationField=metaEntity.fields[joinField];
       }
       if(relationField==null && _.isPlainObject(joinField) && !_.isEmpty(joinField["local"])){
-        var relationField=metaEntity[joinField["local"]];
+        relationField=metaEntity.fields[joinField["local"]];
       }
       if(relationField!=null){
         relationField.isRelationField=true;
@@ -134,9 +134,10 @@ function loadMetaEntityFromMode(context,modelName,model){
  * @param property
  */
 function loadMetaFieldFromProperty(context,propertyName,property){
+
   var metaField={
     name:propertyName,
-    title:property["title"],
+    title:firstNotNaN(property["title"],property["description"],propertyName),
     entityName:context.metaEntity.name,
     published:true,
     summary:property["description"],
@@ -248,7 +249,7 @@ function loadMetaRelationFromProperty(context,propertyName,property){
 function firstNotNaN(){
   var reval;
   _.forEach(arguments,function (item,index) {
-    if(!_.isNaN(item)){
+    if(!_.isUndefined(item)){
       reval=item;
       return false;
     }
@@ -261,15 +262,28 @@ function firstNotNaN(){
 initMetabase();
 
 module.exports={
+  /**
+   * 根据实体名，查询实体
+   * @param metaEntityName
+   * @returns {*}
+   */
   findMetaEntity:function (metaEntityName) {
     if(!metaEntityName){
       return null;
     }
-    return metabase.entities[metaEntityName.toLowerCase()];
+    var metaEntity= metabase.entities[metaEntityName.toLowerCase()];
+    return _.cloneDeep(metaEntity);
   },
+  /**
+   * 获取所有实体
+   * @returns {null}
+   */
   entities:function () {
     return metabase.entities;
   },
+  /**
+   * 刷新实体缓存
+   */
   refresh:function () {
     metabase.synced=false;
     initMetabase();

@@ -23,7 +23,15 @@ var data = [
         name: "entityManage",
         component: "metabase/home.vue",
         path: "metabase/index"
-      }
+      },
+		{
+          meta: {
+            requireAuth: true
+          },
+          name:"userList",
+          component: "example/user_list.vue",
+          path:"example/user_list"
+        }
     ]
   },
   {

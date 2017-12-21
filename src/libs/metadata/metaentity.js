@@ -25,6 +25,17 @@ module.exports=function (options) {
     return idFields;
   };
 
+  metaEntity.findField=function (fieldName) {
+    var field;
+    _.forEach(this.fields,function (metaField,key) {
+      if(fieldName.toLowerCase()==key.toLowerCase()){
+        field=metaField;
+        return false;
+      }
+    });
+    return field;
+  }
+
   /**
    * 第一个语义为的title字段
    */
@@ -34,7 +45,7 @@ module.exports=function (options) {
 
   /**
    * 获取每一个语义为semantics的字段
-   * @param semantics
+   * @param semantics 语义，语义有：title | summary | description | createdAt | updatedAt | createdBy | updatedBy
    * @returns {*}
    */
   metaEntity.firstSemanticsField=function (semantics) {
