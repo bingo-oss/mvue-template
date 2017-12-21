@@ -125,7 +125,8 @@ module.exports=function (options) {
    * 构造默认的创建表单Path
    */
   metaEntity.formPathForCreate=function () {
-    var path="/entities/"+_.snakeCase(this.name)+"/create";
+    var path="/entities/"+_.snakeCase(this.name);
+    //var path="entityForm";
     return path;
   }
 

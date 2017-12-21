@@ -19,10 +19,11 @@ function operationForCreate(context){
         alert("not implement,please set formPath");
         return ;
       }
-      if(path.indexOf('/')>0){
+
+      if(path.indexOf('/')>-1){
         router.push({path:path});
       }else{
-        router.push({name:path,params:{entity:context.metaEntity.name}});
+        router.push({name:path,params:{entityName:context.metaEntity.name}});
       }
     }
   };

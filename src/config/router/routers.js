@@ -10,8 +10,8 @@ var data = [
     name: "default",
     path: "/",
     component: "home/home.vue",
-    redirect:{
-      name:"devGuide"
+    redirect: {
+      name: "devGuide"
     },
     children: [
       {
@@ -24,14 +24,19 @@ var data = [
         component: "metabase/home.vue",
         path: "metabase/index"
       },
-		{
-          meta: {
-            requireAuth: true
-          },
-          name:"userList",
-          component: "example/user_list.vue",
-          path:"example/user_list"
-        }
+      {
+        meta: {
+          requireAuth: true
+        },
+        name: "userList",
+        component: "example/user_list.vue",
+        path: "example/user_list"
+      },
+      {
+        name: "entityForm",
+        component: "example/user_form.vue",
+        path: "entities/:entityName"
+      }
     ]
   },
   {
