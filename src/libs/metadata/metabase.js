@@ -139,7 +139,7 @@ function loadMetaFieldFromProperty(context,propertyName,property){
 
   var metaField={
     name:propertyName,
-    title:firstNotNaN(property["title"],property["description"],propertyName),
+    title:firstNotNaN(property["description"],propertyName),
     entityName:context.metaEntity.name,
     published:true,
     summary:property["description"],
