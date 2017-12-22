@@ -35,7 +35,7 @@ var data = [
       {
         name: "entityForm",
         component: "example/user_form.vue",
-        path: "entities/:entityName"
+        path: "entities/:entityName/create"
       }
     ]
   },

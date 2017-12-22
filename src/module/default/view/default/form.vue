@@ -4,13 +4,7 @@
     @exDataChanged="exDataChanged"
     @on-created="onCreated" 
     @on-deleted="onDeleted">
-        <meta-field name="name" v-model="model.name">
-        </meta-field>
-        <meta-field name="loginName" v-model="model.loginName">
-        </meta-field>
-        <meta-field name="password" v-model="model.password">
-        </meta-field>
-        <meta-field name="gender" v-model="model.gender">
+        <meta-field v-for="key in metaEntity.getDefaultFormFields()" :key="key" :name="key" v-model="model[key]">
         </meta-field>
     </meta-form>
 </div>

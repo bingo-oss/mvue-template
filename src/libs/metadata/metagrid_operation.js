@@ -35,36 +35,35 @@ function operationForCreate(context){
  * @param context
  */
 function operationForEdit(context){
-  var path=context.grid.formPath;
-  if(_.isEmpty(path) && !_.isEmpty(context.metaEntity)){
-    path=context.metaEntity.formPathForEdit();
-  }
   //计算id字段
-  var idFields=[];
+  var idField=null;
   if( !_.isEmpty(context.metaEntity)){
-    var idFields=context.metaEntity.getIdFields();
+    idField=context.metaEntity.getIdField();
   }
   var operation= {
     title:"修改",
     icon:"edit",
     onclick:function(params){
       var clickContext=this;
-      if(_.isEmpty(path)){
-        alert("not implement,please set formPath");
-        return ;
-      }
-      if(_.isEmpty(idFields)){
+      if(!idField){
         alert("entity:"+clickContext.metaEntity.name+" not set identity field");
         return;
       }
-      var id=params.row[idFields[0].name];
-      var queryParams={
-        id:id
+      var id=params.row[idField.name];
+      var path=context.grid.formPath;
+      if(_.isEmpty(path) && !_.isEmpty(context.metaEntity)){
+        //必须传入数据id构造编辑的路径
+        path=context.metaEntity.formPathForEdit(id);
+      }
+      //附加id和实体名到路径参数中
+      var params={
+        id:id,
+        entityName:context.metaEntity.name
       };
-      if(path.indexOf('/')>0){
-        router.push({path:path,query:queryParams});
+      if(path.indexOf('/')>-1){
+        router.push({path:path,params:params});
       }else{
-        router.push({name:path,query:queryParams});
+        router.push({name:path,params:params});
       }
     }
   };
@@ -76,9 +75,9 @@ function operationForDel(context) {
     resource=context.metaEntity.dataResource();
   }
   //计算id字段
-  var idFields=[];
+  var idField=null;
   if( !_.isEmpty(context.metaEntity)){
-    var idFields=context.metaEntity.getIdFields();
+    idField=context.metaEntity.getIdField();
   }
 
   var operation= {
@@ -89,12 +88,12 @@ function operationForDel(context) {
         alert("can't find delete action path");
         return;
       }
-      if(_.isEmpty(idFields)){
+      if(!idField){
         alert("entity:"+clickContext.metaEntity.name+" not set identity field");
         return;
       }
       var clickContext=this;
-      var id=params.row[idFields[0].name];
+      var id=params.row[idField.name];
       iview$Modal.confirm({
         title: '提示',
         content: '确定删除吗?',

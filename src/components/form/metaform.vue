@@ -4,7 +4,7 @@
         <div class="form-toolbar" slot="toolbar">
             <button class="ivu-btn ivu-btn-text" type="button"  @click.stop.prevent="handleCancel">取消</button>
             <button type="button" class="ivu-btn ivu-btn-primary" @click.stop.prevent="saveModel"><span>保存</span></button>
-            <button class="btn btn-danger" type="button" v-if="model.id" @click.stop.prevent="onDelete">删除</button>
+            <button class="btn btn-danger" type="button" v-if="id" @click.stop.prevent="onDelete">删除</button>
         </div>
     </div>
 </template>
@@ -27,7 +27,8 @@ export default {
             dataResource:metaEntity.dataResource(),
             changedQueue:[],//智能验证变化队列
             validator:this.$parent.$validator,
-            metaEntity:metaEntity
+            metaEntity:metaEntity,
+            id:this.$route.params.id
         };
     },
     methods:{
@@ -42,7 +43,6 @@ export default {
             });
         },
         saveModel:function(){
-            console.log(this.model);
             var _this=this;
             this.doValidation(function(){
                 _this.doSave();
@@ -50,15 +50,15 @@ export default {
         },
         doSave(){
             var _this=this;
-            if(_this.model.id){//更新
+            if(this.id){//更新
                 let _model=Utils.reduceModelForUpdate(_this.model);
-                _this.dataResource.update({id:_this.model.id},_model).then(function({data}){
+                _this.dataResource.update({id:this.id},_model).then(function({data}){
                     iview$Message.success('编辑成功');
                     _this.$emit("on-edited");
                 });
             }else{//新建
-            debugger
                 _this.dataResource.save(_this.model).then(function({data}){
+                    _this.id=data[_this.metaEntity.getIdField().name];
                     iview$Message.success('保存成功');
                     _this.$emit("on-created");
                 });
@@ -66,7 +66,7 @@ export default {
         },
         onDelete:function(){
             var _this = this;
-            var delParams={id:this.model.id};
+            var delParams={id:this.id};
             var tips='确定删除吗?';
             iview$Modal.confirm({
                 title: '提示',

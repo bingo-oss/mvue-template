@@ -62,7 +62,7 @@ function intiGridProperties(grid) {
   }
 
   if(_.isEmpty(grid.queryResource)){
-    grid.queryResource=metaEntityObj.dataResource;
+    grid.queryResource=metaEntityObj.dataResource();
   }
 }
 
@@ -78,6 +78,16 @@ function  initColumns(grid) {
     grid:grid,
     metaEntity:metaEntityObj
   };
+  //如果没有传递columns通过实体字段构造
+  if(!grid.columns&&metaEntityObj){
+    grid.columns=[];
+    let defaultFormFields=metaEntityObj.getDefaultFormFields();
+    _.each(defaultFormFields,function(fieldName){
+      let metaField=metaEntityObj.findField(fieldName);
+      let defaultCol=metaFieldToCol(context,metaField);
+      grid.columns.push(defaultCol);
+    });
+  }
   _.each(grid.columns,function(col){
     var metaParams=col.metaParams ||{};
     var _col=_.omit(col,["metaParams"]);

@@ -3,6 +3,8 @@ Vue.component('meta-grid-operation-btn',require("components/grid/operation_btn")
 Vue.component('meta-grid-img-title',require("components/grid/img_title"));
 Vue.component('meta-grid-pictures',require("components/grid/pictures"));
 Vue.component('meta-grid-files',require("components/grid/files"));
+Vue.component('meta-grid',require("components/grid/iview_grid.vue"));
+Vue.component('meta-childheader',require("components/childheader.vue"));
 
 Vue.component('MetaSingleLineText',require("components/form/control_tmpl/single_line_text")),
 Vue.component('MetaMultiLineText',require("components/form/control_tmpl/multi_line_text")),
