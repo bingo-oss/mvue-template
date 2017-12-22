@@ -61,8 +61,8 @@ function intiGridProperties(grid) {
     return;
   }
 
-  if(_.isEmpty(grid.queryResource)){
-    grid.queryResource=metaEntityObj.dataResource();
+  if(_.isEmpty(grid.innerQueryResource)){
+    grid.innerQueryResource=metaEntityObj.dataResource();
   }
 }
 
@@ -80,26 +80,26 @@ function  initColumns(grid) {
   };
   //如果没有传递columns通过实体字段构造
   if(!grid.columns&&metaEntityObj){
-    grid.columns=[];
     let defaultFormFields=metaEntityObj.getDefaultFormFields();
     _.each(defaultFormFields,function(fieldName){
       let metaField=metaEntityObj.findField(fieldName);
       let defaultCol=metaFieldToCol(context,metaField);
-      grid.columns.push(defaultCol);
+      grid.innerColumns.push(defaultCol);
+    });
+  }else{
+    _.each(grid.columns,function(col){
+      var metaParams=col.metaParams ||{};
+      var _col=_.omit(col,["metaParams"]);
+      var metaField={};
+      if(metaEntityObj!=null){
+        metaField=metaEntityObj.findField(_col.key) || {};
+      }
+      metaField=_.extend(metaField,metaParams);
+      var defaultCol=metaFieldToCol(context,metaField);
+      _col=_.extend(defaultCol,_col);
+      grid.innerColumns.push(_col);
     });
   }
-  _.each(grid.columns,function(col){
-    var metaParams=col.metaParams ||{};
-    var _col=_.omit(col,["metaParams"]);
-    var metaField={};
-    if(metaEntityObj!=null){
-      metaField=metaEntityObj.findField(_col.key) || {};
-    }
-    metaField=_.extend(metaField,metaParams);
-    var defaultCol=metaFieldToCol(context,metaField);
-    _col=_.extend(defaultCol,_col);
-    grid.innerColumns.push(_col);
-  });
 }
 
 function  initToolBar(grid) {

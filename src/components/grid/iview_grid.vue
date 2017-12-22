@@ -45,7 +45,7 @@ export default {
         type: Array,
         required: false,
         default: function () {
-          return ["5", "10", "20", "50", "100"];
+          return ["10", "20", "50", "100"];
         }
       },
       "pager": {
@@ -90,6 +90,7 @@ export default {
     data:function(){
         return {
             innerColumns:[],
+            innerQueryResource:this.queryResource,
             data:[],//原始数据
             checked:[],//已经选择的数据
             quicksearchKeyword:"",//快捷查询输入的值
@@ -158,7 +159,7 @@ export default {
     methods:{
         reload: function () {
             var _this = this;
-            if ((!_this.queryUrl) && (!_this.queryResource)) {
+            if ((!_this.queryUrl) && (!_this.innerQueryResource)) {
                 console.log("请配置远程查询地址queryUrl或者queryResource");
                 return;
             }
@@ -193,8 +194,8 @@ export default {
                 dataPromise=_this.$http.get(_this.queryUrl,{params:_queryOptions}).then(function(resp){
                     return resp;
                 });
-            }else if (!!_this.queryResource) {//传的是vue-resource对象
-                dataPromise=_this.queryResource.query(_queryOptions).then(function (resp) {
+            }else if (!!_this.innerQueryResource) {//传的是vue-resource对象
+                dataPromise=_this.innerQueryResource.query(_queryOptions).then(function (resp) {
                    return resp;
                 });
             }
