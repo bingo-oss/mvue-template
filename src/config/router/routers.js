@@ -33,9 +33,9 @@ var data = [
         path: "example/user_list"
       },
       {
-        name: "entityForm",
+        name: "userForm",
         component: "example/user_form.vue",
-        path: "entities/:entityName/create"
+        path: "entities/user/create"
       }
     ]
   },

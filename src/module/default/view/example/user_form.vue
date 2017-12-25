@@ -8,8 +8,6 @@
         </meta-field>
         <meta-field name="loginName" v-model="model.loginName">
         </meta-field>
-        <meta-field name="password" v-model="model.password">
-        </meta-field>
         <meta-field name="gender" v-model="model.gender">
         </meta-field>
     </meta-form>
@@ -18,7 +16,11 @@
 <script>
 import formBase from 'services/metaform/form_base'
 export default {
-    mixins:[formBase]
+    mixins:[formBase],
+    data:function(){
+        //覆盖路由时必须通过这种方式传递实体名称
+        return this.setEntityName("user");
+    }
 }
 </script>
 

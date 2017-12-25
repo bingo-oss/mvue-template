@@ -128,16 +128,22 @@ export default {
         }
     },
     watch: {
-      quicksearchKeyword: function () {
-        var _this = this;
-        if (_this.pager) {
-          //智能搜索包装器，在用户快速输入时先不查询，直到用户输入完毕再查询
-          Utils.smartSearch(_this, function () {
-            _this.pageIndex = 1;
-            _this.reload();
-          });
+        quicksearchKeyword: function () {
+            var _this = this;
+            if (_this.pager) {
+            //智能搜索包装器，在用户快速输入时先不查询，直到用户输入完毕再查询
+            Utils.smartSearch(_this, function () {
+                _this.pageIndex = 1;
+                _this.reload();
+            });
+            }
+        },
+        metaEntity:function(){
+            if(this.metaEntity){
+                metaGrid.initGridByMetabase(this);
+                this.reload();
+            }
         }
-      },
     },
     mounted:function(){
         var _this=this;

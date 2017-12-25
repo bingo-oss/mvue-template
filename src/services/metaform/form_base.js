@@ -2,7 +2,7 @@ import metabase from 'libs/metadata/metabase'
 import constants from 'services/metaform/constants'
 export default{
     data:function(){
-        var entityName=this.$route.params.entityName;
+        var entityName=this.$route.params.entityName||this.getEntityName();
         var metaEntity=metabase.findMetaEntity(entityName);
         var model=_.cloneDeep(metaEntity.defaultModel);
         return {
@@ -38,7 +38,7 @@ export default{
             router.push({
                 name:'defaultEditForm',
                 params:{
-                    entityName:this.$route.params.entityName,
+                    entityName:this.entityName,
                     id:this.$refs.form.id
                 }
             });
@@ -47,9 +47,16 @@ export default{
             router.push({
                 name:'defaultEntityList',
                 params:{
-                    entityName:this.$route.params.entityName
+                    entityName:this.entityName
                 }
             });
+        },
+        setEntityName(entityName){
+            this._entityName=entityName;
+            return {entityName:entityName};
+        },
+        getEntityName(){
+            return this._entityName;
         }
     }
 }

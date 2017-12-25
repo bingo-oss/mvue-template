@@ -155,7 +155,6 @@ module.exports=function (options) {
    */
   metaEntity.formPathForCreate=function () {
     var path=`/entities/${this.name}/create`;
-    //var path="entityForm";
     return path;
   }
 

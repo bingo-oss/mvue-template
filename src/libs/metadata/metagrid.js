@@ -65,7 +65,7 @@ function intiGridProperties(grid) {
     return;
   }
 
-  if(_.isEmpty(grid.innerQueryResource)){
+  if(_.isEmpty(grid.queryResource)&&_.isEmpty(grid.queryUrl)){
     grid.innerQueryResource=metaEntityObj.dataResource();
   }
 }

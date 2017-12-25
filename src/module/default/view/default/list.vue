@@ -23,6 +23,14 @@ export default {
             },
             entityName:entityName
         }
+    },
+    beforeRouteUpdate: function (to, from, next) {
+        var entityName=to.params.entityName;
+        var metaEntity=metabase.findMetaEntity(entityName);
+        this.entityName=entityName;
+        this.header.title=metaEntity.title;
+        this.header.description=metaEntity.description;
+        next();
     }
 };
 </script>
