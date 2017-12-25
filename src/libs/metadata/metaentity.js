@@ -129,6 +129,18 @@ module.exports=function (options) {
     return fields;
   }
   /**
+   * 构造实体默认视图显示的所有字段
+   */
+  metaEntity.getDefaultViewFields=function(){
+    var fields=[];
+    _.forEach(this.fields,function (metaField,key) {
+      if(!metaField.identity&&!_.includes(["redundant"],metaField.semantics)){
+        fields.push(key);
+      }
+    });
+    return fields;
+  }
+  /**
    * 构造实体数据crud操作的vue-resource对象
    */
   metaEntity.dataResource=function(){
