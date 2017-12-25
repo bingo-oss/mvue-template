@@ -2,9 +2,7 @@
   <div>
     <meta-childheader :show="header"></meta-childheader>
     <div class="pageMain">
-      <meta-grid ref="gridList"
-            :meta-entity="entityName"
-      >
+      <meta-grid ref="gridList" :meta-entity="entityName">
       </meta-grid>
     </div>
   </div>

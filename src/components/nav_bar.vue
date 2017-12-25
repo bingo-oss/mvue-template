@@ -54,21 +54,34 @@ export default {
     },
     mounted: function() {
         this.filterMenusWithPermissions();
-        //TODO：没效的样子
-        /*先注释掉，会导致浏览器直接输入路径无法到达路由
-        var activeMenu=null;
-        for (var i = 0; i < this.localMenus.length; i++) {
-            this.openNames.push(this.localMenus[i].id);
-            if(i==0){
-              activeMenu=this.localMenus[i].children[0];
-            }
-        }
-        if(activeMenu!=null){
-          this.activeName=activeMenu.link.name;
-          router.push({name:activeMenu.link.name});
-        }*/
+        this.setActiveMenu();
+    },
+    beforeRouteUpdate: function (to, from, next) {//每次路由变化，需要重新设置导航菜单选中
+        this.setActiveMenu();
+        next();
     },
     methods: {
+        setActiveMenu(){//设置导航菜单选中
+            let _this=this;
+            let menuMap={};
+            function buildMenuMap(_menus){
+                _.each(_menus,function(menu){
+                    if(menu.link&&menu.link.name){
+                        menuMap[menu.link.name]=menu.link.name;
+                    }
+                    if(menu.children){
+                        buildMenuMap(menu.children,menuMap);
+                    }
+                })
+            }
+            buildMenuMap(this.localMenus,menuMap);
+            _.each(this.$route.matched,function(m){
+                if(menuMap[m.name]){
+                    _this.activeName=m.name;
+                    return false;
+                }
+            });
+        },
         doShrink: function() {
             this.shrinkNavBar = !this.shrinkNavBar;
             if (this.shrinkNavBar) {
