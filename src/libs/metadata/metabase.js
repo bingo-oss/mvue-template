@@ -83,7 +83,7 @@ function loadMetaEntityFromMode(context,modelName,model){
   var opt={
     name:modelName,
     title:model.title,
-    description:modelName.description,
+    description:model.description,
     _model:model,
     resourceUrl:`${Config.getApiBaseUrl()}/${entityPath}`
   };
@@ -262,6 +262,7 @@ module.exports={
    * @returns {*}
    */
   findMetaEntity:function (metaEntityName) {
+    debugger
     if(!metaEntityName){
       return null;
     }
