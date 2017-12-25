@@ -1,13 +1,13 @@
 <template>
 <div class="grid-con">
-    <div class="toolBar" v-if="!toolbar.hide">
+    <div class="toolBar" v-if="!innerToolbar.hide">
           <Button @click="refresh()" type="ghost" icon="refresh"></Button>
-          <Button v-for="(toolbarBtn,index) in toolbar.btns"  :key="index"
+          <Button v-for="(toolbarBtn,index) in innerToolbar.btns"  :key="index"
                   type="primary"  :icon="toolbarBtn.icon"
                   @click="toolbarClick(toolbarBtn)"
                   >{{toolbarBtn.title}}</Button>
-        <Input v-if="toolbar.quicksearch&&toolbar.quicksearch.fields"
-               v-model="quicksearchKeyword" :placeholder="toolbar.quicksearch.placeholder"
+        <Input v-if="innerToolbar.quicksearch&&innerToolbar.quicksearch.fields"
+               v-model="quicksearchKeyword" :placeholder="innerToolbar.quicksearch.placeholder"
                icon="search" style="width: 150px" :autofocus="true"/>
         </div>
     <div class="data-table-list">
@@ -54,17 +54,7 @@ export default {
         default: true
       },
       "toolbar": {
-        type: Object,
-        default: function () {
-          return {
-            hide: false,
-            btns: [],
-            quicksearch: {
-              fields: null,
-              placeholder: ""
-            }
-          };
-        }
+        type: Object
       },
       "formPath": {  //创建及修改表单的路径或路由名
         type: String,
@@ -91,6 +81,15 @@ export default {
         return {
             innerColumns:[],
             innerQueryResource:this.queryResource,
+            innerQueryOptions:_.cloneDeep(this.queryOptions),
+            innerToolbar:{
+                    hide: (this.toolbar&&this.toolbar.hide)||false,
+                    btns: (this.toolbar&&this.toolbar.btns)||[],
+                    quicksearch: (this.toolbar&&this.toolbar.quicksearch)||{
+                        fields: null,
+                        placeholder: ""
+                    }
+                },
             data:[],//原始数据
             checked:[],//已经选择的数据
             quicksearchKeyword:"",//快捷查询输入的值
@@ -113,7 +112,7 @@ export default {
                 let _filteredData=[];
                 _.each(this.data, function (item) {
                     var result = false;
-                    _.each(_this.toolbar.quicksearch.fields, function (searchField) {
+                    _.each(_this.innerToolbar.quicksearch.fields, function (searchField) {
                         var contains = item[searchField].indexOf(_this.quicksearchKeyword) != -1;
                         if (contains) {
                             result = true;
@@ -163,7 +162,7 @@ export default {
                 console.log("请配置远程查询地址queryUrl或者queryResource");
                 return;
             }
-            var _queryOptions = _this.queryOptions ? _.cloneDeep(_this.queryOptions) : {}; //这里是克隆查询参数，避免查询参数污
+            var _queryOptions = _this.innerQueryOptions ? _.cloneDeep(_this.innerQueryOptions) : {}; //这里是克隆查询参数，避免查询参数污
             if (_this.pager) {//如果支持分页
                 if (!_this.pageIndex) {
                     _this.pageIndex = 1;
@@ -173,9 +172,9 @@ export default {
                 _queryOptions.total = true;
             }
             //快捷搜索条件添加
-            if(_this.toolbar.quicksearch&&_this.toolbar.quicksearch.fields&&_this.quicksearchKeyword){
+            if(_this.innerToolbar.quicksearch&&_this.innerToolbar.quicksearch.fields&&_this.quicksearchKeyword){
                 let qsFilters = [];
-                _.each(_this.toolbar.quicksearch.fields, function (sField) {
+                _.each(_this.innerToolbar.quicksearch.fields, function (sField) {
                     qsFilters.push(`${sField} like %${_this.quicksearchKeyword}%`);
                 });
                 qsFilters=qsFilters.join(" or ");
