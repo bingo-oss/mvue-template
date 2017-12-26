@@ -21,10 +21,31 @@ export default {
         },
         entityName:{
             type:String
+        },
+        title:{
+            type:String
         }
     },
     data:function(){
-        var entityName=this.entityName||this.$parent.entityName;
+        var entityName=this.entityName;
+        var form=this.getParentForm();
+        if(!form){
+            iview$Modal.error({
+                title:"错误",
+                content:`必须定义父组件meta-form`
+            });
+            return {};
+        }
+        if(!entityName){
+            entityName=form.entityName;
+        }
+        if(!entityName){
+            iview$Modal.error({
+                title:"错误",
+                content:`实体名称无法确定`
+            });
+            return {};
+        }
         var metaEntity=metabase.findMetaEntity(entityName);
         if(!metaEntity){
             iview$Modal.error({
@@ -41,13 +62,15 @@ export default {
             });
             return {};
         }
+        this.overrideProps(metaField);
         var formItem=controlTypeService.buildFormItemByMetaField(metaField);
-        this.initValidation(this.$parent.validator,formItem);
+        this.initValidation(form.$validator,formItem);
         return {
             innerValue:_.cloneDeep(this.value),
             formItem:formItem,
-            validator:this.$parent.validator,
-            metaEntity:metaEntity
+            validator:form.$validator,
+            metaEntity:metaEntity,
+            form:form
         }
     },
     watch:{
@@ -67,12 +90,32 @@ export default {
         }
     },
     methods:{
+        getParentForm(){//不停的向上找父表单组件
+            var _parent=this.$parent;
+            while(_parent){
+                if(_parent.isMetaForm){
+                    return _parent;
+                }else{
+                    _parent=_parent.$parent;
+                }
+            }
+            return null;
+        },
+        //根据组件传递进来的参数，覆盖metaField的属性
+        overrideProps(metaField){
+            if(this.title){
+                metaField.title=this.title;
+            }
+        },
         //表单记录扩展数据填充，如选择用户之后用户名称存储、选项类型其他选项对应的填写值等
         exDataChanged:function(newValue,dataField,exDataKey){
-            this.$parent.$emit("exDataChanged",newValue,dataField,exDataKey);
+            this.form.$emit("exDataChanged",newValue,dataField,exDataKey);
         },
         //初始化字段组件的验证规则
         initValidation: function(validator,formItem){
+            if(!validator){
+                return;
+            }
             if(formItem.isDataField){
                 var fieldName=formItem.dataField;
                 var params=formItem.componentParams;

@@ -26,9 +26,9 @@ export default {
         return {
             dataResource:metaEntity.dataResource(),
             changedQueue:[],//智能验证变化队列
-            validator:this.$parent.$validator,
             metaEntity:metaEntity,
-            id:this.$route.params.id
+            id:this.$route.params.id,
+            isMetaForm:true
         };
     },
     methods:{
@@ -38,7 +38,7 @@ export default {
         doValidation:function(callback){
             var _this=this;
             //启用智能校验
-            Utils.smartValidate(_this,this.model,this.validator,function(){
+            Utils.smartValidate(_this,this.model,this.$validator,function(){
                 callback&&callback();
             });
         },

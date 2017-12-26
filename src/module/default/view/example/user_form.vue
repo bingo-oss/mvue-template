@@ -1,15 +1,28 @@
 <template>
 <div class="pageMain">
-    <meta-form ref="form" :entity-name="entityName" :model="model" 
+    <meta-form ref="form" :entity-name="entityName" :model="model"
     @exDataChanged="exDataChanged"
     @on-created="onCreated" 
     @on-deleted="onDeleted">
-        <meta-field name="name" v-model="model.name">
-        </meta-field>
-        <meta-field name="loginName" v-model="model.loginName">
-        </meta-field>
-        <meta-field name="gender" v-model="model.gender">
-        </meta-field>
+        <Row type="flex" :gutter="10">
+            <Col span="12" order="1">
+                <meta-field name="name" v-model="model.name" title="用户名称">
+                </meta-field>
+            </Col>
+            <Col span="12" order="2">
+                <meta-field name="loginName" v-model="model.loginName">
+                </meta-field>
+            </Col>
+        </Row>
+        <Row type="flex" :gutter="10">
+            <Col span="12" order="1">
+                <meta-field name="gender" v-model="model.gender">
+                </meta-field>
+            </Col>
+            <Col span="12" order="2">
+            </Col>
+        </Row>
+        
     </meta-form>
 </div>
 </template>

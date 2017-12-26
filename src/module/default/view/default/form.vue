@@ -1,6 +1,6 @@
 <template>
 <div class="pageMain">
-    <meta-form ref="form" :entity-name="entityName" :model="model" 
+    <meta-form ref="form" :entity-name="entityName" :model="model"
     @exDataChanged="exDataChanged"
     @on-created="onCreated" 
     @on-deleted="onDeleted">

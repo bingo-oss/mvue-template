@@ -262,7 +262,6 @@ module.exports={
    * @returns {*}
    */
   findMetaEntity:function (metaEntityName) {
-    debugger
     if(!metaEntityName){
       return null;
     }
