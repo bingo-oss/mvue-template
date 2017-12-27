@@ -1,4 +1,4 @@
-import constants from 'services/metaform/constants'
+import constants from './constants'
 var orgUserTypes={
     SingleUserSelect:{ 
         id: "SingleUserSelect", 

@@ -1,4 +1,4 @@
-import uploadType from 'services/metaform/upload_type';
+import uploadType from './upload_type';
 var filesize = require('file-size');
 export default {
     props: {

@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-import controlBase from 'services/metaform/control_base';
+import controlBase from '../js/control_base';
 export default {
     mixins: [controlBase],
     props: {

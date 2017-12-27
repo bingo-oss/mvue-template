@@ -1,5 +1,5 @@
 import metabase from 'libs/metadata/metabase'
-import constants from 'services/metaform/constants'
+import constants from './constants'
 export default{
     data:function(){
         var entityName=this.$route.params.entityName||this.getEntityName();

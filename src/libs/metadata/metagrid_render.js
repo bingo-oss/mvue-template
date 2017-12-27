@@ -1,7 +1,7 @@
 /**
  * 提供内置的列的渲染
  */
-import controlTypeService from 'services/metaform/control_type_service';
+import controlTypeService from 'components/form/js/control_type_service';
 import operationManager from "./metagrid_operation";
 
 export default {

@@ -1,5 +1,5 @@
 const uuidv1 = require('uuid/v1');
-import constants from 'services/metaform/constants'
+import constants from './constants'
 //定义基础组件：选项类型
 var optionsTypes={
     RadioButton:{ 

@@ -65,8 +65,8 @@
     </div>
 </template>
 <script>
-import controlBase from 'services/metaform/control_base';
-import uploadBase from 'services/metaform/upload_base';
+import controlBase from '../js/control_base';
+import uploadBase from '../js/upload_base';
 export default {
     mixins: [controlBase,uploadBase],
     methods:{

@@ -1,5 +1,5 @@
 const uuidv1 = require('uuid/v1');
-import constants from 'services/metaform/constants'
+import constants from './constants'
 
 var defaultValue=[
     {id:uuidv1(),text:"选项1",children:[]},

@@ -1,7 +1,7 @@
 /**
  * 提供元数据与grid整合的功能
  */
-import controlTypeService from 'services/metaform/control_type_service';
+import controlTypeService from 'components/form/js/control_type_service';
 import metabase from 'libs/metadata/metabase';
 import renderManager from './metagrid_render';
 import operationManager from './metagrid_operation';

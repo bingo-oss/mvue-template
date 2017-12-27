@@ -27,7 +27,7 @@
 </div>
 </template>
 <script>
-import formBase from 'services/metaform/form_base'
+import formBase from 'components/form/js/form_base'
 export default {
     mixins:[formBase],
     data:function(){

@@ -4,8 +4,8 @@
     </div>
 </template>
 <script>
-import controlTypeService from 'services/metaform/control_type_service';
-import allComponents from 'services/metaform/all_components';
+import controlTypeService from '../js/control_type_service';
+import allComponents from '../js/all_components';
 export default {
     props:{
         formItem:{

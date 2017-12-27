@@ -26,8 +26,8 @@
 </template>
 <script>
 var moment = require('moment'); 
-import controlBase from 'services/metaform/control_base';
-import dateType from 'services/metaform/date_type';
+import controlBase from '../js/control_base';
+import dateType from '../js/date_type';
 export default {
     mixins: [controlBase],
     props: {

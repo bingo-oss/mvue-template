@@ -1,4 +1,4 @@
-import controlTypeService from 'services/metaform/control_type_service';
+import controlTypeService from './control_type_service';
 export default {
     props:{
         formItem:{
