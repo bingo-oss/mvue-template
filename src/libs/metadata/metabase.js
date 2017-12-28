@@ -34,7 +34,7 @@ function  initMetabase(){
   }
 
   var swagger=Config.getApiBaseUrl()+"/swagger.json";
-  jQuery.ajax({
+  return jQuery.ajax({
     url:swagger,
     dataType:"json",
     async:ajaxAsync,
@@ -258,7 +258,7 @@ function firstNotNaN(){
 
 
 //初始化metabase
-initMetabase();
+//initMetabase();
 
 export default{
   /**
@@ -290,5 +290,6 @@ export default{
   refresh:function () {
     metabase.synced=false;
     initMetabase();
-  }
+  },
+  initMetabase:initMetabase
 }

@@ -17,17 +17,19 @@ function appStart(initFunc) {
     //加载 iView
     window.iView = iview;
     Vue.use(iView);
+    iView.LoadingBar.config({
+      color: '#ff9900',
+      failedColor: '#f0ad4e'
+    });
+    //多选组件
     Vue.component("Multiselect",Multiselect.Multiselect);
     //全局组件引入
     require("libs/global_components");
     //注册自定义全局指令
     var CustomDirectives = require("libs/extend/custom_directives.js");
     new CustomDirectives(Vue);
-
-    iView.LoadingBar.config({
-      color: '#ff9900',
-      failedColor: '#f0ad4e'
-    });
+    //全局组件引入
+    require("libs/index_component_init");
     //过滤
     var filters = require('libs/filters.js');
     Object.keys(filters).forEach(function (k) {
@@ -44,79 +46,41 @@ function appStart(initFunc) {
     new CustomVueResource(Vue, VueResource);
     Vue.use(VueRouter);
     //路由引入
-    var {routesData,appEntry}=initFunc();
-    var router = new VueRouter({
-      routes: routesData
-    });
-    var session=require("libs/security/session");
-    router.beforeEach(function(to, from, next) {
-      session.doFilter(to,from,next);
-    });
-    router.afterEach(function (transition) {
-      console.log('-----------------Router Start');
-      console.log(transition);
-      console.log('-----------------Router End');
-    });
-    window.router = router;
-    var App = appEntry;
-    //全局eventBus，用来组件之间事件传递
-    var eventBus = new Vue({
-      data: {
-        events: {
-
-        }
-      }
-    });
-    window.eventBus = eventBus;
-    var iview$Modal = {
-      info: function (opts) {
-        if (opts && opts.noTimeout) {
-          eventBus.$Modal.info(opts);
-        } else {
-          setTimeout(function () {
-            eventBus.$Modal.info(opts);
-          }, 300);
-        }
-      },
-      success: function (opts) {
-        if (opts && opts.noTimeout) {
-          eventBus.$Modal.success(opts);
-        } else {
-          setTimeout(function () {
-            eventBus.$Modal.success(opts);
-          }, 300);
-        }
-      },
-      warning: function (opts) {
-        if (opts && opts.noTimeout) {
-          eventBus.$Modal.warning(opts);
-        } else {
-          setTimeout(function () {
-            eventBus.$Modal.warning(opts);
-          }, 300);
-        }
-      },
-      error: function (opts) {
-        if (opts && opts.noTimeout) {
-          eventBus.$Modal.error(opts);
-        } else {
-          setTimeout(function () {
-            eventBus.$Modal.error(opts);
-          }, 300);
-        }
-      },
-      confirm: function (opts) {
-        eventBus.$Modal.confirm(opts);
-      }
+    var routesData=null,appEntry=null;
+    var result=initFunc();
+    if(result&&result.then){
+      result.then(function(res){
+        routesData=res.routesData;
+        appEntry=res.appEntry;
+        doStart()
+      });
+    }else{
+      routesData=result.routesData;
+      appEntry=result.appEntry;
+      doStart()
     }
-    window.iview$Modal = iview$Modal;
-    window.iview$Message = eventBus.$Message;
-    new Vue({
-      el: '#app',
-      router: router,
-      template: '<App/>',
-      components: {App}
-    });
+    function doStart(){
+      var router = new VueRouter({
+        routes: routesData
+      });
+      var session=require("libs/security/session");
+      router.beforeEach(function(to, from, next) {
+        session.doFilter(to,from,next);
+      });
+      router.afterEach(function (transition) {
+        console.log('-----------------Router Start');
+        console.log(transition);
+        console.log('-----------------Router End');
+      });
+      window.router = router;
+      var App = appEntry;
+      new Vue({
+        el: '#app',
+        router: router,
+        template: '<App/>',
+        components: {App}
+      });
+    }
   }).catch(function (err) {
     console.log('Failed to load vue vue-router iview', err);
   });
