@@ -32,6 +32,7 @@
           {type:"index",width:"50px"},
           {key:"name"},
           {key:"loginName"},
+          {key:"photos"},
           {key:"gender"},
           {key:"updatedAt"},
           {title:"具体操作",width:220,align:"center",metaParams:{

@@ -20,6 +20,8 @@
                 </meta-field>
             </Col>
             <Col span="12" order="2">
+                <meta-field name="photos" v-model="model.photos">
+                </meta-field>
             </Col>
         </Row>
         
