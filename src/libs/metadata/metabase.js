@@ -2,6 +2,7 @@
  * 元数据管理
  * Created by fulsh on 2017/12/12.
  */
+import controlTypeService from 'components/form/js/control_type_service';
 var store=require("store2");
 require("store2/cache");
 
@@ -136,7 +137,6 @@ function loadMetaEntityFromMode(context,modelName,model){
  * @param property
  */
 function loadMetaFieldFromProperty(context,propertyName,property){
-
   var metaField={
     name:propertyName,
     title:firstNotNaN(property["description"],propertyName),
@@ -156,7 +156,7 @@ function loadMetaFieldFromProperty(context,propertyName,property){
     updatable:firstNotNaN(property["x-updatable"],property["readOnly"],true),
     sortable:firstNotNaN(property["x-sortable"],false),
     filterable:firstNotNaN(property["x-filterable"],false),
-    inputType:firstNotNaN(property["x-input"],"SingleLineText"),
+    inputType:property["x-input"],
     inputTypeParams:{},
     semantics:property["x-meaning"],
     maxLength:property["maxLength"],
@@ -182,6 +182,11 @@ function loadMetaFieldFromProperty(context,propertyName,property){
  * @param property
  */
 function fillInputTypeParams(metaField,property) {
+  //如果metaField的inputType为空，设置默认
+  if(!metaField.inputType){
+    let inputType=controlTypeService.getMetaFieldComponentType(metaField);
+    metaField.inputType=inputType;
+  }
   if(_.isNaN(property["maxLength"])){
     metaField.inputTypeParams["maxLength"]=property["maxLength"];
   }
@@ -255,7 +260,7 @@ function firstNotNaN(){
 //初始化metabase
 initMetabase();
 
-module.exports={
+export default{
   /**
    * 根据实体名，查询实体
    * @param metaEntityName

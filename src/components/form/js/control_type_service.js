@@ -297,5 +297,6 @@ export default{
     controlMode:{normal:"normal",design:"design"},////["design","normal"],design设计模式，组件不可操作;normal普通模式，可以填写数据
     buildFormLayoutByMetaFields:buildFormLayoutByMetaFields,
     buildFormItemByMetaField:buildFormItemByMetaField,
-    formatData:formatData
+    formatData:formatData,
+    getMetaFieldComponentType:getMetaFieldComponentType
 };

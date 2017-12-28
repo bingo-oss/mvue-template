@@ -34,7 +34,7 @@
 </template>
 <script>
 import metabase from 'libs/metadata/metabase';
-import  metaGrid from "libs/metadata/metagrid";
+import  metaGrid from "./js/metagrid";
 export default {
     props: {
       "metaEntity": {
