@@ -3,6 +3,7 @@
  */
 import controlTypeService from 'components/form/js/control_type_service';
 import operationManager from "./metagrid_operation";
+var Config=require("src/config/config.js");
 
 export default {
   /**
@@ -14,7 +15,10 @@ export default {
     return function (h, params) {
       return h("meta-grid-pictures", {
         props: {
-          params: metaField,
+          params: {
+            metaField:metaField,
+            uploadUrl:Config.getUploadUrl()
+          },
           item: params.row
         }
       });
@@ -30,7 +34,10 @@ export default {
     return function (h, params) {
       return h("meta-grid-files", {
         props: {
-          params: metaField,
+          params: {
+            metaField:metaField,
+            uploadUrl:Config.getUploadUrl()
+          },
           item: params.row
         }
       });
@@ -45,7 +52,10 @@ export default {
     return function (h, params) {
       return h("meta-grid-img-title", {
         props: {
-          params: metaField,
+          params: {
+            metaField:metaField,
+            uploadUrl:Config.getUploadUrl()
+          },
           item: params.row
         },
         on: {
