@@ -184,5 +184,29 @@ mergedConfig.getClientSecret=function () {
   var key="clientSecret";
   return getConfigVal(key);
 };
+/**
+ * 获取上传下载的服务器地址
+ * @returns {*}
+ */
+mergedConfig.getUploadUrl=function () {
+  var key="uploadUrl";
+  return getConfigVal(key);
+};
+/**
+ * 用户api访问地址
+ * @returns {*}
+ */
+mergedConfig.getUserApiUrl=function () {
+  var key="userApiUrl";
+  return getConfigVal(key);
+};
+/**
+ * 部门api访问地址
+ * @returns {*}
+ */
+mergedConfig.getOrgApiUrl=function () {
+  var key="orgApiUrl";
+  return getConfigVal(key);
+};
 
 module.exports = mergedConfig;

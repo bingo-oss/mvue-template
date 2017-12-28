@@ -3,13 +3,15 @@
     v-model="innerValue" 
     :validator="validator"
     @exDataChanged="exDataChanged" 
-    :is="'Meta'+formItem.componentType" 
+    :is="'Meta'+formItem.componentType"
+    :paths="paths" 
     :form-item="formItem">
     </component>
 </template>
 <script>
 import metabase from 'libs/metadata/metabase';
 import controlTypeService from './js/control_type_service';
+var Config=require("src/config/config.js");
 export default {
     props:{
         name:{
@@ -70,7 +72,12 @@ export default {
             formItem:formItem,
             validator:form.$validator,
             metaEntity:metaEntity,
-            form:form
+            form:form,
+            paths:{
+                uploadUrl:Config.getUploadUrl(),
+                userApiUrl:Config.getUserApiUrl(),
+                orgApiUrl:Config.getOrgApiUrl()
+            }
         }
     },
     watch:{

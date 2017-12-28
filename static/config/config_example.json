@@ -7,5 +7,9 @@
   "apiBaseUrl":"http://localhost:8080",
   "gatewayUrl":"https://developer.bingosoft.net:12100",
   "oauth2Flow":"implicit",
-  "authAccessCodeProxyUrl":"https://developer.bingosoft.net:12100/console/auth/access_token"
+  "authAccessCodeProxyUrl":"https://developer.bingosoft.net:12100/console/auth/access_token",
+
+  "uploadUrl":"https://developer.bingosoft.net:12100/engine/api/stream",
+  "userApiUrl":"https://developer.bingosoft.net:12100/engine/api/user",
+  "orgApiUrl":"https://developer.bingosoft.net:12100/engine/api/organization"
 }

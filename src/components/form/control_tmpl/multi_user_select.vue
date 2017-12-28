@@ -92,10 +92,10 @@ export default {
                 });
             }
         },
-        "paths.projectEngineBaseUrl":function(newValue,oldValue){//监听engine地址，一旦设置值，用户操作的resource就可以构造了
+        "paths.userApiUrl":function(newValue,oldValue){//监听地址，一旦设置值，用户操作的resource就可以构造了
             var _this=this;
             if(newValue){
-                this.entityResource= Vue.resource("api/user",null,null,{root:newValue});
+                this.entityResource= Vue.resource(newValue);
                 this.doSearch();
             }
         },
