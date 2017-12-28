@@ -98,20 +98,20 @@ function formatDateTime(value,precision){
 }
 function formatData(componentType,item,metaField){
     let fieldName=metaField.name;
-    let initValue=item[fieldName];
-    if(!initValue){
+    let origin=item[fieldName];
+    if(_.isUndefined(origin)||_.isNull(origin)||origin===''){
         return "";
     }
     let result="";
     if(isDate(componentType)){
         let datePrecision=metaField.inputTypeParams&&metaField.inputTypeParams.datePrecision;
-        result= formatDate(initValue,datePrecision);
+        result= formatDate(origin,datePrecision);
     }else if(isTime(componentType)){
         let timePrecision=metaField.inputTypeParams&&metaField.inputTypeParams.timePrecision;
-        result= formatTime(initValue,timePrecision);
+        result= formatTime(origin,timePrecision);
     }else if(isDateTime(componentType)){
         let timePrecision=metaField.inputTypeParams&&metaField.inputTypeParams.timePrecision;
-        result= formatDateTime(initValue,timePrecision);
+        result= formatDateTime(origin,timePrecision);
     }
     return result;
 }

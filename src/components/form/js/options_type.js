@@ -79,7 +79,7 @@ function isSingleOption(componentType){
 function formatData(componentType,item,metaField){
     let fieldName=metaField.name;
     let origin=item[fieldName];
-    if(!origin){
+    if(_.isUndefined(origin)||_.isNull(origin)||origin===''){
         return "";
     }
     let rkey=constants.entityModelRedundantKey;
