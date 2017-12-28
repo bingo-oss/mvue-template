@@ -14,7 +14,7 @@ var WordLimit=function($dom,value){
     }
 };
 module.exports = function CustomDirectives(Vue) {
-    //注册一个全局自定义指令 v-wordlimit
+    //自动根据设置的长度设置文本的...样式，如：v-wordlimit='{length:50,text:"文本值"}'表示超过50个字符出现...
     Vue.directive('wordlimit', {
         inserted: function (el,binding,vnode,oldVnode) {
             var value=binding.value||{};
@@ -23,6 +23,26 @@ module.exports = function CustomDirectives(Vue) {
         componentUpdated:function (el,binding,vnode,oldVnode) {
             var value=binding.value||{};
             WordLimit($(el),value);
+        }
+    });
+    //固定元素的高度，并设置自动滚动条，如:v-autoscroll='60'
+    Vue.directive('autoscroll', {
+        inserted: function (el,binding,vnode,oldVnode) {
+            var value=binding.value;
+            var windowHeight=$(window).height();
+            if(!value){
+                $(el).css({
+                    height:windowHeight+'px',
+                    overflow:'auto'
+                });
+            }else{
+                value=_.toNumber(value);
+                let height=windowHeight-value>0?windowHeight-value:windowHeight;
+                $(el).css({
+                    height:height+'px',
+                    overflow:'auto'
+                });
+            }
         }
     });
 };
