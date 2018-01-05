@@ -12,6 +12,7 @@
                         :show-no-results="false"
                         label="name"
                         @select="onSelect"
+                        @remove="onRemove"
                         @search-change="searchChange"
                         :track-by="getIdField()">
                 <template slot="option" slot-scope="props">
@@ -82,6 +83,10 @@ export default {
             var idField=this.getIdField();
             this.emitExData(selectItem[idField],_.cloneDeep(selectItem));
             this.$emit('input',selectItem[idField]);
+        },
+        onRemove:function(item){
+            this.selectedItem=null;
+            this.$emit('input',null);
         },
         searchChange:function(keyword){
             var _this=this;
