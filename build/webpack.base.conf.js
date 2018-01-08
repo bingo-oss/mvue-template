@@ -164,8 +164,13 @@ module.exports = {
 }
 for(var page in pages) {
   // 配置生成的html文件，定义路径等
+  let _pageName=page;
+  //如果模块名称为default，生成的html名称改为index
+  if(page==='default'){
+    _pageName="index";
+  }
   var conf = {
-    filename: page + '.html',
+    filename: _pageName + '.html',
     template: pages[page], //模板路径
     inject: true,
     // excludeChunks 允许跳过某些chunks, 而chunks告诉插件要引用entry里面的哪几个入口
