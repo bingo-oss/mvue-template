@@ -26,7 +26,7 @@ export default {
     },
     mounted:function(){
         //用来将默认空值，填充到表单的formData中，否则无法验证
-        if(!this.value){
+        if(!this.value&&this.value!==0&&this.value!==false){
             this.$emit('input',null);
         }else if(this.value&&this.value.length==0){
             this.$emit('input',[]);

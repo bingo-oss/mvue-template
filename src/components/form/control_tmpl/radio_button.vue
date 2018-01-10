@@ -49,16 +49,17 @@ import controlBase from '../js/control_base';
 export default {
     mixins: [controlBase],
     props: {
-        "value":{type:[Boolean,Number,String,Object],default:null}
+        "value":{type:[Number,String],default:null}
     },
     data: function(){
         return {
-            valueObj:null
+            valueObj:null,
+            isNumber:false
         };
     },
     watch:{
         "value":function(newV,oldV){
-            this.valueObj=newV;
+            this.valueToString();
         },
         "formItem.componentParams.options":{
             handler:function(newOptions,oldOptions){
@@ -69,12 +70,18 @@ export default {
     },
     mounted:function(){
         var _this=this;
-        this.valueObj=this.value;
+        this.valueToString();
         if(!this.valueObj){
             this.initDefault();
         }
     },
     methods:{
+        valueToString(){
+            if(_.isNumber(this.value)){
+                this.isNumber=true;
+            }
+            this.valueObj=_.toString(this.value);
+        },
         initDefault:function(){
             var _this=this;
             _.each(this.formItem.componentParams.options,function(option){
@@ -88,15 +95,12 @@ export default {
         },
         updateValue: function ($checkbox,text) {
             var _value=$checkbox.value;
-            var emitValue=_value;
-            if("true"===_value){
-                emitValue=true;
-            }else if("false"===_value){
-                emitValue=false;
+            if(this.isNumber){
+                _value=_.toNumber(_value);
             }
-            this.$emit('input',emitValue);
+            this.$emit('input',_value);
             if(text){
-                this.emitExData(emitValue,text);
+                this.emitExData(_value,text);
             }
         },
         emitOthersValue:function(othersValue){
