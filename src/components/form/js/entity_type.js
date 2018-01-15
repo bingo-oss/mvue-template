@@ -24,7 +24,7 @@ function formatData(componentType,item,metaField){
         return "";
     }
     let rkey=constants.entityModelRedundantKey;
-    var $data=item[rkey]&&item[rkey][fieldName];
+    var $data=(item[rkey]&&item[rkey][fieldName])||{};
     var titleField=metaField.inputTypeParams&&metaField.inputTypeParams.titleField;
     titleField=titleField||"name";
     var result= $data.refEntity&&$data.refEntity[origin]&&$data.refEntity[origin].name;
