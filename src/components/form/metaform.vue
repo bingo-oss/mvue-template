@@ -3,7 +3,7 @@
         <slot></slot>
         <div class="form-toolbar" slot="toolbar">
             <button class="ivu-btn ivu-btn-text" type="button"  @click.stop.prevent="handleCancel">取消</button>
-            <button type="button" class="ivu-btn ivu-btn-primary" @click.stop.prevent="saveModel"><span>保存</span></button>
+            <button type="button" class="btn btn-primary" @click.stop.prevent="saveModel"><span>保存</span></button>
             <button class="btn btn-danger" type="button" v-if="id" @click.stop.prevent="onDelete">删除</button>
         </div>
     </div>

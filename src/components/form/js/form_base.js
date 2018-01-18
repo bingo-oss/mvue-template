@@ -34,22 +34,19 @@ export default{
                 this.model[rkey][dataField][exDataKey]=newValue;
             }
         },
-        onCreated(){
-            router.push({
-                name:'defaultEditForm',
-                params:{
-                    entityName:this.entityName,
-                    id:this.$refs.form.id
-                }
-            });
-        },
-        onDeleted(){
+        gotoViewList(){
             router.push({
                 name:'defaultEntityList',
                 params:{
                     entityName:this.entityName
                 }
             });
+        },
+        onCreated(){
+            this.gotoViewList();
+        },
+        onDeleted(){
+            this.gotoViewList();
         },
         setEntityName(entityName){
             this._entityName=entityName;
