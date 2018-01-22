@@ -29,7 +29,6 @@
         queryResource:metaEntityResource,
         queryOptions:{"orderby":"updatedAt desc"},
         columns:[
-          {type:"index",width:"50px"},
           {key:"name"},
           {key:"loginName"},
           {key:"photos"},

@@ -6,15 +6,15 @@ var homeMenu = [
     children: [
       {
         id: "0001",
-        title: '开发指南',
+        title: '组织管理(默认)',
         icon: 'iconfont icon-order',
         link: {
-          name: 'devGuide'
+          name: 'orgList'
         }
       },
       {
         id: "0002",
-        title: '用户管理',
+        title: '用户管理(自定义)',
         icon: 'iconfont icon-order',
         link: {
           name: 'userList'
@@ -22,7 +22,7 @@ var homeMenu = [
       }
     ]
   },
-  {
+  /*{
     title: '系统管理',
     id: "1000",
     icon: 'ivu-icon ivu-icon-android-settings',
@@ -44,6 +44,6 @@ var homeMenu = [
         }
       }
     ]
-  }
+  }*/
 ];
 module.exports = homeMenu

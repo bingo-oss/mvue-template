@@ -100,8 +100,7 @@ function  initColumns(grid) {
   //如果没有传递columns通过实体字段构造
   if(!grid.columns&&metaEntityObj){
     let defaultFormFields=metaEntityObj.getDefaultViewFields();
-    //默认第一列为序号列
-    let _cols=[{type:"index",width:"50"}];
+    let _cols=[];
     _.each(defaultFormFields,function(fieldName){
       _cols.push({key:fieldName});
     });

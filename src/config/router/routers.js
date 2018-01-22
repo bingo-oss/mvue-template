@@ -11,7 +11,7 @@ var data = [
     path: "/",
     component: "home/home.vue",
     redirect: {
-      name: "devGuide"
+      name: "orgList"
     },
     children: [
       {
@@ -36,6 +36,11 @@ var data = [
         name: "userForm",
         component: "example/user_form.vue",
         path: "entities/user/create"
+      },
+      {
+        name: "orgList",
+        component: "example/org/index.vue",
+        path: "example/organization_list"
       }
     ]
   },
