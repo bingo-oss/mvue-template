@@ -104,18 +104,19 @@ export default {
             this.emitExData(othersValue);
         },
         emitExData:function(othersValue){
+            var _this=this;
             var exData={};
             var optionsMap=_.keyBy(this.formItem.componentParams.options,"id");
             var othersId=this.formItem.componentParams.otherOptions.id;
             _.each(this.valueObj,function(selectedId){
                 if(othersId!==selectedId){
-                    exData[selectedId]=optionsMap[selectedId].text;
+                    exData[selectedId]=_this.buildExData(optionsMap[selectedId].text);
                 }
             });
             if(othersValue){
-                exData[othersId]=othersValue;
+                exData[othersId]=_this.buildExData(othersValue);
             }
-            this.$emit("exDataChanged",exData,this.formItem.dataField,"options");
+            this.$emit("exDataChanged",exData,this.formItem.dataField);
         }
     }
 }

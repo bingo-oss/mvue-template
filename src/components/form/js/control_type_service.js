@@ -260,6 +260,7 @@ function switchableComponents(formItem){
 };
 
 export default{
+    componentTypes:componentTypes,
     switchableComponents:switchableComponents,
     toggleComponent:toggleComponent,
     buildFormItemByComponentType:buildFormItemByComponentType,

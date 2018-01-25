@@ -91,7 +91,7 @@ export default {
             _.each(selectedData,function(item){
                 exData[item.value]=item.text;
             });
-            this.$emit("exDataChanged",exData,this.formItem.dataField,"options");
+            this.$emit("exDataChanged",exData,this.formItem.dataField);
         }
     }
 }

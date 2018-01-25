@@ -191,7 +191,6 @@ export default {
             });
         },
         handleRemove (file) {
-            debugger
             //TODO 真实的删除
             // 从 upload 实例删除数据
             let fileList = this.$refs.upload.fileList;

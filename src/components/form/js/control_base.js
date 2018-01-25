@@ -1,4 +1,5 @@
 import controlTypeService from './control_type_service';
+import constants from './constants';
 export default {
     props:{
         formItem:{
@@ -17,6 +18,9 @@ export default {
             default:function(){
                 return {};
             }
+        },
+        model:{//表单的模型数据
+            type:Object
         }
     },
     data:function(){
@@ -44,6 +48,22 @@ export default {
         },
         disabled:function(){
             return this.mode!==controlTypeService.controlMode.normal;
+        }
+    },
+    methods:{
+        buildExData(value){//构造组件需要保存的冗余数据
+            var exData={};
+            exData[constants.entityModelTitleKey]=value;
+            return exData;
+        },
+        getExData(id){//编辑模式获取当前表单数据字段id的冗余数据
+            if(!id){
+                return null;
+            }
+            var _data=this.model&&this.model[constants.entityModelRedundantKey];
+            _data=_data||{};
+            _data= _data[this.formItem.dataField]||{};
+            return _data[id]&&_data[id][constants.entityModelTitleKey];
         }
     }
 }

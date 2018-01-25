@@ -10,7 +10,7 @@
                         selected-label="已选"
                         deselect-label="按enter键取消选择"
                         :show-no-results="false"
-                        label="name"
+                        :label="getTitleField()"
                         @select="onSelect"
                         @remove="onRemove"
                         @search-change="searchChange"
@@ -63,7 +63,6 @@ export default {
     watch:{
         value:function(newV,oldV){
             if(newV){
-                this.doSearch();
                 this.selectedItem=this.dataItemsMap[newV]||null;
             }else{
                 this.selectedItem=null;
@@ -81,7 +80,9 @@ export default {
     methods: {
         onSelect:function(selectItem){
             var idField=this.getIdField();
-            this.emitExData(selectItem[idField],_.cloneDeep(selectItem));
+            var titleField=this.getTitleField();
+            var exData=this.buildExData(selectItem[titleField]);
+            this.emitExData(selectItem[idField],exData);
             this.$emit('input',selectItem[idField]);
         },
         onRemove:function(item){
@@ -118,10 +119,13 @@ export default {
         getIdField:function(){
             return this.formItem.componentParams.idField;
         },
+        getTitleField:function(){
+            return this.formItem.componentParams.titleField;
+        },
         emitExData:function(id,data){
             var exData={};
             exData[id]=data;
-            this.$emit("exDataChanged",exData,this.formItem.dataField,"refEntity");
+            this.$emit("exDataChanged",exData,this.formItem.dataField);
         }
     }
 }

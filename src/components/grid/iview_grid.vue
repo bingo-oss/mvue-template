@@ -1,17 +1,23 @@
 <template>
 <div class="grid-con">
     <div class="toolBar" v-if="!innerToolbar.hide">
-          <Button @click="refresh()" type="ghost" icon="refresh"></Button>
-          <Button v-for="(toolbarBtn,index) in innerToolbar.btns"  :key="index"
-                  type="primary"  :icon="toolbarBtn.icon"
-                  @click="toolbarClick(toolbarBtn)"
-                  >{{toolbarBtn.title}}</Button>
+        <Button @click="refresh()" type="ghost" icon="refresh"></Button>
+        <template v-for="(toolbarBtn,index) in innerToolbar.btns">
+            <Button v-if="!toolbarBtn.render" :key="index"
+                    type="primary"  :icon="toolbarBtn.icon"
+                    @click="toolbarClick(toolbarBtn)"
+                    >{{toolbarBtn.title}}</Button>
+            <toolbar-btn-render v-if="toolbarBtn.render" :render="toolbarBtn.render" :key="index" :toolbar-btn="toolbarBtn"></toolbar-btn-render>
+        </template>
         <Input v-if="innerToolbar.quicksearch&&innerToolbar.quicksearch.fields"
                v-model="quicksearchKeyword" :placeholder="innerToolbar.quicksearch.placeholder"
-               icon="search" style="width: 150px" :autofocus="true"/>
-        </div>
+               icon="search" style="width: 150px;" :autofocus="true"/>
+        <advance-search v-if="innerToolbar.advanceSearchFields&&innerToolbar.advanceSearchFields.length>0" :entity-name="metaEntity" :advance-search-fields="innerToolbar.advanceSearchFields" @do-advance-search="doAdvanceSearch"></advance-search>
+    </div>
     <div class="data-table-list">
-        <Table :columns="innerColumns" :data="filteredData" @on-sort-change="handleSortChange">
+        <Table :columns="innerColumns" :data="filteredData" 
+            @on-selection-change="handleOnSelectionChange"
+            @on-sort-change="handleSortChange">
         </Table>
     </div>
     <div class="tableBox-tool" v-if="pager">
@@ -33,8 +39,8 @@
 </div>
 </template>
 <script>
-import metabase from 'libs/metadata/metabase';
-import  metaGrid from "./js/metagrid";
+import metaGrid from "./js/metagrid";
+import toolbarBtnRender from "./js/toolbar_btn_render";
 export default {
     props: {
       "metaEntity": {
@@ -56,7 +62,15 @@ export default {
       "toolbar": {
         type: Object
       },
-      "formPath": {  //创建及修改表单的路径或路由名
+      "createPath": {  //创建表单的路径或路由名
+        type: String,
+        required: false
+      },
+      "editPath": {  //修改表单的路径或路由名
+        type: String,
+        required: false
+      },
+      "viewPath": {  //查看表单的地址
         type: String,
         required: false
       },
@@ -76,6 +90,9 @@ export default {
         type: Array,
         required: false,
       },
+      "contextParent":{//grid的自定义父容器
+        type:Object
+      }
     },
     data:function(){
         return {
@@ -88,7 +105,8 @@ export default {
                     quicksearch: (this.toolbar&&this.toolbar.quicksearch)||{
                         fields: null,
                         placeholder: ""
-                    }
+                    },
+                    advanceSearchFields:(this.toolbar&&this.toolbar.advanceSearchFields)||[]
                 },
             data:[],//原始数据
             checked:[],//已经选择的数据
@@ -101,6 +119,7 @@ export default {
             pageCount: 1,
             //end 分页相关参数
             orderby:"",//只支持一个orderby，用户点击排序后将覆盖默认的排序规则
+            advanceSearchFilters:[],//高级查询设置的查询条件
         };
     },
     computed:{
@@ -143,23 +162,24 @@ export default {
                 metaGrid.initGridByMetabase(this);
                 this.reload();
             }
+        },
+        pageSize:function (newVal, oldVal) {
+            if (newVal != oldVal) {
+                this.pageIndex = 1;
+                this.reload();
+            }
+        },
+        queryOptions:{
+            handler:function(){
+                this.reload();
+            },
+            deep:true
         }
     },
     mounted:function(){
         var _this=this;
         metaGrid.initGridByMetabase(_this);
         this.reload();
-        _this.$watch('pageSize', function (newVal, oldVal) {
-            if (newVal != oldVal) {
-                _this.pageIndex = 1;
-                _this.reload();
-            }
-        });
-        /*_this.$watch('forceReload', function (newVal, oldVal) {
-            //清空已选
-            //_this.checked=[];
-            _this.reload();
-        });*/
     },
     methods:{
         reload: function () {
@@ -177,8 +197,20 @@ export default {
                 _queryOptions.page_size = _this.pageSize;
                 _queryOptions.total = true;
             }
+            //如果启用了高级搜索，快捷搜索失效
+            if(this.advanceSearchFilters&&this.advanceSearchFilters.length>0){
+                let qsFilters = [];
+                _.each(this.advanceSearchFilters,function(asField){
+                    qsFilters.push(`${asField.key} ${asField.op} ${asField.value}`);
+                });
+                qsFilters=qsFilters.join(" and ");
+                if(_queryOptions.filters){
+                    _queryOptions.filters=`${_queryOptions.filters} and (${qsFilters})`;
+                }else{
+                    _queryOptions.filters=qsFilters;
+                }
+            }else if(_this.innerToolbar.quicksearch&&_this.innerToolbar.quicksearch.fields&&_this.quicksearchKeyword){
             //快捷搜索条件添加
-            if(_this.innerToolbar.quicksearch&&_this.innerToolbar.quicksearch.fields&&_this.quicksearchKeyword){
                 let qsFilters = [];
                 _.each(_this.innerToolbar.quicksearch.fields, function (sField) {
                     qsFilters.push(`${sField} like %${_this.quicksearchKeyword}%`);
@@ -218,54 +250,69 @@ export default {
                 }
                 _this.$emit("dataloaded", _this);
             });
-      },
+        },
         refresh:function () {//刷新列表
-        this.reload();
-      },
-      //begin 分页相关方法
-      pageIndexOne: function () {
-        if (this.pageIndex != 1) {
-          this.pageIndex = 1;
-          this.reload();
+            this.reload();
+        },
+        //begin 分页相关方法
+        pageIndexOne: function () {
+            if (this.pageIndex != 1) {
+                this.pageIndex = 1;
+                this.reload();
+            }
+        },
+        pageIndexPrevious: function () {
+            if (this.pageIndex > 1) {
+                --this.pageIndex;
+                this.reload();
+            }
+        },
+        pageIndexNext: function () {
+            if (this.pageIndex < this.pageCount) {
+                ++this.pageIndex;
+                this.reload();
+            }
+        },
+        pageIndexLast: function () {
+            if (this.pageIndex != this.pageCount) {
+                this.pageIndex = this.pageCount;
+                this.reload();
+            }
+        },
+        //begin 远程排序
+        handleSortChange({column,key,order}){
+            if(order=="normal"){
+                this.orderby=null;
+            }else{
+                this.orderby=`${key} ${order}`;
+            }
+            this.reload();
+        },
+        //end 远程排序
+        //
+        toolbarClick:function (btn) {
+            var _self=this;
+            var context={
+                grid:_self,
+                op:btn,
+            };
+            btn.onclick.call(context,{checked:_self.checked});
+        },
+        //高级查询
+        doAdvanceSearch(advanceSearchFilters){
+            this.quicksearchKeyword="";
+            this.advanceSearchFilters=advanceSearchFilters;
+            this.reload();
+        },
+        //begin 选择行
+        handleOnSelectionChange(selection){
+            this.checked=selection;
         }
-      },
-      pageIndexPrevious: function () {
-        if (this.pageIndex > 1) {
-          --this.pageIndex;
-          this.reload();
-        }
-      },
-      pageIndexNext: function () {
-        if (this.pageIndex < this.pageCount) {
-          ++this.pageIndex;
-          this.reload();
-        }
-      },
-      pageIndexLast: function () {
-        if (this.pageIndex != this.pageCount) {
-          this.pageIndex = this.pageCount;
-          this.reload();
-        }
-      },
-      //begin 远程排序
-      handleSortChange({column,key,order}){
-          if(order=="normal"){
-              this.orderby=null;
-          }else{
-              this.orderby=`${key} ${order}`;
-          }
-          this.reload();
-      },
-      //end 远程排序
-      //
-      toolbarClick:function (btn) {
-          var _self=this;
-         var context={
-           grid:_self,
-           op:btn,
-         };
-        btn.onclick.call(context,{checked:_self.checked});
-      }
+        //end 选择行
+    },
+    components:{
+        advanceSearch:require("./advance_search"),
+        toolbarBtnRender:toolbarBtnRender
     }
 }
 </script>

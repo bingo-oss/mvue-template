@@ -49,7 +49,6 @@ export default {
     },
     methods:{
         updateValue: function ($checkbox) {
-            debugger
             this.$emit('input',this.valueObj);
         }
     }

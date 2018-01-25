@@ -10,7 +10,7 @@
                         selected-label="已选"
                         deselect-label="按enter键取消选择"
                         :show-no-results="false"
-                        label="name"
+                        :label="getTitleField()"
                         @select="onSelect"
                         @remove="onRemove"
                         @search-change="searchChange"
@@ -30,7 +30,27 @@
             <div class="form-group" :class="{'ivu-form-item-required':formItem.componentParams.required}">
                 <label v-text="formItem.componentParams.title" class="ivu-form-item-label control-label col-md-2" :style="{width:labelWidth}"></label>
                 <div class="col-md-10" :style="{width:controlWidth}">
-                    
+                    <Multiselect v-model="selectedItem"
+                        :options="dataItems"
+                        placeholder="选择用户"
+                        :disabled="disabled"
+                        select-label="按enter键选择"
+                        selected-label="已选"
+                        deselect-label="按enter键取消选择"
+                        :show-no-results="false"
+                        :label="getTitleField()"
+                        @select="onSelect"
+                        @remove="onRemove"
+                        @search-change="searchChange"
+                        :track-by="getIdField()">
+                        <template slot="option" slot-scope="props">
+                            <div class="option__desc">
+                                <span class="option__title">{{ props.option.name }}</span>
+                                <span>-</span>
+                                <span class="option__small">{{ props.option.email||props.option.loginId }}</span>
+                            </div>
+                        </template>
+                    </Multiselect>
                     <span class="colorRed" v-show="validator&&validator.errorBag&&validator.errorBag.has(formItem.dataField)">{{ validator&&validator.errorBag&&validator.errorBag.first(formItem.dataField) }}</span>
                     <p class="colorGrey" v-show="formItem.componentParams.description" v-text="formItem.componentParams.description"></p>
                 </div>
@@ -46,10 +66,14 @@ export default {
         "value":{type:String,default:null}
     },
     data: function(){
+        let entityResource=null;
+        if(this.paths&&this.paths.userApiUrl){
+            entityResource= Vue.resource(this.paths.userApiUrl);
+        }
         return {
             selectedItem:null,//已经选择的项
             dataItems:[],//远程获取的数据项
-            entityResource:null,//获取用户数据的操作resource
+            entityResource:entityResource,//获取用户数据的操作resource
             queryFields:"userId,name,mobile,loginId,email,orgId,ecode"//查询的冗余数据
         };
     },
@@ -80,10 +104,15 @@ export default {
             }
         },
     },
+    mounted:function(){
+        this.doSearch();
+    },
     methods: {
         onSelect:function(selectItem){
             var idField=this.getIdField();
-            this.emitExData(selectItem[idField],_.cloneDeep(selectItem));
+            var titleField=this.getTitleField();
+            var exData=this.buildExData(selectItem[titleField]);
+            this.emitExData(selectItem[idField],exData);
             this.$emit('input',selectItem[idField]);
         },
         onRemove:function(item){
@@ -122,10 +151,13 @@ export default {
         getIdField:function(){
             return "userId";
         },
+        getTitleField:function(){
+            return "name";
+        },
         emitExData:function(id,data){
             var exData={};
             exData[id]=data;
-            this.$emit("exDataChanged",exData,this.formItem.dataField,"user");
+            this.$emit("exDataChanged",exData,this.formItem.dataField);
         }
     }
 }

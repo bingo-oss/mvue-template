@@ -87,8 +87,8 @@ export default {
         },
         emitExData:function(id,text){
             var exData={};
-            exData[id]=text;
-            this.$emit("exDataChanged",exData,this.formItem.dataField,"options");
+            exData[id]=this.buildExData(text);
+            this.$emit("exDataChanged",exData,this.formItem.dataField);
         }
     }
 }

@@ -120,6 +120,14 @@ function loadMetaEntityFromMode(context,modelName,model){
       if(relationField!=null){
         relationField.isRelationField=true;
         relationField.relations.push(metaRelation);
+        //多对一关系的字段修正为引用实体控件类型
+        if(metaRelation.type=="many-to-one"&&
+        ((!relationField.inputType)||
+        (relationField.inputType==controlTypeService.componentTypes.RefEntity.id)||
+        (relationField.inputType==controlTypeService.componentTypes.SingleLineText.id))){
+          relationField.inputType=controlTypeService.componentTypes.RefEntity.id;
+          relationField.manyToOneRelation=metaRelation;
+        }
       }
     });
 

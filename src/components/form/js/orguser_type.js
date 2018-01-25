@@ -72,34 +72,26 @@ function switchableComponents(componentType){
 function formatData(componentType,item,metaField){
     let fieldName=metaField.name;
     let origin=item[fieldName];
-    if(_.isUndefined(origin)||_.isNull(origin)||origin===''){
+    if(_.isNil(origin)||origin===''){
         return "";
     }
     let rkey=constants.entityModelRedundantKey;
+    let titleKey=constants.entityModelTitleKey;
     var $data=(item[rkey]&&item[rkey][fieldName])||{};
     var result="";
-    if(orgUserTypes.SingleUserSelect.id===componentType){
-        result= $data.user&&$data.user[origin]&&$data.user[origin].name;
+    //单选
+    if(orgUserTypes.SingleUserSelect.id===componentType||orgUserTypes.SingleOrgSelect.id===componentType){
+        result= $data[origin]&&$data[origin][titleKey];
         result=result||origin;
-    }else if(orgUserTypes.MultiUserSelect.id===componentType){
-        let userNames=[];
+    }else if(orgUserTypes.MultiUserSelect.id===componentType||orgUserTypes.MultiOrgSelect.id===componentType){
+    //多选
+        let names=[];
         _.each(origin,function(id){
-            let name=$data.user&&$data.user[id]&&$data.user[id].name;
+            let name=$data[id]&&$data[id][titleKey];
             name=name||id;
-            userNames.push(name);
+            names.push(name);
         });
-        result= userNames.join(",");
-    }else if(orgUserTypes.SingleOrgSelect.id===componentType){
-        result= $data.organization&&$data.organization[origin]&&$data.organization[origin].name;
-        result=result||origin;
-    }else if(orgUserTypes.MultiOrgSelect.id===componentType){
-        let orgNames=[];
-        _.each(origin,function(id){
-            let name=$data.organization&&$data.organization[id]&&$data.organization[id].name;
-            name=name||id;
-            orgNames.push(name);
-        });
-        result= orgNames.join(",");
+        result= names.join(",");
     }
     return result;
 }

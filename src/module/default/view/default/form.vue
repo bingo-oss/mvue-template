@@ -1,7 +1,8 @@
 <template>
 <div class="pageMain">
     <meta-form ref="form" :entity-name="entityName" :model="model"
-    @exDataChanged="exDataChanged"
+    @exDataChanged="exDataChanged" 
+    :preprocessed="preprocessed"
     @on-created="onCreated" 
     @on-deleted="onDeleted">
         <meta-field v-for="key in metaEntity.getDefaultFormFields()" :key="key" :name="key" v-model="model[key]">

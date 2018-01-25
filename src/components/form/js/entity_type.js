@@ -1,4 +1,5 @@
 import constants from './constants'
+import metabase from 'libs/metadata/metabase'
 var types={
     RefEntity:{ 
         id: "RefEntity", 
@@ -20,20 +21,36 @@ function accept(componentType){
 function formatData(componentType,item,metaField){
     let fieldName=metaField.name;
     let origin=item[fieldName];
-    if(_.isUndefined(origin)||_.isNull(origin)||origin===''){
+    if(_.isNil(origin)||origin===''){
         return "";
     }
     let rkey=constants.entityModelRedundantKey;
+    let titleKey=constants.entityModelTitleKey;
     var $data=(item[rkey]&&item[rkey][fieldName])||{};
-    var titleField=metaField.inputTypeParams&&metaField.inputTypeParams.titleField;
-    titleField=titleField||"name";
-    var result= $data.refEntity&&$data.refEntity[origin]&&$data.refEntity[origin].name;
+    var result= $data[origin]&&$data[origin][titleKey];
     result=result||origin;
     return result;
+}
+function fillComponentParams(formItem,metaField){
+    var relation=metaField.manyToOneRelation;
+    if(relation){
+        let targetEntity=metabase.findMetaEntity(relation.targetEntity);
+        if(targetEntity){
+            let idField=targetEntity.getIdField();
+            let titleField=targetEntity.firstTitleField();
+            formItem.componentParams.entityId=relation.targetEntity;
+            formItem.componentParams.idField=idField.name;
+            formItem.componentParams.titleField=titleField?titleField.name:idField.name;
+            formItem.componentParams.entityResourceUrl=targetEntity.dataResourceUrl();
+        }else{
+            console.log(`关系字段${metaField.name}的引用实体${targetEntity}不存在`);
+        }
+    }
 }
 export default{
     types:types,
     accept:accept,
     componentParams:componentParams,
-    formatData:formatData
+    formatData:formatData,
+    fillComponentParams:fillComponentParams
 }

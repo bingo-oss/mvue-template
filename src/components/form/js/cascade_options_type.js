@@ -31,15 +31,17 @@ var newOne=function(){
 function formatData(componentType,item,metaField){
     let fieldName=metaField.name;
     let origin=item[fieldName];
-    if(_.isUndefined(origin)||_.isNull(origin)||origin===''){
+    if(_.isNil(origin)||origin===''){
         return "";
     }
     let rkey=constants.entityModelRedundantKey;
     var $data=(item[rkey]&&item[rkey][fieldName])||{};
     let optionTexts=[];
     _.each(origin,function(v){
-      let optionText=$data.options&&$data.options[v];
-      optionTexts.push(optionText);
+      let optionText=$data[v];
+      if(!_.isNil(optionText)){
+          optionTexts.push(optionText);
+      }
     });
     return optionTexts.join("/")||origin.join("/");
 }

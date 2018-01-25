@@ -5,12 +5,14 @@
     @exDataChanged="exDataChanged" 
     :is="'Meta'+formItem.componentType"
     :paths="paths" 
+    :model="innerModel"
     :form-item="formItem">
     </component>
 </template>
 <script>
 import metabase from 'libs/metadata/metabase';
 import controlTypeService from './js/control_type_service';
+import metaformUtils from './js/metaform_utils';
 var Config=require("src/config/config.js");
 export default {
     props:{
@@ -26,19 +28,25 @@ export default {
         },
         title:{
             type:String
+        },
+        inputType:{
+            type:String
+        },
+        model:{
+            type:Object
         }
     },
     data:function(){
         var entityName=this.entityName;
         var form=this.getParentForm();
-        if(!form){
-            iview$Modal.error({
-                title:"错误",
-                content:`必须定义父组件meta-form`
-            });
-            return {};
-        }
         if(!entityName){
+            if(!form){
+                iview$Modal.error({
+                    title:"错误",
+                    content:`必须定义父组件meta-form`
+                });
+                return {};
+            }
             entityName=form.entityName;
         }
         if(!entityName){
@@ -56,7 +64,7 @@ export default {
             });
             return {};
         }
-        var metaField=metaEntity.fields[this.name];
+        var metaField=_.cloneDeep(metaEntity.findField(this.name));
         if(!metaField){
             iview$Modal.error({
                 title:"错误",
@@ -64,15 +72,26 @@ export default {
             });
             return {};
         }
+        if(!form){
+            //没有表单时，不需要渲染出必填样式
+            metaField.required=false;
+        }
         this.overrideProps(metaField);
         var formItem=controlTypeService.buildFormItemByMetaField(metaField);
-        this.initValidation(form.$validator,formItem);
+        //初始化字段验证
+        if(form){
+            if(!this.model){
+                this.innerModel=form.model;
+            }
+            metaformUtils.initValidation(form.$validator,formItem,metaEntity,this.$route.params.id);
+        }
         return {
             innerValue:_.cloneDeep(this.value),
             formItem:formItem,
-            validator:form.$validator,
+            validator:form?form.$validator:null,
             metaEntity:metaEntity,
             form:form,
+            innerModel:_.cloneDeep(this.model),
             paths:{
                 uploadUrl:Config.getUploadUrl(),
                 userApiUrl:Config.getUserApiUrl(),
@@ -113,77 +132,14 @@ export default {
             if(this.title){
                 metaField.title=this.title;
             }
+            if(this.inputType){
+                metaField.inputType=this.inputType;
+            }
         },
         //表单记录扩展数据填充，如选择用户之后用户名称存储、选项类型其他选项对应的填写值等
-        exDataChanged:function(newValue,dataField,exDataKey){
-            this.form.$emit("exDataChanged",newValue,dataField,exDataKey);
-        },
-        //初始化字段组件的验证规则
-        initValidation: function(validator,formItem){
-            if(!validator){
-                return;
-            }
-            if(formItem.isDataField){
-                var fieldName=formItem.dataField;
-                var params=formItem.componentParams;
-                //必填
-                var rule={};
-                if(params.required){
-                    rule.required=true;
-                }
-                //唯一性校验
-                if(params.unique){
-                    rule.verify_field_unique=[
-                        `query:${_this.metaEntity.resourceUrl}`,
-                        fieldName,
-                        {},
-                        _this.$route.params.dataId
-                    ]
-                }
-                //验证规则
-                if(params.validation
-                    &&params.validation.validate
-                    &&params.validation.rule
-                    &&params.validation.rule.pattern){
-                    rule.regex=[params.validation.rule.pattern];
-                }
-                //长度验证
-                if(params.limitLength&&params.limitLength.limit){
-                    if(params.limitLength.max>0){
-                        rule.max=[params.limitLength.max];
-                    }
-                    if(params.limitLength.min>0){
-                        rule.min=[params.limitLength.min];
-                    }
-                }
-                //数值范围
-                if(params.limitRange&&params.limitRange.limit){
-                    if(params.limitRange.max>0){
-                        rule.max_value=[params.limitRange.max];
-                    }
-                    if(params.limitRange.min>0){
-                        rule.min_value=[params.limitRange.min];
-                    }
-                }
-                //小数点限制
-                if(params.decimal){
-                    //小数
-                    if(params.decimal.isAllowed){
-                        rule.decimal=[params.decimal.digits];
-                    }else{//不含小数部分
-                        rule.decimal=[];
-                    }
-                }
-                //负数限制
-                if(params.allowNegative===false){
-                    //没有定义最小值或者最小值设置成负数，设置最小值为0
-                    if((!rule.min_value)||(_.startsWith(rule.min_value,"-"))){
-                        rule.min_value=["0"];
-                    }
-                }
-                if(!_.isEmpty(rule)){
-                    validator.attach(fieldName, rule);
-                }
+        exDataChanged:function(newValue,dataField){
+            if(this.form){
+                this.form.$emit("exDataChanged",newValue,dataField);
             }
         }
     }

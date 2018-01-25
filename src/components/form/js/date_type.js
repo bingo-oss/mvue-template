@@ -16,6 +16,24 @@ var dateTypes={
         title: "日期时间", 
         icon:"ivu-icon ivu-icon-calendar" 
     },
+    DateRange:{ 
+        id: "DateRange", 
+        title: "日期范围", 
+        icon:"ivu-icon ivu-icon-ios-calendar-outline",
+        hidden:true 
+    },
+    TimeRange:{ 
+        id: "TimeRange", 
+        title: "时间范围", 
+        icon:"ivu-icon ivu-icon-ios-clock-outline",
+        hidden:true  
+    },
+    DateTimeRange:{ 
+        id: "DateTimeRange", 
+        title: "日期时间范围", 
+        icon:"ivu-icon ivu-icon-calendar",
+        hidden:true 
+    }
 };
 var datePrecision={
     day:"day",
@@ -35,6 +53,10 @@ var componentParams={
         timePrecision:timePrecision.second
     },
     DateTime:{
+        datePrecision:datePrecision.day,
+        timePrecision:timePrecision.second
+    },
+    DateTimeRange:{
         datePrecision:datePrecision.day,
         timePrecision:timePrecision.second
     }

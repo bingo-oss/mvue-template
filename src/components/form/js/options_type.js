@@ -79,19 +79,30 @@ function isSingleOption(componentType){
 function formatData(componentType,item,metaField){
     let fieldName=metaField.name;
     let origin=item[fieldName];
-    if(_.isUndefined(origin)||_.isNull(origin)||origin===''){
+    if(_.isNil(origin)||origin===''){
         return "";
     }
     let rkey=constants.entityModelRedundantKey;
+    let titleKey=constants.entityModelTitleKey;
     var $data=(item[rkey]&&item[rkey][fieldName])||{};
+    if(metaField.inputTypeParams&&metaField.inputTypeParams.options){
+        let optionMap={};
+        _.each(metaField.inputTypeParams.options,function(opt){
+            optionMap[opt.id]={};
+            optionMap[opt.id][titleKey]=opt.text;
+        });
+        $data=optionMap;
+    }
     if(isSingleOption(componentType)){//单选
-        let optionText=$data.options&&$data.options[origin];
+        let optionText=$data[origin]&&$data[origin][titleKey];
         return optionText||origin;
     }else{
         let optionTexts=[];
         _.each(origin,function(v){
-          let optionText=$data.options&&$data.options[v];
-          optionTexts.push(optionText);
+          let optionText=$data[v][titleKey];
+          if(!_.isNil(optionText)){
+              optionTexts.push(optionText);
+          }
         });
         return optionTexts.join(",")||origin.join(",");
     }
