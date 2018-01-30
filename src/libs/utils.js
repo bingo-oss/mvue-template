@@ -195,6 +195,12 @@ var utils = {
             window.open("", "_self");  
             window.close();  
         }  
+    },
+    leapQueryValueEncode(value){//leap 框架查询值单引号需要转义
+        if(value){
+            value=value.replace(/'/ig,"''");
+        }
+        return value;
     }
 };
 

@@ -41,6 +41,7 @@
 <script>
 import metaGrid from "./js/metagrid";
 import toolbarBtnRender from "./js/toolbar_btn_render";
+var utils= require('libs/utils');
 export default {
     props: {
       "metaEntity": {
@@ -213,7 +214,8 @@ export default {
             //快捷搜索条件添加
                 let qsFilters = [];
                 _.each(_this.innerToolbar.quicksearch.fields, function (sField) {
-                    qsFilters.push(`${sField} like %${_this.quicksearchKeyword}%`);
+                    let _keyword=utils.leapQueryValueEncode(_this.quicksearchKeyword);
+                    qsFilters.push(`${sField} like '%${_keyword}%'`);
                 });
                 qsFilters=qsFilters.join(" or ");
                 if(_queryOptions.filters){
