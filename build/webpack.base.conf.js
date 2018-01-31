@@ -93,7 +93,7 @@ module.exports = {
         }
       },
       {
-        test: /\.(woff2?|eot|svg|ttf|otf)(\?.*)?$/,
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         exclude: _excludes,
         loader: 'url-loader',
         options: {
