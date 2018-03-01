@@ -31,7 +31,10 @@ var compiler = webpack(webpackConfig)   // 启动 webpack 进行编译
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, { //将编译后的文件暂存到内存中
   publicPath: webpackConfig.output.publicPath,
-  quiet: false
+  quiet: false,
+  stats:{
+    colors:true
+  }
 })
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {  //热加载
