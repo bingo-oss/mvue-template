@@ -1,11 +1,16 @@
 /**
  * 当前会话
  */
-var sessionStore=require("store2").session;
+var sessionStore=require("store2");
 var ssoclient=require("libs/security/ssoclient");
+var Cookies=require("js-cookie");
 
-var sessionKey="_session_";
+var sessionKeyPrefix="_session_";
+var sessionCookieKey="m_vue_session_id";
 var anonymousSession={
+  sessionId:null,
+  loginTime:null,
+  expires:0,
   token:{
     accessToken:null,
     refreshToken:null,
@@ -19,8 +24,8 @@ var anonymousSession={
 };
 var session=_.extend({},anonymousSession);
 
-if(sessionStore.has(sessionKey)){
-  session=sessionStore.get(sessionKey);
+if(sessionStore.has(getSessionKey())){
+  session=sessionStore.get(getSessionKey());
 }
 
 function createLoginRouter(returnUrl){
@@ -52,27 +57,68 @@ function onSSOCallback(callback){
   });
 }
 
+/**
+ * 判断当前会话是否登录
+ * @returns {boolean}
+ */
+function isLogin() {
+  var sessionId=Cookies.get(sessionCookieKey);
+  if(_.isEmpty(sessionId)||sessionId!=session.sessionId){
+    return false;
+  }
+  if(_.now().valueOf()>session.expires){
+    removeSession();
+  }
+  return true;
+}
+
 function signIn(tokenInfo){
   session.token=tokenInfo;
   session.user.anonymous=false;
-  sessionStore.set(sessionKey,session);
+  session.loginTime=_.now().valueOf();
+  session.expires=session.loginTime+tokenInfo.expiresIn*1000-60000;
+  session.sessionId="session_id_"+session.loginTime;
+  Cookies.set(sessionCookieKey,session.sessionId,{
+    path:getWebContext()
+  });
+  sessionStore.set(getSessionKey(),session);
 }
 
 function signOut(returnUrl) {
-  session=_.extend({},anonymousSession);
-  sessionStore.remove(sessionKey);
+  removeSession();
   if(_.isEmpty(returnUrl)){
     returnUrl=window.location.href;
   }
   ssoclient.ssoLogout(returnUrl);
 }
 
+function removeSession() {
+  session=_.extend({},anonymousSession);
+  sessionStore.remove(getSessionKey());
+  Cookies.remove(sessionCookieKey,{path:getWebContext()});
+}
+
+function  getWebContext() {
+  var webContext=window.location.pathname;
+  if(webContext.indexOf('/')>1){
+    webContext=webContext.substring(0,webContext.lastIndexOf('/'));
+  }
+  return webContext;
+}
+
+function getSessionKey() {
+  return sessionKeyPrefix+getWebContext();
+}
+
 module.exports={
   getToken:function(){
+    if(!isLogin()){
+      return null;
+    }
     return session.token.accessToken;
   },
   hasToken:function () {
-    if(_.isEmpty(session.token.accessToken)){
+    if(!isLogin()|| _.isEmpty(session.token.accessToken)){
       return false;
     }
     return true;
