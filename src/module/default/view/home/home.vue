@@ -4,7 +4,6 @@
       <div class="layout-logo">元数据开发框架</div>
       <div class="layout-header-menu clearfix">
         <Menu mode="horizontal" theme="primary" >
-          <!--
           <MenuItem name="1">
             <Icon type="home"></Icon>
             <router-link to="/" tag="span">主页</router-link>
@@ -13,7 +12,7 @@
             <Icon type="gear-b"></Icon>
             元数据管理
           </MenuItem>
-          
+
           <Submenu name="3">
             <template slot="title">
               <Avatar shape="square" icon="person" size="small" />
@@ -26,17 +25,16 @@
             </MenuGroup>
             <MenuGroup title="系统">
               <MenuItem name="3-4"><span @click="logout">退出</span></MenuItem>
-              <MenuItem name="3-5">流失用户</MenuItem>
             </MenuGroup>
-          </Submenu>-->
+          </Submenu>
         </Menu>
       </div>
     </div>
     <div class="layout-content" v-autoscroll>
       <Row>
         <Col span="4">
-        <navbar :menus="menu" @shrinkNavBar="doShrink"></navbar>
-        </Col>
+          <navbar :menus="menu" @shrinkNavBar="doShrink"></navbar>
+      </Col>
         <Col span="20">
         <div class="layout-content-main">
           <router-view>
@@ -63,6 +61,9 @@
       },
       logout:function(){
         session.doLogout();
+      },
+      gotoMb:function(){
+        router.push({ name: ""});
       }
     },
     components:{

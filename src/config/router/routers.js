@@ -11,7 +11,7 @@ var data = [
     path: "/",
     component: "home/home.vue",
     redirect: {
-      name: "orgList"
+      name: "activityList"
     },
     children: [
       {
@@ -28,19 +28,19 @@ var data = [
         meta: {
           requireAuth: true
         },
-        name: "userList",
-        component: "example/user_list.vue",
-        path: "example/user_list"
+        name: "channelList",
+        component: "example/channel_list.vue",
+        path: "example/channel_list"
       },
       {
-        name: "userForm",
-        component: "example/user_form.vue",
-        path: "entities/user/create"
+        name: "channelForm",
+        component: "example/channel_form.vue",
+        path: "entities/Channel/create"
       },
       {
-        name: "orgList",
-        component: "example/org/index.vue",
-        path: "example/organization_list"
+        name: "activityList",
+        component: "example/activity/index.vue",
+        path: "example/activity_list"
       }
     ]
   },

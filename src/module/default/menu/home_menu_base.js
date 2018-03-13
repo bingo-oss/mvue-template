@@ -6,18 +6,18 @@ var homeMenu = [
     children: [
       {
         id: "0001",
-        title: '组织管理(默认)',
+        title: '活动管理(默认)',
         icon: 'iconfont icon-order',
         link: {
-          name: 'orgList'
+          name: 'activityList'
         }
       },
       {
         id: "0002",
-        title: '用户管理(自定义)',
+        title: '频道管理(自定义)',
         icon: 'iconfont icon-order',
         link: {
-          name: 'userList'
+          name: 'channelList'
         }
       }
     ]

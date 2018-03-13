@@ -8,7 +8,7 @@ export default {
         router.push({
             name:"defaultEntityList",
             params:{
-                entityName:"Organization"
+                entityName:"Activity"
             }
         });
     }

@@ -99,22 +99,7 @@ mergedConfig.getOAuth2FlowType=function () {
     }
   }
 };
-/**
- * 登录地址
- * @returns {*}
- */
-mergedConfig.getLoginUrl=function () {
-  var key="tplLoginUrl";
-  return getConfigVal(key);
-};
-/**
- *
- * @returns {*}
- */
-mergedConfig.getLoginUrl=function () {
-  var key="tplLoginUrl";
-  return getConfigVal(key);
-};
+
 /**
  * 获取服务器端代理验证授权码（accessCode）的地址
  * @returns {*}
@@ -144,7 +129,7 @@ mergedConfig.getApiBaseUrl=function () {
  */
 mergedConfig.getGatewayUrl=function () {
   var url="";
-  var key="gatewayUrl";
+  var key="service.gateway.endpoint";
   url=getConfigVal(key);
   if(!_.isEmpty(url)){
     return url;
@@ -184,12 +169,20 @@ mergedConfig.getClientSecret=function () {
   var key="clientSecret";
   return getConfigVal(key);
 };
+
+/**
+ * 获取元数据服务的地址，包括表单、视图、套件和项目等基本信息获取接口
+ * @returns {*}
+ */
+mergedConfig.getMetaserviceUrl = function () {
+  return getConfigVal("service.metabase.endpoint");
+};
 /**
  * 获取上传下载的服务器地址
  * @returns {*}
  */
 mergedConfig.getUploadUrl=function () {
-  var key="uploadUrl";
+  var key="service.stream.endpoint";
   return getConfigVal(key);
 };
 /**

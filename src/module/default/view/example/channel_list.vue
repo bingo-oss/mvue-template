@@ -3,7 +3,7 @@
     <childheader :show="header"></childheader>
     <div class="pageMain">
       <grid ref="gridList"
-            :meta-entity="'User'"
+            :meta-entity="'Channel'"
             :query-resource="queryResource" :query-options="queryOptions"
             :columns="columns"
             :pager="pager"
@@ -15,13 +15,13 @@
   </div>
 </template>
 <script>
-  var metaEntityResource=require("services/security/user_service").$resource;
+  var metaEntityResource=require("services/example/channel_service").$resource;
   module.exports = {
     data:function(){
       return {
         header: {
-          title: "用户管理",
-          description: "显示及维护系统内的所有用户",
+          title: "频道管理",
+          description: "显示及维护系统内的所有频道",
           showBack: false
         },
         pager:true,
@@ -29,10 +29,9 @@
         queryResource:metaEntityResource,
         queryOptions:{"orderby":"updatedAt desc"},
         columns:[
-          {key:"name"},
-          {key:"loginName"},
-          {key:"photos"},
-          {key:"gender"},
+          {key:"title"},
+          {key:"status"},
+          {key:"description"},
           {key:"updatedAt"},
           {title:"具体操作",width:220,align:"center",metaParams:{
               type:"operation",
@@ -42,7 +41,7 @@
         toolbar:{
           btns:["create"],
           quicksearch:{
-            fields:["name","loginName"],
+            fields:["description","title"],
             placeholder:"根据名称搜索"
           }
         }

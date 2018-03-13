@@ -1,14 +1,11 @@
 <template>
 <div class="pageMain">
-  sdfkdsjfkdsjfd
     <meta-form :entity-name="entityName" :model="model" @exDataChanged="exDataChanged">
-        <meta-field name="name" v-model="model.name">
+        <meta-field name="title" v-model="model.title">
         </meta-field>
-        <meta-field name="loginName" v-model="model.loginName">
+        <meta-field name="status" v-model="model.status">
         </meta-field>
-        <meta-field name="password" v-model="model.password">
-        </meta-field>
-        <meta-field name="gender" v-model="model.gender">
+        <meta-field name="description" v-model="model.description">
         </meta-field>
     </meta-form>
 </div>

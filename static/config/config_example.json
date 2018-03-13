@@ -1,15 +1,16 @@
 {
   "ssoVersion": "v3",
   "clientId": "console",
-  "ssoServerUrl": "https://developer.bingosoft.net:12100/ssov3",
-  "tplLoginUrl": "https://developer.bingosoft.net:12100/ssov3/oauth2/authorize?client_id=console&response_type=code+id_token&redirect_uri={redirect_uri}&logout_uri=https%3A%2F%2Fdeveloper.bingosoft.net%3A12100%2Fssov3%2Foauth2%2Flogout",
-  "tplLogoutUrl": "https://developer.bingosoft.net:12100/ssov3/oauth2/logout?post_logout_redirect_uri={redirect_uri}",
-  "apiBaseUrl":"http://localhost:8080",
-  "gatewayUrl":"https://developer.bingosoft.net:12100",
+   "ssoServerUrl": "https://saaslinkdev.projects.bingosoft.net:22283/sso",
   "oauth2Flow":"implicit",
   "authAccessCodeProxyUrl":"https://developer.bingosoft.net:12100/console/auth/access_token",
+  "apiBaseUrl":"https://developer.bingosoft.net:12100/cddc_engine",
 
-  "uploadUrl":"https://developer.bingosoft.net:12100/engine/api/stream",
-  "userApiUrl":"https://developer.bingosoft.net:12100/engine/api/user",
-  "orgApiUrl":"https://developer.bingosoft.net:12100/engine/api/organization"
+  "service.gateway.endpoint":"https://developer.bingosoft.net:12100",
+  "service.stream.endpoint":"https://developer.bingosoft.net:12100/services/stream",
+  "service.tool.endpoint":"https://developer.bingosoft.net:12100/services/tool",
+  "service.metabase.endpoint":"https://developer.bingosoft.net:12100/services/metaservice",
+
+  "userApiUrl":"https://developer.bingosoft.net:12100/services/tool/user",
+  "orgApiUrl":"https://developer.bingosoft.net:12100/services/tool/organization"
 }
