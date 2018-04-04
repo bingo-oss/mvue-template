@@ -2,7 +2,7 @@
  * 获取元数据相关信息的接口，包括表单、视图、套件和项目等基本信息获取接口
  * swagger json定义：https://developer.bingosoft.net:12100/services/metaservice/swagger.json
  */
-var Config=require("src/config/config.js");
+var Config=require("src/libs/config_helper.js");
 var metaserviceUrl=Config.getMetaserviceUrl();
 
 var customActions = {

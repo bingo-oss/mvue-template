@@ -5,7 +5,7 @@ var data = [
   {
     meta: {
       module: "default",
-      requiresAuth: true
+      requiresAuth: false
     },
     name: "default",
     path: "/",

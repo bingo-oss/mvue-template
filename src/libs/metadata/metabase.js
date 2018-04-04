@@ -6,7 +6,7 @@ import controlTypeService from 'components/form/js/control_type_service';
 var store=require("store2");
 require("store2/cache");
 
-var Config=require("src/config/config.js");
+var Config=require("src/libs/config_helper.js");
 var MetaEntityCls=require("libs/metadata/metaentity");
 var mbCacheKey="_mb_";
 var mbModule={};

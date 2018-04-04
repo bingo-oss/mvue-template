@@ -1,16 +1,15 @@
 {
   "ssoVersion": "v3",
+  "ssoServerUrl": "https://saaslinkdev.projects.bingosoft.net:22283/sso",
+  "oauth2Flow": "implicit",
   "clientId": "console",
-   "ssoServerUrl": "https://saaslinkdev.projects.bingosoft.net:22283/sso",
-  "oauth2Flow":"implicit",
-  "authAccessCodeProxyUrl":"https://developer.bingosoft.net:12100/console/auth/access_token",
-  "apiBaseUrl":"https://developer.bingosoft.net:12100/cddc_engine",
 
-  "service.gateway.endpoint":"https://developer.bingosoft.net:12100",
-  "service.stream.endpoint":"https://developer.bingosoft.net:12100/services/stream",
-  "service.tool.endpoint":"https://developer.bingosoft.net:12100/services/tool",
-  "service.metabase.endpoint":"https://developer.bingosoft.net:12100/services/metaservice",
+  "apiBaseUrl": "https://developer.bingosoft.net:12000/mvue_engine",
+  "userApiUrl": "https://developer.bingosoft.net:12100/services/tool/user",
+  "orgApiUrl": "https://developer.bingosoft.net:12100/services/tool/organization",
 
-  "userApiUrl":"https://developer.bingosoft.net:12100/services/tool/user",
-  "orgApiUrl":"https://developer.bingosoft.net:12100/services/tool/organization"
+  "service.stream.endpoint": "https://developer.bingosoft.net:12100/services/stream",
+  "service.tool.endpoint": "https://developer.bingosoft.net:12100/services/tool",
+  "service.metabase.endpoint": "https://developer.bingosoft.net:12100/services/metaservice",
+  "service.gateway.endpoint": "https://developer.bingosoft.net:12100"
 }

@@ -1,4 +1,4 @@
-var Config=require("src/config/config");
+var Config=require("src/libs/config_helper");
 export default{
     entityModelRedundantKey:'_data',
     entityModelTitleKey:'title',

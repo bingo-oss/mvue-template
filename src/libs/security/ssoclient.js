@@ -1,7 +1,7 @@
 /**
  * SSO客户端
  */
-var Config=require("src/config/config.js");
+var Config=require("src/libs/config_helper.js");
 var Base64=require("js-base64").Base64;
 /**
  * 跳转到sso登录页面

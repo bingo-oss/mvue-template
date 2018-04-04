@@ -5,9 +5,9 @@
   "author": "bingosoft",
   "private": true,
   "scripts": {
-    "dev": "browserify src/config/config.js > static/config/config_local.js && node build/dev-server.js",
-    "dev_debug": "browserify src/config/config.js > static/config/config_local.js && node %NODE_DEBUG_OPTION% build/dev-server.js",
-    "build": "browserify src/config/config.js > static/config/config_local.js && node build/build.js",
+    "dev": "browserify src/libs/config_helper.js > static/config/config_local.js && node build/dev-server.js",
+    "dev_debug": "browserify src/libs/config_helper.js > static/config/config_local.js && node %NODE_DEBUG_OPTION% build/dev-server.js",
+    "build": "browserify src/libs/config_helper.js > static/config/config_local.js && node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",

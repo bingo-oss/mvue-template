@@ -69,7 +69,7 @@ function toRealRouteData(_data, _moduleName, r) {
   }
   return routes;
 }
-var routersBaseData = require('src/config/router/routers.js').data;
+var routersBaseData = require('src/router/routers.js').data;
 var routersExData = [];
 //module 模块名称，r 是此模块require的模块动态加载函数
 function getModuleRoutes(module, r) {
