@@ -1,14 +1,24 @@
-var utils=require("libs/router_utils");
+import utils from "libs/router_utils";
 var routersData = utils.getModuleRoutes("default",function(component){
     return require('src/module/default/view/' + component);
 });
+var propsResolve=function (router) {
+  if(!_.isEmpty(router.params.menu)){
+    router.meta["menu"]=router.params.menu;
+  }
+};
+
 routersData[0].children.push({
     meta: {
       requireAuth: true
     },
     name: "defaultEntityList",
     component: require('src/module/default/view/default/list'),
-    path: "entities/:entityName/list"
+    path: "entities/:entityName/list",
+  beforeEnter:function (to,from,next) {
+    propsResolve(to);
+    next();
+  }
 });
 routersData[0].children.push({
     meta: {
@@ -26,4 +36,5 @@ routersData[0].children.push({
     component: require('src/module/default/view/default/form'),
     path: "entities/:entityName/edit/:id"
 });
-module.exports = routersData;
+
+export default routersData;

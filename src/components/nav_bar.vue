@@ -80,6 +80,10 @@ export default {
                     _this.activeName=m.name;
                     return false;
                 }
+                if(m.meta && !_.isEmpty(m.meta["menu"]) && menuMap[m.meta["menu"]]) {
+                  _this.activeName=m.meta["menu"];
+                  return false;
+                }
             });
         },
         doShrink: function() {

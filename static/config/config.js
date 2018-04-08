@@ -4,6 +4,5 @@ window.config={
   //服务器地址，如:http://xxxx/console，该配置服务需提供/config接口，获取服务器配置信息
 	//baseServerUrl:"https://developer.bingosoft.net:12100",
 	//SSO配置，客户端Id和密钥
-	clientId:"console",
-	clientSecret:"gw_rest_api_secret"
+	clientId:"console"
 }

@@ -1,6 +1,7 @@
 /**
  * 路由基础文件
  */
+import metabase from 'libs/metadata/metabase';
 var data = [
   {
     meta: {
@@ -39,8 +40,10 @@ var data = [
       },
       {
         name: "activityList",
-        component: "example/activity/index.vue",
-        path: "example/activity_list"
+        path: "entities/Activity/list",
+        redirect: function (route) {
+          return metabase.routeForEntityList("Activity",{menu:route.name});
+        },
       }
     ]
   },
@@ -53,4 +56,6 @@ var data = [
     path: "/ssoclient"
   },
 ];
-exports.data = data;
+export default{
+  data:data
+}

@@ -1,4 +1,6 @@
 //将arr2的路由基础数据合并到arr1中
+import  BaseRoute from "src/router/routers";
+
 function mergeData(arr1, arr2) {
   for (var i = 0; i < arr2.length; i++) {
     var Bhas = false;
@@ -69,7 +71,8 @@ function toRealRouteData(_data, _moduleName, r) {
   }
   return routes;
 }
-var routersBaseData = require('src/router/routers.js').data;
+
+var routersBaseData = BaseRoute.data;
 var routersExData = [];
 //module 模块名称，r 是此模块require的模块动态加载函数
 function getModuleRoutes(module, r) {
@@ -81,6 +84,7 @@ function getModuleRoutes(module, r) {
   var routersData = toRealRouteData(filteredData, module, r);
   return routersData;
 }
-module.exports = {
+
+export  default {
   getModuleRoutes:getModuleRoutes
 };
