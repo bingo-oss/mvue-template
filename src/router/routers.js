@@ -1,7 +1,6 @@
 /**
  * 路由基础文件
  */
-import metabase from 'libs/metadata/metabase';
 var data = [
   {
     meta: {
@@ -42,7 +41,7 @@ var data = [
         name: "activityList",
         path: "entities/Activity/list",
         redirect: function (route) {
-          return metabase.routeForEntityList("Activity",{menu:route.name});
+          return mvueCore.metaBase.routeForEntityList("Activity",{menu:route.name});
         },
       }
     ]

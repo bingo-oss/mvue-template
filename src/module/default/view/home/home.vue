@@ -47,7 +47,6 @@
 </template>
 <script>
   var menu = require('../../menu/home_menu_base.js');
-  var session=require("libs/security/session");
   module.exports = {
     data: function () {
       return {
@@ -60,7 +59,7 @@
         this.shrinkNavBar=shrinkNavBar;
       },
       logout:function(){
-        session.doLogout();
+        mvueCore.session.doLogout();
       },
       gotoMb:function(){
         router.push({ name: ""});

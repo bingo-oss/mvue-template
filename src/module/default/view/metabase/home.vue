@@ -9,7 +9,6 @@
 </div>
 </template>
 <script>
-  import metabase from "libs/metadata/metabase.js";
     export default {
         data(){
             return {
@@ -18,7 +17,7 @@
         },
       mounted() {
           var _self=this;
-          _.forEach(metabase.entities(),function (val,key) {
+          _.forEach(this.$metaBase.entities(),function (val,key) {
             _self.entities.push(val);
           });
       },

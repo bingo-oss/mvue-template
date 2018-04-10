@@ -11,9 +11,8 @@
 </div>
 </template>
 <script>
-import formBase from 'components/form/js/form_base'
 export default {
-    mixins:[formBase]
+    mixins:[mvueCore.mixins.formBase]
 }
 </script>
 

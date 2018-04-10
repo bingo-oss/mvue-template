@@ -2,7 +2,7 @@
   <div>
     <childheader :show="header"></childheader>
     <div class="pageMain">
-      <grid ref="gridList"
+      <meta-grid ref="gridList"
             :meta-entity="'Channel'"
             :query-resource="queryResource" :query-options="queryOptions"
             :columns="columns"
@@ -10,7 +10,7 @@
             :pager-sizes="pagerSizes"
             :toolbar="toolbar"
       >
-      </grid>
+      </meta-grid>
     </div>
   </div>
 </template>
@@ -51,7 +51,6 @@
 
     },
     components:{
-      grid:require('components/grid/iview_grid.vue'),
       childheader:require('components/childheader.vue'),
     }
   };

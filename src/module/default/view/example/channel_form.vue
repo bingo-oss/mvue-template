@@ -25,9 +25,8 @@
 </div>
 </template>
 <script>
-import formBase from 'components/form/js/form_base'
 export default {
-    mixins:[formBase],
+    mixins:[mvueCore.mixins.formBase],
     data:function(){
         //覆盖路由时必须通过这种方式传递实体名称
         return this.setEntityName("Channel");

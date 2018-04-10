@@ -1,12 +1,12 @@
+//这几个工具类必须在最前面引用，不得删除和更改
 window.jQuery = window.$ = require('jquery');
+window._ = require('lodash');
+window.store = require('store2');
 function appStart(initFunc) {
   require("babel-polyfill");
-  window.Ajax = window.ax = require("libs/ajax.js");
-  window.Utils = require("libs/utils.js");
-  window.loading = require("libs/load/loading.js");
   Promise.all([
-    import('iview'),import('vue-multiselect')
-  ]).then(function ([iview,Multiselect]) {
+    import('iview'),import('vue-multiselect'),import('mvue-core')
+  ]).then(function ([iview,Multiselect,mvueCorePkg]) {
     require( 'iview/dist/styles/iview.css');
     require("vue-multiselect/dist/vue-multiselect.min.css");
     var vue = require("vue");
@@ -24,25 +24,21 @@ function appStart(initFunc) {
     //多选组件
     Vue.component("Multiselect",Multiselect.Multiselect);
     //全局组件引入
-    require("libs/global_components");
-    //注册自定义全局指令
-    var CustomDirectives = require("libs/extend/custom_directives.js");
-    new CustomDirectives(Vue);
+    var mvueCore=mvueCorePkg.default;
+    window.mvueCore=mvueCore;
+    Vue.use(mvueCore);
+    window.Utils=mvueCore.utils;
+    window.Ajax = window.ax = mvueCore.ajax;
     //全局组件引入
     require("libs/index_component_init");
-    //过滤
-    var filters = require('libs/filters.js');
-    Object.keys(filters).forEach(function (k) {
-      Vue.filter(k, filters[k]);
-    });
     //表单验证控件
     var Vee = require("vee-validate");
-    var CustomValidator = require("libs/extend/custom_validator.js");
+    var CustomValidator = mvueCore.customValidator;
     new CustomValidator(Vue, Vee);
     //利用 XMLHttpRequest 请求资源的快捷方式
     var VueResource = require('vue-resource');
     Vue.use(VueResource);
-    var CustomVueResource = require("libs/extend/custom_vue_resource.js");
+    var CustomVueResource = mvueCore.customVueResource;
     new CustomVueResource(Vue, VueResource);
     Vue.use(VueRouter);
     //路由引入
@@ -63,7 +59,7 @@ function appStart(initFunc) {
       var router = new VueRouter({
         routes: routesData
       });
-      var session=require("libs/security/session");
+      var session=mvueCore.session;
       router.beforeEach(function(to, from, next) {
         session.doFilter(to,from,next);
       });
