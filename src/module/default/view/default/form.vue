@@ -1,5 +1,5 @@
 <template>
-<div class="pageMain">
+<div class="pageMain" v-autoscroll>
     <meta-form ref="form" :entity-name="entityName" :model="model"
     @exDataChanged="exDataChanged" 
     :preprocessed="preprocessed"
