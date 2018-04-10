@@ -142,15 +142,6 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest'
     }),
-    new webpack.ProvidePlugin({
-      jQuery: "jquery",
-      $: "jquery",
-      _: "lodash",
-      'window.store': 'store2',
-      'store': 'store2'
-    }),
-
-
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static/config'),

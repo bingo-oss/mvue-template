@@ -1,5 +1,6 @@
 <template>
   <div>
+    <childheader :show="header"></childheader>
     <div class="pageMain">
       <meta-grid ref="gridList" :meta-entity="entityName">
       </meta-grid>
@@ -27,6 +28,9 @@ export default {
         this.header.title=metaEntity.title;
         this.header.description=metaEntity.description;
         next();
+    },
+    components:{
+      childheader:require('components/childheader.vue'),
     }
 };
 </script>
