@@ -1,20 +1,19 @@
 @import '~iview/src/styles/index.less';
-
+@zindex-transfer        : 1061;
 // 下面是要覆盖的变量，例如：
 // Border color
-@border-color-base:#cccccc;// outside
+@border-color-base:#E7E8EB;// outside
 //@border-color-split:rgb(85,85,85);// inside
 @input-disabled-bg           : #eeeeee;
-@font-size-small:14px;
-@btn-font-size:14px;
+@font-size-small:13px;
+@btn-font-size:13px;
+@input-padding-horizontal    : 12px;
+@input-padding-vertical-base : 6px;
 .contentDailog .form-group .formElement .ivu-select{
     width:100%;
 }
 .ivu-select-disabled .ivu-select-selection{
     color:#555555;
-}
-.ivu-select-selection{
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value{
     padding-left:12px;
@@ -39,8 +38,7 @@
   line-height: 1;
 }
 .ivu-card-bordered {
-  border: 1px solid #dddee1;
-  border-color: #e9eaec;
+  border: 1px solid #e9eaec;
 }
 .ivu-modal-header {
     border-bottom: 1px solid #e9eaec;
@@ -50,4 +48,11 @@
 }
 .ivu-modal-body{
     word-break: break-all;
+}
+//修正multiselect选人控件的下拉弹出框，覆盖不了iview日期组件的icon的bug
+.multiselect__content-wrapper{
+    width:80%;
+}
+.ivu-select-dropdown{
+    max-height:250px;
 }
