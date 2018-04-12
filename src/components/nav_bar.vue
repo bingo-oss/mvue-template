@@ -10,7 +10,7 @@
                 <Icon :type="item.icon" size="18"></Icon>
                 {{item.title}}
               </template>
-              <MenuItem v-for="childItem in item.children" :key="childItem.id" :name="childItem.link.name">
+              <MenuItem v-for="childItem in item.children" :key="childItem.id" :name="childItem.id">
                 {{childItem.title}}
               </MenuItem>
             </Submenu>
@@ -40,7 +40,8 @@ export default {
             isShow: false,
             localMenus: _.cloneDeep(this.menus),
             openNames:['0000'],
-            activeName:""
+            activeName:"",
+            menuMappings:{}
         }
     },
     watch:{
@@ -63,28 +64,26 @@ export default {
     methods: {
         setActiveMenu(){//设置导航菜单选中
             let _this=this;
-            let menuMap={};
-            function buildMenuMap(_menus){
-                _.each(_menus,function(menu){
-                    if(menu.link&&menu.link.name){
-                        menuMap[menu.link.name]=menu.link.name;
-                    }
-                    if(menu.children){
-                        buildMenuMap(menu.children,menuMap);
-                    }
-                })
-            }
-            buildMenuMap(this.localMenus,menuMap);
-            _.each(this.$route.matched,function(m){
-                if(menuMap[m.name]){
-                    _this.activeName=m.name;
-                    return false;
-                }
-                if(m.meta && !_.isEmpty(m.meta["menu"]) && menuMap[m.meta["menu"]]) {
-                  _this.activeName=m.meta["menu"];
+          _this.activeName="";
+            for(var i=this.$route.matched.length-1;i>=0;i--) {
+              var curRouter = this.$route.matched[i];
+              _.forEach(this.menuMappings, function (menu, key) {
+                if (curRouter.name == menu.id
+                  || curRouter.name == menu.link.name
+                  || curRouter.path == menu.link.path) {
+                  _this.activeName = menu.id;
                   return false;
                 }
-            });
+                if (curRouter.meta && !_.isEmpty(curRouter.meta["menu"])) {
+                  var routerMenu = curRouter.meta["menu"];
+                  if (routerMenu == menu.id
+                    || routerMenu==menu.link.name) {
+                    _this.activeName = menu.id;
+                    return false;
+                  }
+                }
+              });
+            }
         },
         doShrink: function() {
             this.shrinkNavBar = !this.shrinkNavBar;
@@ -96,7 +95,12 @@ export default {
         },
         clickMenu:function(name){
           if(name){
-            router.push({name:name});
+            var selectedMenu=this.menuMappings[name];
+            if(_.isEmpty(selectedMenu) || _.isEmpty(selectedMenu.link)){
+              alert("菜单定义数据有误");
+              return;
+            }
+            router.push(selectedMenu.link);
           }
         },
         leftNavItemShow: function(dom, item) {
@@ -131,7 +135,24 @@ export default {
             if(!(_this.localMenus&&_this.localMenus.length)){//如果菜单为空
                 return;
             }
-            /*userPermsCheck.getCurUserPermissions(function(userPerms) {
+            _.forEach(_this.localMenus,function (menu,i) {
+              var menuId=menu.id;
+              _this.menuMappings[menuId]=menu;
+              if(_.isEmpty(menu.link)){
+                menu.link={};
+              }
+              if(_.isEmpty(menu.children)){
+                return;
+              }
+              _.forEach(menu.children,function (subMenu,k) {
+                  var subMenuId=subMenu.id;
+                _this.menuMappings[subMenuId]=subMenu;
+                if(_.isEmpty(subMenu.link)){
+                  subMenu.link={};
+                }
+              });
+            });
+              /*userPermsCheck.getCurUserPermissions(function(userPerms) {
                 for (var k = 0; k < _this.localMenus.length; k++) {
                     var menuChild = _this.localMenus[k].children;
                     var iNow = 0;

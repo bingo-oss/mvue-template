@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-  var menu = require('../../menu/home_menu_base.js');
+  var menu = require('../../menu/menu.js');
   module.exports = {
     data: function () {
       return {

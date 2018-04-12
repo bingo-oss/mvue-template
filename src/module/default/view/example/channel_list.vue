@@ -3,19 +3,18 @@
     <childheader :show="header"></childheader>
     <div class="pageMain">
       <meta-grid ref="gridList"
-            :meta-entity="'Channel'"
-            :query-resource="queryResource" :query-options="queryOptions"
-            :columns="columns"
-            :pager="pager"
-            :pager-sizes="pagerSizes"
-            :toolbar="toolbar"
+                 :meta-entity="'Channel'"
+                 :query-options="queryOptions"
+                 :columns="columns"
+                 :pager="pager"
+                 :pager-sizes="pagerSizes"
+                 :toolbar="toolbar"
       >
       </meta-grid>
     </div>
   </div>
 </template>
 <script>
-  var metaEntityResource=require("services/example/channel_service").$resource;
   module.exports = {
     data:function(){
       return {
@@ -26,10 +25,10 @@
         },
         pager:true,
         pagerSizes:[10,20,50],
-        queryResource:metaEntityResource,
         queryOptions:{"orderby":"updatedAt desc"},
         columns:[
-          {key:"title"},
+          {type:"selection",align:"center",width:60},
+          {key:"title",width:300},
           {key:"status"},
           {key:"description"},
           {key:"updatedAt"},
