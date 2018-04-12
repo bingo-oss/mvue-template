@@ -1,58 +1,114 @@
 .logout {
-    color: #fff;
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    z-index: 1000;
-    cursor: pointer;
-    &:hover {
-        color: #fff;
-        text-decoration: none;
-        cursor: inherit;
-    }
-    i {
-        &:hover {
-            color: $grayd9;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    }
+  color: #fff;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  z-index: 1000;
+  cursor: pointer;
+  &:hover {
+      color: #fff;
+      text-decoration: none;
+      cursor: inherit;
+  }
+  i {
+      &:hover {
+          color: $grayd9;
+          text-decoration: none;
+          cursor: pointer;
+      }
+  }
 }
-
-  .multiselect{
-    min-height: auto;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-    border:1px solid #ccc;
-  }
-  .multiselect--disabled{
-    opacity: 1;
-    pointer-events: auto;
+.multiselect,.multiselect__input,.multiselect__single{
+  font-size:14px;
+  color:#555;
+}
+.multiselect{
+  min-height: auto;
+  border-radius: 4px;
+  box-shadow: none;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  border:1px solid #E7E8EB;
+}
+.multiselect--disabled{
+  opacity: 1;
+  pointer-events: auto;
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
+.multiselect__input{
+  margin-bottom:0px;
+}
+.multiselect__input, .multiselect__single{
+  padding:0px;
+}
+.multiselect__tags{
+  padding:5px 40px 4px 12px;
+  height:32px;
+  min-height: unset;
+  border:none;
+}
+.multiselect__select{
+  height:31px;
+  border:none;
+  width:30px;
+  padding:4px 5px;
+}
+.ivu-cascader-arrow,.ivu-select-arrow{
+  right:12px;
+  color:#999;
+}
+.multiselect--disabled{
+  .multiselect__input,.multiselect__select{
     cursor: not-allowed;
-    background-color: #eeeeee;
   }
-  .multiselect__input{
-    margin-bottom:0px;
-    color:#555;
+}
+.multiselect--disabled{
+  .multiselect__select,.multiselect__tags,.multiselect__input{
+    background: none;
   }
-  .multiselect__tags{
-    padding:4px 40px 4px 8px;
-    height:32px;
-    min-height: unset;
-    border:none;
-  }
-  .multiselect__select{
-    height:31px;
-    border:none;
-  }
-  .multiselect--disabled{
-    .multiselect__input,.multiselect__select{
-      cursor: not-allowed;
-    }
-  }
-  .multiselect--disabled{
-    .multiselect__select,.multiselect__tags,.multiselect__input{
-      background: none;
-    }
-  }
+}
+.div-inline-block{
+display:inline-block;
+width: auto;
+vertical-align: middle;
+}
+.div-inline{
+display:inline;
+vertical-align: middle;
+}
+.div-block{
+display:block;
+}
+/*通用颜色设置*/
+$font12:12px;
+$font13:13px;
+$font14:14px;
+$tips-color:rgb(153,153,153);
+$tools-color:rgb(102,102,102);
+
+$main-theme-color: rgb(76, 164, 254);
+.font12{
+font-size:$font12;
+}
+.font13{
+font-size:$font13;
+}
+.font14{
+font-size:$font14;
+}
+.tips-color{
+color:$tips-color;
+}
+.tools-color{
+color:$tools-color;
+}
+.default-color-btn{
+background: $main-theme-color;
+border-color: $main-theme-color;
+}
+.default-form-body .form-control{
+  box-shadow: none;
+  -webkit-box-shadow:none;
+  border:1px solid #E7E8EB;
+  color:#555555;
+}
