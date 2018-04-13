@@ -34,12 +34,12 @@
           {key:"description"},
           {key:"updatedAt"},
           {title:"具体操作",width:220,align:"center",metaParams:{
-              type:"operation",
-              btns:["edit","del"]
+              type:"operation"
             }},
         ],
         toolbar:{
           btns:["create"],
+          singleBtns:["edit","del"],
           quicksearch:{
             fields:["description","title"],
             placeholder:"根据名称搜索"

@@ -2,6 +2,10 @@
 window.jQuery = window.$ = require('jquery');
 window._ = require('lodash');
 window.store = require('store2');
+window.Vue = require("vue").default;
+//利用 XMLHttpRequest 请求资源的快捷方式
+var VueResource = require('vue-resource');
+Vue.use(VueResource);
 function appStart(initFunc) {
   require("babel-polyfill");
   Promise.all([
@@ -9,11 +13,7 @@ function appStart(initFunc) {
   ]).then(function ([iview,Multiselect,mvueCorePkg]) {
     require( 'iview/dist/styles/iview.css');
     require("vue-multiselect/dist/vue-multiselect.min.css");
-    var vue = require("vue");
-    var vr = require("vue-router");
-    var Vue = vue.default;
-    var VueRouter = vr.default;
-    window.Vue = Vue;
+    var VueRouter = require("vue-router").default;
     //加载 iView
     window.iView = iview;
     Vue.use(iView);
@@ -35,9 +35,6 @@ function appStart(initFunc) {
     var Vee = require("vee-validate");
     var CustomValidator = mvueCore.customValidator;
     new CustomValidator(Vue, Vee);
-    //利用 XMLHttpRequest 请求资源的快捷方式
-    var VueResource = require('vue-resource');
-    Vue.use(VueResource);
     var CustomVueResource = mvueCore.customVueResource;
     new CustomVueResource(Vue, VueResource);
     Vue.use(VueRouter);

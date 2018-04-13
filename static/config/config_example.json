@@ -1,8 +1,8 @@
 {
-  "ssoVersion": "v3",
-  "ssoServerUrl": "https://saaslinkdev.projects.bingosoft.net:22283/sso",
-  "oauth2Flow": "implicit",
-  "clientId": "console",
+  "oauth2.serverVersion": "v3",
+  "oauth2.serverUrl": "https://saaslinkdev.projects.bingosoft.net:22283/sso",
+  "oauth2.flow": "implicit",
+  "oauth2.clientId": "console",
 
   "apiBaseUrl": "https://developer.bingosoft.net:12000/mvue_engine",
   "userApiUrl": "https://developer.bingosoft.net:12100/services/tool/user",

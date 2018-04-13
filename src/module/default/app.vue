@@ -4,8 +4,11 @@
   </div>
 </template>
 <script>
-  module.exports = {
+  export default {
     data: function () {
+      //每次刷新页面要强制重新获取项目的元数据
+      var projectId=this.$route.params.projectId;
+      this.$metaBase.initMetabase(projectId,true);
       return {
 
       };
