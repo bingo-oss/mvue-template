@@ -9,7 +9,7 @@ var homeMenu = [
         title: '活动管理(默认)',
         icon: 'iconfont icon-order',
         link: {
-          name: 'activityList'
+          name:"activityList"
         }
       },
       {

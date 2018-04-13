@@ -20,22 +20,26 @@ var data = [
         path: "guide/index"
       },
       {
-        name: "entityManage",
-        component: "metabase/home.vue",
-        path: "metabase/index"
-      },
-      {
         meta: {
           requireAuth: true
         },
         name: "channelList",
         component: "example/channel_list.vue",
-        path: "example/channel_list"
+        path: "entities/Channel/list"
       },
       {
-        name: "channelForm",
+        name: "entityManage",
+        component: "metabase/home.vue",
+        path: "metabase/index"
+      },
+      {
+        name: "channelEditForm",
         component: "example/channel_form.vue",
-        path: "entities/Channel/create"
+        path: "entities/Channel/create",
+        beforeEnter: function (to, from, next) {
+          mvueCore.metaBase.setEntityNameForRoute(to,"Channel");
+          next();
+        }
       },
       {
         name: "activityList",
