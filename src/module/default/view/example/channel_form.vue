@@ -1,6 +1,6 @@
 <template>
   <div class="pageMain">
-    <meta-form ref="form" :entity-name="entityName" :record-id="id" :onMounted="onFormMounted">
+    <meta-form ref="form" :entity-name="entityName" :record-id="id" :on-inited="onFormInited">
       <Row type="flex" :gutter="10">
         <Col span="24" order="1">
         <meta-field name="title"  title="频道名称">
@@ -33,8 +33,8 @@
       }
     },
     methods:{
-      onFormMounted:function (metaForm) {
-        metaForm.entity.description="aaaaa";
+      onFormInited:function (metaForm) {
+        //metaForm.entity.description="aaaaa";
       }
     }
   }

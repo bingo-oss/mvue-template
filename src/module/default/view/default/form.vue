@@ -1,14 +1,12 @@
 <template>
-<div class="pageMain default-form-body" v-autoscroll>
-    <meta-form ref="form" :entity-name="entityName" :model="model"
-    @exDataChanged="exDataChanged"
-    :preprocessed="preprocessed"
-    @on-created="onCreated"
-    @on-deleted="onDeleted">
-        <meta-field v-for="key in metaEntity.getDefaultFormFields()" :key="key" :name="key" v-model="model[key]">
-        </meta-field>
-    </meta-form>
-</div>
+  <div :key="$route.fullPath" class="pageMain" :id="'default-form-uuid-'+entityName" >
+    <div class=" default-form-body">
+      <meta-form ref="form" transfer :entity-name="entityName" :record-id="id" :isView="isViewMode">
+          <meta-field v-for="key in metaEntity.getDefaultFormFields()" :key="key" :name="key">
+          </meta-field>
+      </meta-form>
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -20,6 +18,12 @@ export default {
       entityName:entityName,
       id:id,
       metaEntity:metaEntity
+    }
+  },
+  computed:{
+    isViewMode(){
+      let action=this.$route.query&&this.$route.query[Utils.queryKeys.action];
+      return Utils.formActions.view===action;
     }
   }
 }
