@@ -35,7 +35,7 @@ var data = [
       {
         name: "channelEditForm",
         component: "example/channel_form.vue",
-        path: "entities/Channel/create",
+        path: "entities/Channel/edit/:id",
         beforeEnter: function (to, from, next) {
           mvueCore.metaBase.setEntityNameForRoute(to,"Channel");
           next();

@@ -46,9 +46,6 @@
         }
       }
     },
-    mounted: function () {
-
-    },
     components:{
       childheader:require('components/childheader.vue'),
     }
