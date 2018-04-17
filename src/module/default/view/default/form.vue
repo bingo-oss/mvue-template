@@ -2,8 +2,6 @@
   <div :key="$route.fullPath" class="pageMain" :id="'default-form-uuid-'+entityName" >
     <div class=" default-form-body">
       <meta-form ref="form" transfer :entity-name="entityName" :record-id="id" :isView="isViewMode">
-          <meta-field v-for="key in metaEntity.getDefaultFormFields()" :key="key" :name="key">
-          </meta-field>
       </meta-form>
     </div>
   </div>
@@ -12,12 +10,10 @@
 export default {
   data:function () {
     var entityName=this.$route.params.entityName;
-    var metaEntity=this.$metaBase.findMetaEntity(entityName);
     var id=this.$route.params.id;
     return {
       entityName:entityName,
-      id:id,
-      metaEntity:metaEntity
+      id:id
     }
   },
   computed:{
