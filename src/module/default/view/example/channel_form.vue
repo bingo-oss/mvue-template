@@ -23,6 +23,7 @@
   </div>
 </template>
 <script>
+  import   channelService from "services/example/channel_service";
   export default {
     data:function () {
       var entityName=this.$route.params.entityName;
@@ -32,6 +33,16 @@
         id:id
       }
     },
+  mounted:function () {
+    var id=this.$route.params.id;
+    channelService.get({id:id}).then(function(reVal){
+      console.log(JSON.stringify(reVal));
+    });
+    //获取创建时间字段的默认值
+    channelService.calc({"createdAt":null}).then(function({data}){
+      console.log(JSON.stringify(data));
+    });
+  },
     methods:{
       onFormInited:function (metaForm) {
         //metaForm.entity.description="aaaaa";
