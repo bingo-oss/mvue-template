@@ -1,9 +1,7 @@
 
 var customActions = {
-
+  calc: {method: 'POST', url: 'channel/calc'}
 };
 var $resource=Vue.resource('channel{/id}',null,customActions);
 
-module.exports={
-    $resource:$resource
-}
+export default $resource;

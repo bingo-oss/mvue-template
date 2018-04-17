@@ -12,7 +12,7 @@
 export default {
   data:function () {
     var entityName=this.$route.params.entityName;
-    var metaEntity=this.$metaBase.findMetaEntity(entityName);
+    var metaEntity=mvueCore.metaBase.findMetaEntity(entityName);
     var id=this.$route.params.id;
     return {
       entityName:entityName,
