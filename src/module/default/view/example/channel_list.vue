@@ -37,7 +37,7 @@
             }},
         ],
         toolbar:{
-          btns:["create"],
+          btns:["create","export","import"],
           singleBtns:["edit","del"],
           quicksearch:{
             fields:["description","title"],
