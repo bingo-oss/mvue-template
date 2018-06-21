@@ -1,6 +1,5 @@
-import utils from "libs/router_utils";
-
-var routersData = utils.getModuleRoutes("default", function (component) {
+import  BaseRoute from "src/router/routers";
+var routersData = mvueCore.router.getModuleRoutes("default",BaseRoute.data, function (component) {
   return require('src/module/default/view/' + component);
 });
 var propsResolve = function (router) {
