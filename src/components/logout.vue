@@ -12,21 +12,7 @@
     },
     methods: {
       'logout': function () {
-        var _this = this;
-        iview$Modal.confirm({
-          title: '注销',
-          content: '确认注销当前用户?',
-          onOk: () => {
-            var reqUrl = Config.contextPath.authUrl;
-            ax.get(reqUrl, null, function (res) {
-                sessionStorage.removeItem("AccessToken");
-                sessionStorage.removeItem("hasStart");
-                if(res){
-                    window.location.href = res.tplLogoutUrl.replace("{redirect_uri}", window.location.href);
-                }
-            });
-          }
-        });
+        mvueCore.session.doLogout();
       }
     },
     mounted: function () {
