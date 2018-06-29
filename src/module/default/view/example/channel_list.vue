@@ -3,7 +3,7 @@
     <childheader :show="header"></childheader>
     <div class="pageMain">
       <meta-grid ref="gridList"
-                 :meta-entity="'Channel'"
+                 meta-entity-name="Channel"
                  :query-options="queryOptions"
                  :columns="columns"
                  :pager="pager"
@@ -27,14 +27,10 @@
         pagerSizes:[10,20,50],
         queryOptions:{"orderby":"updatedAt desc"},
         columns:[
-          {type:"selection",align:"center",width:60},
-          {key:"title",width:300},
+          {key:"title",width:200},
           {key:"status"},
           {key:"description"},
-          {key:"updatedAt"},
-          {title:"具体操作",width:220,align:"center",metaParams:{
-              type:"operation"
-            }},
+          {key:"updatedAt",width:150}
         ],
         toolbar:{
           btns:["create","export","import"],
