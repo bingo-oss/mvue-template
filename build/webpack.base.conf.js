@@ -3,12 +3,11 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 var webpack = require('webpack')
+var parseArgs  = require('minimist')
 
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-//非常酷的插件，自动浏览器预览最后生成的js boundles的内容
-//var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -17,9 +16,10 @@ var _pageEntryBase='./src/module/*/index';
 var pages = utils.getEntries(_pageEntryBase+'.html');
 var entries = utils.getEntries(_pageEntryBase+'.js');
 
+
 //用来屏蔽某些vue模板解析，方便开发迁移调试
 var _excludes=[];
-module.exports = {
+var packingConfig= {
   //入口文件
   entry: entries,
   output: {
@@ -106,10 +106,6 @@ module.exports = {
     ]
   },
   plugins: [
-    //非常酷的插件，自动浏览器预览最后生成的js boundles的内容
-    /*new BundleAnalyzerPlugin({
-     analyzerMode: 'static'
-     }),*/
     //webpack在require动态路径时会加载整个目录的文件作为模块，这个插件可以限定要引入的模块
     new webpack.ContextReplacementPlugin(
       /moment[\/\\]locale$/,
@@ -149,10 +145,19 @@ module.exports = {
         ignore: ['.*']
       }
     ])
-
-
   ]
 }
+var argv = parseArgs(process.argv.slice(2));
+if(argv.debug){
+  //非常酷的插件，自动浏览器预览最后生成的js boundles的内容
+  var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+  packingConfig.plugins.splice(1,0,  new BundleAnalyzerPlugin({
+    analyzerMode: 'static'
+  }));
+  console.log("enable BundleAnalyzerPlugin");
+}
+module.exports =packingConfig;
+
 for(var page in pages) {
   // 配置生成的html文件，定义路径等
   let _pageName=page;
