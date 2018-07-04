@@ -1,5 +1,6 @@
-//全局eventBus，用来组件之间事件传递
-var eventBus = new Vue({
+function init(Vue){
+  //全局eventBus，用来组件之间事件传递
+  var eventBus = new Vue({
     data: {
       events: {
 
@@ -50,6 +51,8 @@ var eventBus = new Vue({
   }
   window.iview$Modal = iview$Modal;
   window.iview$Message = eventBus.$Message;
-export default{
+}
 
+export default{
+  init
 }

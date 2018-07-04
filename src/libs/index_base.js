@@ -3,7 +3,7 @@ import mvueToolkit from "mvue-toolkit";
 window.jQuery = window.$ = require('jquery');
 window._ = require('lodash');
 window.store = require('store2');
-window.Vue = require("vue").default;
+var Vue = require("vue").default;
 function appStart(initFunc) {
   require("babel-polyfill");
   mvueToolkit.config.loadServerConfig().then(function () {
@@ -22,6 +22,12 @@ function appStart(initFunc) {
       });
       //多选组件
       Vue.component("Multiselect",Multiselect.Multiselect);
+      //表单验证控件
+      var Vee = require("vee-validate");
+      Vue.use(mvueToolkit,{
+        vee:Vee,
+        baseUrlForResource:mvueToolkit.config.getApiBaseUrl()
+      });
       //全局组件引入
       var mvueCore=mvueCorePkg.default;
       window.mvueCore=mvueCore;
@@ -29,13 +35,7 @@ function appStart(initFunc) {
       window.Utils=mvueCore.utils;
       window.Ajax = window.ax = mvueCore.ajax;
       //全局组件引入
-      require("libs/index_component_init");
-      //表单验证控件
-      var Vee = require("vee-validate");
-      Vue.use(mvueToolkit,{
-        vee:Vee,
-        baseUrlForResource:mvueToolkit.config.getApiBaseUrl()
-      });
+      require("libs/index_component_init").default.init(Vue);;
       Vue.use(VueRouter);
       //路由引入
       var routesData=null,appEntry=null;

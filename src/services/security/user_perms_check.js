@@ -1,6 +1,4 @@
-var Vue = require("vue").default;
 var permResource = require("./permission_service").$resource;
-var cacheTimer = false;
 var permsDataCached = null;
 //定义基本的权限对象
 var permsList = {

@@ -7,8 +7,6 @@ var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-//非常酷的插件，自动浏览器预览最后生成的js boundles的内容
-//var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -19,7 +17,7 @@ var entries = utils.getEntries(_pageEntryBase+'.js');
 
 //用来屏蔽某些vue模板解析，方便开发迁移调试
 var _excludes=[];
-module.exports = {
+var webpackConfig={
   //入口文件
   entry: entries,
   output: {
@@ -106,10 +104,6 @@ module.exports = {
     ]
   },
   plugins: [
-    //非常酷的插件，自动浏览器预览最后生成的js boundles的内容
-    /*new BundleAnalyzerPlugin({
-     analyzerMode: 'static'
-     }),*/
     //webpack在require动态路径时会加载整个目录的文件作为模块，这个插件可以限定要引入的模块
     new webpack.ContextReplacementPlugin(
       /moment[\/\\]locale$/,
@@ -153,6 +147,13 @@ module.exports = {
 
   ]
 }
+if (config.build.bundleAnalyzerReport) {
+  //非常酷的插件，自动浏览器预览最后生成的js boundles的内容
+  var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin({
+    analyzerMode: 'static'
+  }));
+}
 for(var page in pages) {
   // 配置生成的html文件，定义路径等
   let _pageName=page;
@@ -173,5 +174,6 @@ for(var page in pages) {
     })
   }
   // 需要生成几个html文件，就配置几个HtmlWebpackPlugin对象
-  module.exports.plugins.push(new HtmlWebpackPlugin(conf))
+  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
 }
+module.exports = webpackConfig;
