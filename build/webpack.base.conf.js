@@ -3,6 +3,7 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 var webpack = require('webpack')
+var parseArgs  = require('minimist')
 
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
@@ -14,6 +15,7 @@ function resolve (dir) {
 var _pageEntryBase='./src/module/*/index';
 var pages = utils.getEntries(_pageEntryBase+'.html');
 var entries = utils.getEntries(_pageEntryBase+'.js');
+
 
 //用来屏蔽某些vue模板解析，方便开发迁移调试
 var _excludes=[];
@@ -143,8 +145,6 @@ var webpackConfig={
         ignore: ['.*']
       }
     ])
-
-
   ]
 }
 if (config.build.bundleAnalyzerReport) {
