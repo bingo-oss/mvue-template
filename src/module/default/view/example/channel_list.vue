@@ -33,6 +33,7 @@
           {key:"updatedAt",width:150}
         ],
         toolbar:{
+          advanceSearchFields:['title'],
           btns:["create","export","import"],
           singleBtns:["edit","del"],
           quicksearch:{
