@@ -143,6 +143,11 @@ var webpackConfig={
         from: path.resolve(__dirname, '../static/config'),
         to: 'config',
         ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, '../static/images'),
+        to: 'static/images',
+        ignore: ['.*']
       }
     ])
   ]
