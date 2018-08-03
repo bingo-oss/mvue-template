@@ -1,6 +1,5 @@
 <template>
   <div v-autoscroll>
-    <childheader></childheader>
     <div class="pageMain">
       <meta-grid ref="gridList" :toolbar="toolbar">
       </meta-grid>
@@ -20,9 +19,6 @@ export default {
             }
           }
         }
-    },
-    components:{
-      childheader:require('components/childheader.vue'),
     }
 };
 </script>

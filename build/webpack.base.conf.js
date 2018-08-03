@@ -8,6 +8,7 @@ var parseArgs  = require('minimist')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -15,7 +16,6 @@ function resolve (dir) {
 var _pageEntryBase='./src/module/*/index';
 var pages = utils.getEntries(_pageEntryBase+'.html');
 var entries = utils.getEntries(_pageEntryBase+'.js');
-
 
 //用来屏蔽某些vue模板解析，方便开发迁移调试
 var _excludes=[];
@@ -35,31 +35,12 @@ var webpackConfig={
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       src : resolve('src'),
-      style : resolve('src') + '/style',
-      sass : resolve('src') + '/style/sass',
       libs : resolve('src') + '/libs',
-      //page : __dirname + '/src/page',
-      views : resolve('src') + '/module',
-      config : resolve('static') + '/config',
-      components : resolve('src') + '/components',
-      services : resolve('src')  + '/services',
-      images : resolve('src')  + '/images',
-      paas: resolve('src')  + '/module/console/view/paas',
-      'store2/cache': 'store2/src/store.cache.js'
+      style : resolve('src') + '/style'
     }
   },
   module: {
     rules: [
-      {
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        exclude: _excludes,
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
       {
         test: /\.vue$/,
         exclude: _excludes,
@@ -67,20 +48,15 @@ var webpackConfig={
         options: vueLoaderConfig
       },
       {
-        test : /\.tpl$/,
-        exclude: _excludes,
-        loader : 'ejs-loader'
-      },
-      {
         test: /\.js$/,
         exclude: _excludes,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src'), resolve('test'),resolve('/node_modules/iview/src')],
+        'options': {
+          'plugins': ['lodash'],
+          'presets': [['env', { 'modules': false, 'targets': { 'node': 4 } }]]
+        }
       },
-      // {
-      //   test: /\.html$/,
-      //   loader: 'vue-html'
-      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -106,11 +82,8 @@ var webpackConfig={
     ]
   },
   plugins: [
+    new LodashModuleReplacementPlugin,
     //webpack在require动态路径时会加载整个目录的文件作为模块，这个插件可以限定要引入的模块
-    new webpack.ContextReplacementPlugin(
-      /moment[\/\\]locale$/,
-      /zh\-cn|en\-us/
-    ),
     new webpack.ContextReplacementPlugin(
       /codemirror[\/\\]mode$/,
       /javascript/

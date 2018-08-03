@@ -1,53 +1,94 @@
 /**
  * 路由基础文件
  */
-var data = [
+var routers = [
   {
     meta: {
       module: "default",
-      requiresAuth: false
+      requiresAuth: true
     },
     name: "default",
     path: "/",
-    component: "home/home.vue",
-    redirect: {
-      name: "activityList"
+    redirect:{
+      name:'system.admin.menu'
     },
+    component: "home/home.vue",
     children: [
+      // 主页
       {
-        name: "devGuide",
-        component: "guide/home.vue",
-        path: "guide/index"
+        name: "indexRouter",
+        component: "index/index.vue",
+        path: "index/index"
+      },
+      {
+        name: "iframe",
+        component: "common/iframe.vue",
+        path: "iframe/:menuId"
+      },
+      //begin 配置管理
+      {
+        name: "system.admin.config",
+        path: "system/config",
+        redirect: { name: "system.admin.config.list" },
       },
       {
         meta: {
-          requireAuth: true
+          keepAlive: true,
+          menu: 'system.admin.config'
         },
-        name: "channelList",
-        component: "example/channel_list.vue",
-        path: "entities/Channel/list"
+        name: "system.admin.config.list",
+        path: "system/config/list",
+        component: "system/config"
       },
       {
-        name: "entityManage",
-        component: "metabase/home.vue",
-        path: "metabase/index"
-      },
-      {
-        name: "channelEditForm",
-        component: "example/channel_form.vue",
-        path: "entities/Channel/edit/:id",
-        beforeEnter: function (to, from, next) {
-          mvueCore.metaBase.setEntityNameForRoute(to,"Channel");
-          next();
-        }
-      },
-      {
-        name: "activityList",
-        path: "entities/Activity/list",
-        redirect: function (route) {
-          return mvueCore.metaBase.routeForEntityList("Activity",{menu:route.name});
+        meta: {
+          menu: 'system.admin.config'
         },
+        name: "system.admin.config.create",
+        path: "system/config/create",
+        component: "system/create-config"
+      },
+      {
+        meta: {
+          menu: 'system.admin.config'
+        },
+        name: "system.admin.config.edit",
+        path: "system/config/edit/:id",
+        component: "system/edit-config"
+      },
+      //end 配置管理
+      //begin 菜单管理
+      {
+        name: "system.admin.menu",
+        path: "system/menu",
+        redirect: { name: "system.admin.menu.list" },
+      },
+      {
+        meta: {
+          keepAlive: true,
+          menu: 'system.admin.menu'
+        },
+        name: "system.admin.menu.list",
+        path: "system/menu/list",
+        component: "system/menu/list"
+      },
+      {
+        meta: {
+          menu: 'system.admin.menu'
+        },
+        name: "system.admin.menu.create",
+        path: "system/menu/create",
+        component: "system/menu/create"
+      },
+      {
+        meta: {
+          menu: 'system.admin.menu'
+        },
+        name: "system.admin.menu.edit",
+        path: "system/menu/edit/:id",
+        component: "system/menu/edit"
       }
+      //end 菜单管理
     ]
   },
   {
@@ -57,8 +98,7 @@ var data = [
     name: "ssoclient",
     component: "common/ssoclient.vue",
     path: "/ssoclient"
-  },
+  }
 ];
-export default{
-  data:data
-}
+
+export default routers;

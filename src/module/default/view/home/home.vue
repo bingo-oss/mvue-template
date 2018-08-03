@@ -1,127 +1,96 @@
+<style lang="scss">
+  @import "./home.scss";
+</style>
 <template>
-  <div  class="layout">
-    <div class="layout-header clearfix">
-      <div class="layout-logo">元数据开发框架</div>
-      <div class="layout-header-menu clearfix">
-        <Menu mode="horizontal" theme="primary" >
-          <MenuItem name="1">
-            <Icon type="home"></Icon>
-            <router-link to="/" tag="span">主页</router-link>
-          </MenuItem>
-          <MenuItem name="2">
-            <Icon type="gear-b"></Icon>
-            元数据管理
-          </MenuItem>
+  <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
+    <b-header v-if="!hide('top')">
+      <template slot="left">
+        <Dropdown placement="bottom-start">
+          <Button type="text">
+            服务
+            <Icon type="ios-arrow-down ml-sm"></Icon>
+          </Button>
+          <DropdownMenu slot="list">
+            <div class="p-md">
+              <Button>Default</Button>
+              <Button type="primary">Primary</Button>
+              <Button ghost>Ghost</Button>
+              <Button type="dashed">Dashed</Button>
+              <Button type="text">Text</Button>
+            </div>
+          </DropdownMenu>
+        </Dropdown>
+      </template>
+      <template slot="right">
 
-          <Submenu name="3">
-            <template slot="title">
-              <Avatar shape="square" icon="person" size="small" />
-              张三
-            </template>
-            <MenuGroup title="用户">
-              <MenuItem name="3-1">基本信息</MenuItem>
-              <MenuItem name="3-2">操作日志</MenuItem>
-              <MenuItem name="3-3">配置管理</MenuItem>
-            </MenuGroup>
-            <MenuGroup title="系统">
-              <MenuItem name="3-4"><span @click="logout">退出</span></MenuItem>
-            </MenuGroup>
-          </Submenu>
-        </Menu>
-      </div>
-    </div>
-    <div class="layout-content" v-autoscroll>
-      <Row>
-        <Col span="4">
-          <navbar :menus="menu" @shrinkNavBar="doShrink"></navbar>
-      </Col>
-        <Col span="20">
-        <div class="layout-content-main">
-          <router-view>
-          </router-view>
+        <ul class="topbar-menu">
+          <li>
+            <Tooltip content="首页" placement="bottom">
+              <router-link :to="{name:'indexRouter'}">
+                <Button type="text" icon="ios-home" ></Button>
+              </router-link>
+            </Tooltip>
+          </li>
+          <li>
+            <Tooltip content="购物车" placement="bottom">
+              <router-link :to="{path:'/iframe/person.cart',query:{url:'/#/cart?_hide=top,left'}}">
+                <Button type="text" icon="ios-cart"></Button>
+              </router-link>
+            </Tooltip>
+          </li>
+          <li>
+            <Tooltip content="工单" placement="bottom">
+              <Badge :count="workorder">
+                <router-link :to="{path:'/iframe/K-igah_rz',query:{url:serviceComWeb+'/cmp-cloud-workflow/modules/task/list_task.jsp'}}">
+                  <Button type="text" icon="ios-paper"></Button>
+                </router-link>
+              </Badge>
+            </Tooltip>
+          </li>
+        </ul>
+      </template>
+    </b-header>
+    <Layout :class="'ivu-layout-has-sider'" class="layout-content">
+      <b-menu v-if="!hide('left')" :menus="menu"></b-menu>
+      <Content>
+        <b-router-tab></b-router-tab>
+        <div class="bvue-page-tabcontent">
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+          </keep-alive>
+
+          <router-view v-if="!$route.meta.keepAlive"></router-view>
         </div>
-        </Col>
-      </Row>
-    </div>
+      </Content>
+    </Layout>
   </div>
 </template>
 <script>
-  var menu = require('../../menu/menu.js');
-  module.exports = {
+  import mvueCore from "mvue-toolkit";
+  import { menuService } from "mvue-components";
+  export default {
     data: function () {
       return {
-        shrinkNavBar: false,
-        menu: menu
-      };
-    },
-    methods: {
-      doShrink:function(shrinkNavBar){
-        this.shrinkNavBar=shrinkNavBar;
-      },
-      logout:function(){
-        mvueCore.session.doLogout();
-      },
-      gotoMb:function(){
-        router.push({ name: ""});
+        workorder:3,
+        menu: [],
+        serviceComWeb: mvueCore.config.getConfigVal('service.com.web')
       }
     },
-    components:{
-      navbar:require('components/nav_bar'),
+    mounted: function () {
+      const self = this;
+      menuService().published({ orderby: "displayOrder asc" }).then(function ({ data }) {
+        self.menu = data;
+      });
+    },
+    methods:{
+      hide(type){
+        var types=this.$route.query._hide;
+        if(!types){
+          return false;
+        }
+        types=types.split(",");
+        return _.includes(types,type);
+      }
     }
   }
 </script>
-<style lang="scss">
-  .layout{
-    border: 1px solid #d7dde4;
-    background: #f5f7f9;
-  }
-  .layout-logo{
-    height: 30px;
-    border-radius: 3px;
-    float: left;
-    position: relative;
-    top: 15px;
-    left: 20px;
-    color: #ffffff;
-    font-size: 20px;
-  }
-  .layout-header{
-    background:  #017fe1;
-    box-shadow: 0 1px 1px rgba(0,0,0,.1);
-  }
-
-  .layout-header-menu{
-    float: right;
-    margin-right: 15px;
-  }
-  .layout-header-menu a{
-    color: #9ba7b5;
-  }
-  .layout-header-menu .ivu-menu-submenu-title span>i{
-    margin-right: 2px;
-  }
-
-  .layout-content{
-    min-height: 200px;
-    margin: 0px;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 4px;
-  }
-  .layout-content-main{
-    padding: 0px;
-  }
-
-  .clearfix:after {
-    content: "";
-    height: 0;
-    line-height: 0;
-    display: block;
-    visibility: hidden;
-    clear: both
-  }
-  .clearfix {
-    zoom: 1;
-  }
-</style>
-

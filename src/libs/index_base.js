@@ -1,42 +1,33 @@
 //这几个工具类必须在最前面引用，不得删除和更改
+import  $lodash from "./lodash_loader";
+import Vue from "vue";
 import mvueToolkit from "mvue-toolkit";
-window.jQuery = window.$ = require('jquery');
-window._ = require('lodash');
-window.store = require('store2');
-var Vue = require("vue").default;
+import vuescroll from 'vuescroll';
+import context from 'libs/context';
+window.$ = require('libs/zepto');
+
+
+import 'vuescroll/dist/vuescroll.css';
+//import 'mvue-design/dist/index.css';
+import 'mvue-design/src/statics/styles/index.less';
 function appStart(initFunc) {
   require("babel-polyfill");
-  mvueToolkit.config.loadServerConfig().then(function () {
+  mvueToolkit.config.loadServerConfig().then(()=>{
     Promise.all([
-      import('iview'),import('vue-multiselect'),import('mvue-core')
-    ]).then(function ([iview,Multiselect,mvueCorePkg]) {
-      require( 'iview/dist/styles/iview.css');
-      require("vue-multiselect/dist/vue-multiselect.min.css");
+      import('iview')
+    ]).then(function ([iview]) {
       var VueRouter = require("vue-router").default;
-      //加载 iView
-      window.iView = iview;
-      Vue.use(iView);
-      iView.LoadingBar.config({
-        color: '#ff9900',
-        failedColor: '#f0ad4e'
-      });
-      //多选组件
-      Vue.component("Multiselect",Multiselect.Multiselect);
-      //表单验证控件
-      var Vee = require("vee-validate");
+      var mvueComponents=require('mvue-components').default;
       Vue.use(mvueToolkit,{
-        vee:Vee,
         baseUrlForResource:mvueToolkit.config.getApiBaseUrl()
       });
-      //全局组件引入
-      var mvueCore=mvueCorePkg.default;
-      window.mvueCore=mvueCore;
-      Vue.use(mvueCore);
-      window.Utils=mvueCore.utils;
-      window.Ajax = window.ax = mvueCore.ajax;
-      //全局组件引入
-      require("libs/index_component_init").default.init(Vue);;
       Vue.use(VueRouter);
+      Vue.use(iview);
+      Vue.use(mvueComponents,{mvueToolkit:mvueToolkit});
+      Vue.use(vuescroll);
+      context.setMvueToolkit(mvueToolkit);
+      var globalComponentsInit=require('./global_components').default;
+      globalComponentsInit(Vue);
       //路由引入
       var routesData=null,appEntry=null;
       var result=initFunc();
@@ -55,26 +46,35 @@ function appStart(initFunc) {
         var router = new VueRouter({
           routes: routesData
         });
-        var session=mvueCore.session;
+        //将路由对象设置到全局上下文中
+        context.setRouter(router);
+        //将路由对象设置到组件上下文中
+        mvueComponents.context.setRouter(router);
+        var session=mvueToolkit.session;
         router.beforeEach(function(to, from, next) {
           session.doFilter(to,from,next);
         });
         router.afterEach(function (transition) {
-          console.log('-----------------Router Start');
-          console.log(transition);
-          console.log('-----------------Router End');
+          // console.log('-----------------Router Start');
+          // console.log(transition);
+          // console.log('-----------------Router End');
+          if(window.parent && window.parent!=window){
+              context.resizeParentIframeHeight();
+          }
         });
-        window.router = router;
         var App = appEntry;
         new Vue({
           el: '#app',
           router: router,
           template: '<App/>',
-          components: {App}
+          components: {App},
+          created:function () {
+            context.setIframeId(this.$route.query["_iframeId"]);
+          }
         });
       }
     }).catch(function (err) {
-      console.log('Failed to load vue vue-router iview', err);
+      console.error('Failed to load vue vue-router iview', err);
     });
   });
 }
