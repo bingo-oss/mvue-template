@@ -1,6 +1,7 @@
 <template>
   <div class="bvue-page">
-      <meta-grid ref="gridList"
+    <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
+    <meta-grid ref="gridList"
                  meta-entity-name="Menu"
                  :columns="columns"
                  :toolbar="toolbar">
