@@ -1,6 +1,5 @@
 <template>
   <div>
-    <childheader :show="header"></childheader>
     <div class="pageMain">
       <meta-grid ref="gridList"
                  meta-entity-name="Channel"
@@ -42,9 +41,6 @@
           }
         }
       }
-    },
-    components:{
-      childheader:require('components/childheader.vue'),
     }
   };
 </script>

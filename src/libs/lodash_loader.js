@@ -36,13 +36,22 @@ import now from 'lodash/now'
 import join from 'lodash/join'
 import forIn from 'lodash/forIn'
 import union from 'lodash/union'
+import omit  from 'lodash/omit'
+import keyBy  from 'lodash/keyBy'
+import snakeCase  from 'lodash/snakeCase'
+import isNaN  from 'lodash/isNaN'
+import trim  from 'lodash/trim'
+import isPlainObject   from 'lodash/isPlainObject'
+import filter    from 'lodash/filter'
+import isNumber     from 'lodash/isNumber'
 
 let _lodash={
   clone,  cloneDeep,  endsWith,  debounce,  throttle,  find,
   isEmpty,  flatten,  flattenDepth,  merge,  startsWith,  includes,
   each,  isFunction,  forEach,  isNull,  isString,  toSafeInteger,  isUndefined,
   extend,  has,  toNumber,  isInteger,isNil,isFinite,isArray,uniqueId,assign,
-  isEqual,now,forIn,join,union
+  isEqual,now,forIn,join,union,omit,keyBy,snakeCase,isNaN,trim,isPlainObject,
+  filter,isNumber
 };
 
 window._=_lodash;

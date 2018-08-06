@@ -16,11 +16,6 @@ var routers = [
     children: [
       // 主页
       {
-        name: "indexRouter",
-        component: "index/index.vue",
-        path: "index/index"
-      },
-      {
         name: "iframe",
         component: "common/iframe.vue",
         path: "iframe/:menuId"
@@ -38,7 +33,7 @@ var routers = [
         },
         name: "system.admin.config.list",
         path: "system/config/list",
-        component: "system/config"
+        component: "system/config/config"
       },
       {
         meta: {
@@ -46,7 +41,7 @@ var routers = [
         },
         name: "system.admin.config.create",
         path: "system/config/create",
-        component: "system/create-config"
+        component: "system/conifg/create-config"
       },
       {
         meta: {
@@ -54,7 +49,7 @@ var routers = [
         },
         name: "system.admin.config.edit",
         path: "system/config/edit/:id",
-        component: "system/edit-config"
+        component: "system/config/edit-config"
       },
       //end 配置管理
       //begin 菜单管理

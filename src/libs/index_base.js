@@ -6,11 +6,10 @@ import vuescroll from 'vuescroll';
 import context from 'libs/context';
 window.$ = require('libs/zepto');
 
-
 import 'vuescroll/dist/vuescroll.css';
 //import 'mvue-design/dist/index.css';
 import 'mvue-design/src/statics/styles/index.less';
-function appStart(initFunc) {
+function appStart(initFunc,postStarted) {
   require("babel-polyfill");
   mvueToolkit.config.loadServerConfig().then(()=>{
     Promise.all([
@@ -30,7 +29,7 @@ function appStart(initFunc) {
       globalComponentsInit(Vue);
       //路由引入
       var routesData=null,appEntry=null;
-      var result=initFunc();
+      var result=initFunc(context);
       if(result&&result.then){
         result.then(function(res){
           routesData=res.routesData;
@@ -63,7 +62,7 @@ function appStart(initFunc) {
           }
         });
         var App = appEntry;
-        new Vue({
+        var vueApp=new Vue({
           el: '#app',
           router: router,
           template: '<App/>',
@@ -72,6 +71,10 @@ function appStart(initFunc) {
             context.setIframeId(this.$route.query["_iframeId"]);
           }
         });
+        context.setVue(vueApp);
+        if(postStarted){
+          postStarted(context);
+        }
       }
     }).catch(function (err) {
       console.error('Failed to load vue vue-router iview', err);

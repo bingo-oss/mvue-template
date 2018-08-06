@@ -23,7 +23,6 @@
   </div>
 </template>
 <script>
-import channelService from "services/example/channel_service";
 
 export default {
   data: function() {

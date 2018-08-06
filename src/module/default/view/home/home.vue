@@ -14,7 +14,6 @@
             <div class="p-md">
               <Button>Default</Button>
               <Button type="primary">Primary</Button>
-              <Button ghost>Ghost</Button>
               <Button type="dashed">Dashed</Button>
               <Button type="text">Text</Button>
             </div>
@@ -26,22 +25,22 @@
         <ul class="topbar-menu">
           <li>
             <Tooltip content="首页" placement="bottom">
-              <router-link :to="{name:'indexRouter'}">
+              <router-link :to="{name:'default'}">
                 <Button type="text" icon="ios-home" ></Button>
               </router-link>
             </Tooltip>
           </li>
           <li>
             <Tooltip content="购物车" placement="bottom">
-              <router-link :to="{path:'/iframe/person.cart',query:{url:'/#/cart?_hide=top,left'}}">
+              <router-link :to="{name:'default'}">
                 <Button type="text" icon="ios-cart"></Button>
               </router-link>
             </Tooltip>
           </li>
           <li>
             <Tooltip content="工单" placement="bottom">
-              <Badge :count="workorder">
-                <router-link :to="{path:'/iframe/K-igah_rz',query:{url:serviceComWeb+'/cmp-cloud-workflow/modules/task/list_task.jsp'}}">
+              <Badge :count="1">
+                <router-link :to="{name:'default'}">
                   <Button type="text" icon="ios-paper"></Button>
                 </router-link>
               </Badge>
@@ -66,14 +65,11 @@
   </div>
 </template>
 <script>
-  import mvueCore from "mvue-toolkit";
   import { menuService } from "mvue-components";
   export default {
     data: function () {
       return {
-        workorder:3,
         menu: [],
-        serviceComWeb: mvueCore.config.getConfigVal('service.com.web')
       }
     },
     mounted: function () {
