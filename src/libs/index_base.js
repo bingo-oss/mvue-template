@@ -9,6 +9,7 @@ window.$ = require('libs/zepto');
 import 'vuescroll/dist/vuescroll.css';
 //import 'mvue-design/dist/index.css';
 import 'mvue-design/src/statics/styles/index.less';
+import "vue-multiselect/dist/vue-multiselect.min.css" ;
 function appStart(initFunc,postStarted) {
   require("babel-polyfill");
   mvueToolkit.config.loadServerConfig().then(()=>{

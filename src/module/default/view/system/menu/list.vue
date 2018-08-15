@@ -2,10 +2,10 @@
   <div class="bvue-page">
     <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
     <meta-grid ref="gridList"
-                 meta-entity-name="Menu"
-                 :columns="columns"
-                 :toolbar="toolbar">
-      </meta-grid>
+               meta-entity-name="Menu"
+               :columns="columns"
+               :toolbar="toolbar">
+    </meta-grid>
   </div>
 </template>
 <script>
@@ -23,17 +23,18 @@
           {key:"title",width:200},
           {key:"name"},
           {key:"url"},
-          {key:"displayOrder"},
+          {key:"displayOrder",width:100,align:"center"},
           {key:"status"},
-          {key:"createdAt",width:150}
+          {key:"parentId"},
+          {key:"createdAt",width:100}
         ],
         toolbar:{
-          btnSizeBeforeMore: 1,
+          btnSizeBeforeMore: 2,
           advanceSearchFields:['title'],
-          btns:["create","export","import"],
+          btns:["create","batchDelete","export","import"],
           singleBtns:["edit","del"],
           quicksearch:{
-            fields:["description","title"],
+            fields:["title","name"],
             placeholder:"根据名称搜索"
           }
         }

@@ -82,6 +82,21 @@ var routers = [
         name: "system.admin.menu.edit",
         path: "system/menu/edit/:id",
         component: "system/menu/edit"
+      },
+      //end 菜单管理
+      //begin 角色菜单权限管理
+      {
+        name: "system.admin.role.perms",
+        path: "system/role/perms",
+        redirect: { name: "system.admin.role.perms.menu" },
+      },
+      {
+        meta: {
+          menu: 'system.admin.role.perms'
+        },
+        name: "system.admin.role.perms.menu",
+        path: "system/role/perms/menu",
+        component: "system/role/menu-perms"
       }
       //end 菜单管理
     ]

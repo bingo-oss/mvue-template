@@ -1,8 +1,17 @@
 <template>
-  <div :key="$route.fullPath" class="pageMain" :id="'default-form-uuid-'+entityName" >
-    <div class=" default-form-body">
-      <meta-form ref="form" :entity-name="entityName" :record-id="id" :isView="isViewMode" :toolbar="toolbar">
-      </meta-form>
+  <div class="bvue-page" :key="$route.fullPath"  :id="'default-form-uuid-'+entityName">
+    <b-childheader :title="'实体管理'" :subtitle="'对实体数据进行编辑'"></b-childheader>
+    <div class="bvue-page-body">
+      <Card :bordered="false" :padding="24">
+        <Row>
+          <Col span="22" >
+              <meta-form ref="form" :entity-name="entityName" :record-id="id"
+                         :isView="isViewMode" :toolbar="toolbar"
+                         :label-width="120">
+              </meta-form>
+          </Col>
+        </Row>
+      </Card>
     </div>
   </div>
 </template>
@@ -21,19 +30,13 @@ export default {
                 "termimalType":1,
                 "name": "goback",
                 "title":"取消",
-                "btnType":"default"
+                "btnType":"text"
             },
             {
                 "operationType": "common",
                 "name": "save",
                 "termimalType":7,
                 "title":"保存"
-            },
-            {
-                "operationType": "common",
-                "name": "del",
-                "termimalType":7,
-                "title":"删除"
             }
         ]
       }

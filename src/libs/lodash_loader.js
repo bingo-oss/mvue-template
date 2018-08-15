@@ -44,6 +44,7 @@ import trim  from 'lodash/trim'
 import isPlainObject   from 'lodash/isPlainObject'
 import filter    from 'lodash/filter'
 import isNumber     from 'lodash/isNumber'
+import defaultTo     from 'lodash/defaultTo'
 
 let _lodash={
   clone,  cloneDeep,  endsWith,  debounce,  throttle,  find,
@@ -51,7 +52,7 @@ let _lodash={
   each,  isFunction,  forEach,  isNull,  isString,  toSafeInteger,  isUndefined,
   extend,  has,  toNumber,  isInteger,isNil,isFinite,isArray,uniqueId,assign,
   isEqual,now,forIn,join,union,omit,keyBy,snakeCase,isNaN,trim,isPlainObject,
-  filter,isNumber
+  filter,isNumber,defaultTo
 };
 
 window._=_lodash;

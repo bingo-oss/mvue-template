@@ -24,4 +24,5 @@ indexBase.appStart(function (ctx) {
   }
 },function (ctx) {
 mvueCore.context.setRouter(ctx.getRouter());
+mvueCore.context.setVue(ctx.getVue());
 });
