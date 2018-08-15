@@ -41,7 +41,7 @@ var routers = [
         },
         name: "system.admin.config.create",
         path: "system/config/create",
-        component: "system/conifg/create-config"
+        component: "system/config/create-config"
       },
       {
         meta: {
