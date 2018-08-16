@@ -24,12 +24,12 @@ export default {
             columns:[
                 {
                     type:'index',
-                    width:60,
+                    width:50,
                     align:'center'
                 },
                 {
                     type: 'selection',
-                    width: 60,
+                    width: 50,
                     align: 'center'
                 },
                 {

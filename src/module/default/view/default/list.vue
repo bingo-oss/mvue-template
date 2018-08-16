@@ -1,7 +1,9 @@
 <template>
   <div v-autoscroll>
     <div class="pageMain">
-      <meta-grid ref="gridList" :toolbar="toolbar">
+      <meta-grid ref="gridList"
+               :meta-entity-name="$route.params.entityName" 
+               :toolbar="toolbar">
       </meta-grid>
     </div>
   </div>

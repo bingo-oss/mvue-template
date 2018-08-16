@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-  module.exports = {
+  export default{
     data:function(){
       return {
         header: {
@@ -17,15 +17,13 @@
           description: "显示及维护系统内的所有菜单",
           showBack: false
         },
-        pagerSizes:[10,20,50],
-        queryOptions:{"orderby":"updatedAt desc"},
         columns:[
-          {key:"title",width:200},
-          {key:"name"},
-          {key:"url"},
-          {key:"displayOrder",width:100,align:"center"},
-          {key:"status"},
-          {key:"parentId"},
+          {key:"title"},
+          {key:"name",width:100},
+          {key:"url",width:100},
+          {key:"displayOrder",width:50},
+          {key:"status",width:50},
+          {key:"parentId",width:50},
           {key:"createdAt",width:100}
         ],
         toolbar:{
