@@ -2,7 +2,7 @@
   <div v-autoscroll>
     <div class="pageMain">
       <meta-grid ref="gridList"
-               :meta-entity-name="$route.params.entityName" 
+               :entity-name="$route.params.entityName" 
                :toolbar="toolbar">
       </meta-grid>
     </div>

@@ -2,7 +2,7 @@
   <div class="bvue-page">
     <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
     <meta-grid ref="gridList"
-               meta-entity-name="Menu"
+               entity-name="Menu"
                :columns="columns"
                :toolbar="toolbar">
     </meta-grid>
@@ -22,7 +22,7 @@
           {key:"name",width:100},
           {key:"url",width:100},
           {key:"displayOrder",width:50},
-          {key:"status",width:50},
+          {key:"status",width:100,filterMultiple:true,metaParams:{autoFilterable:true}},
           {key:"parentId",width:50},
           {key:"createdAt",width:100}
         ],
