@@ -3,12 +3,14 @@
     <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
     <meta-grid ref="gridList"
                entity-name="Menu"
+               :query="query"
                :columns="columns"
                :toolbar="toolbar">
     </meta-grid>
   </div>
 </template>
 <script>
+  import { leapQueryConvertor } from "mvue-components";
   export default{
     data:function(){
       return {
@@ -36,6 +38,13 @@
             placeholder:"根据名称搜索"
           }
         }
+      }
+    },
+    methods:{
+      query(ctx,queryResource){
+        return leapQueryConvertor.exec(queryResource,ctx,(queryParams)=>{
+            queryParams["x-impersonate-sudo"]=1;
+        });
       }
     }
   };
