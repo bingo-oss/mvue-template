@@ -35,7 +35,7 @@ export default {
                 "termimalType":1,
                 "name": "goback",
                 "title":"取消",
-                "btnType":"text"
+                "btnType":"default"
             },
             {
                 "operationType": "common",
