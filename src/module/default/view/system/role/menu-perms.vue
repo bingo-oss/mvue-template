@@ -1,22 +1,18 @@
 <template>
-    <div class="bvue-page">
-        <b-childheader :title="childheader.title" :showBack="false" ></b-childheader>
-        <div class="bvue-page-boody">
-             <Card :bordered="false" :dis-hover="true" :shadow="false">
-                <div slot="title">
-                    <Select :placeholder="placeholder" v-model="currentRole" style="width:200px">
-                        <Option v-for="item in roles" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                    <Button type="primary" :disabled="mustStopRepeatedClick" @click="saveCurrentRoleMenus">保存</Button>
-                </div>
-                <Row v-if="currentRole">
-                    <i-col v-for="(menu,index) in splittedMenu" :key="index" span="6">
-                        <Tree ref="menuTree" :data="menu" show-checkbox></Tree>
-                    </i-col>
-                </Row>
-             </Card>
-        </div>
-    </div>
+  <div>
+    <Row >
+      <Select :placeholder="placeholder" v-model="currentRole" style="width:200px">
+        <Option v-for="item in roles" :value="item.id" :key="item.id">{{ item.name }}</Option>
+      </Select>
+      <Button type="primary" :disabled="mustStopRepeatedClick" @click="saveCurrentRoleMenus">保存</Button>
+    </Row>
+    <Row v-if="currentRole">
+      <i-col v-for="(menu,index) in splittedMenu" :key="index" span="6">
+        <Tree ref="menuTree" :data="menu" show-checkbox></Tree>
+      </i-col>
+    </Row>
+
+  </div>
 </template>
 <script>
 import { menuService } from "mvue-components";
@@ -27,9 +23,6 @@ export default {
         return{
             mustStopRepeatedClick:false,//阻止点击操作重复触发
             placeholder:"请选择角色",
-            childheader:{
-                "title":"角色菜单权限配置"
-            },
             roles:[],
             currentRole:null,
             currentRoleMenuPermsMark:{},//当前角色的所有菜单权限标记map，可用来计算需要删除的菜单权限
@@ -76,11 +69,11 @@ export default {
                 this.flattedMenu=flattedMenu;
                 //获取所有角色
                 roleService().query().then(({data})=>{
-                    if(data){
-                        this.roles=data;
-                        //设置当前角色为第一个
-                        this.currentRole=this.roles[0].id;
-                    }
+                  if(data){
+                    this.roles=data;
+                    //设置当前角色为第一个
+                    this.currentRole=this.roles[0].id;
+                  }
                 });
             });
         });

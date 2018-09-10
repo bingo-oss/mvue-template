@@ -88,17 +88,28 @@ var routers = [
       {
         name: "system.admin.role.perms",
         path: "system/role/perms",
+        component:"system/role/default",
         redirect: { name: "system.admin.role.perms.menu" },
-      },
-      {
-        meta: {
-          menu: 'system.admin.role.perms'
-        },
-        name: "system.admin.role.perms.menu",
-        path: "system/role/perms/menu",
-        component: "system/role/menu-perms"
+        children:[
+          {
+            meta: {
+              menu: 'system.admin.role.perms'
+            },
+            name: "system.admin.role.perms.menu",
+            path: "system/role/perms/menu",
+            component: "system/role/menu-perms"
+          },
+          {
+            meta: {
+              menu: 'system.admin.role.perms'
+            },
+            name: "system.admin.role.perms.func",
+            path: "system/role/perms/func",
+            component: "system/role/func-perms"
+          }
+        ]
       }
-      //end 菜单管理
+      //end 角色菜单权限管理
     ]
   },
   {
