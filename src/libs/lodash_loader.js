@@ -31,6 +31,7 @@ import isNil from 'lodash/isNil'
 import isArray from 'lodash/isArray'
 import uniqueId from 'lodash/uniqueId'
 import assign from 'lodash/assign'
+import assignIn from 'lodash/assign'
 import isEqual from 'lodash/isEqual'
 import now from 'lodash/now'
 import join from 'lodash/join'
@@ -50,7 +51,7 @@ let _lodash={
   clone,  cloneDeep,  endsWith,  debounce,  throttle,  find,
   isEmpty,  flatten,  flattenDepth,  merge,  startsWith,  includes,
   each,  isFunction,  forEach,  isNull,  isString,  toSafeInteger,  isUndefined,
-  extend,  has,  toNumber,  isInteger,isNil,isFinite,isArray,uniqueId,assign,
+  extend,  has,  toNumber,  isInteger,isNil,isFinite,isArray,uniqueId,assign,assignIn,
   isEqual,now,forIn,join,union,omit,keyBy,snakeCase,isNaN,trim,isPlainObject,
   filter,isNumber,defaultTo
 };
