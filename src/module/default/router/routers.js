@@ -1,5 +1,6 @@
 import routers from "src/router/routers";
 import mvueToolkit from "mvue-toolkit";
+import autoRoutes from '../pages/auto-routes';
 var routersData = mvueToolkit.router.getModuleRoutes("default", routers,function (component) {
   return require('src/module/default/view/' + component);
 });
@@ -8,7 +9,8 @@ var propsResolve = function (router) {
     router.meta["menu"] = router.params.menu;
   }
 };
-
+//将自动生成的路由附加到跟路由上
+routersData[0].children=routersData[0].children.concat(autoRoutes);
 routersData[0].children.push({
   meta: {
     requireAuth: true

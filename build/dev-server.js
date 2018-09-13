@@ -1,4 +1,6 @@
 require('./check-versions')() // 检查 Node 和 npm 版本
+var autoRouter=require('./auto-router');
+autoRouter.run(true);
 var config = require('../config') // 获取 config/index.js 的默认配置
 /*
  ** 如果 Node 的环境无法判断当前是 dev / product 环境

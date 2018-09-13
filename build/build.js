@@ -1,5 +1,6 @@
 require('./check-versions')()
-
+var autoRouter=require('./auto-router');
+autoRouter.run(false);
 process.env.NODE_ENV = 'production'
 
 var ora = require('ora')
