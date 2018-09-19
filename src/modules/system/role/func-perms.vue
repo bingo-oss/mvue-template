@@ -40,9 +40,9 @@
 
 </style>
 <script>
-  import permService from '../../../../../services/security/perm-service';
-  import roleService from '../../../../../services/security/role-service';
-  import permScopeService from '../../../../../services/security/perm-scope-service';
+  import permService from 'services/security/perm-service';
+  import roleService from 'services/security/role-service';
+  import permScopeService from 'services/security/perm-scope-service';
 export default {
   data() {
     return {

@@ -13,15 +13,11 @@ var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-var _pageEntryBase='./src/module/*/index';
-var pages = utils.getEntries(_pageEntryBase+'.html');
-var entries = utils.getEntries(_pageEntryBase+'.js');
-
 //用来屏蔽某些vue模板解析，方便开发迁移调试
 var _excludes=[];
 var webpackConfig={
   //入口文件
-  entry: entries,
+  entry: './src/main.js',
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -36,7 +32,9 @@ var webpackConfig={
       '@': resolve('src'),
       src : resolve('src'),
       libs : resolve('src') + '/libs',
-      style : resolve('src') + '/style'
+      style : resolve('src') + '/style',
+      services : resolve('src') + '/services',
+      modules : resolve('src') + '/modules'
     }
   },
   module: {
@@ -132,26 +130,11 @@ if (config.build.bundleAnalyzerReport) {
     analyzerMode: 'static'
   }));
 }
-for(var page in pages) {
-  // 配置生成的html文件，定义路径等
-  let _pageName=page;
-  //如果模块名称为default，生成的html名称改为index
-  if(page==='default'){
-    _pageName="index";
-  }
-  var conf = {
-    filename: _pageName + '.html',
-    template: pages[page], //模板路径
-    inject: true,
-    // excludeChunks 允许跳过某些chunks, 而chunks告诉插件要引用entry里面的哪几个入口
-    // 如何更好的理解这块呢？举个例子：比如本demo中包含两个模块（index和about），最好的当然是各个模块引入自己所需的js，
-    // 而不是每个页面都引入所有的js，你可以把下面这个excludeChunks去掉，然后npm run build，然后看编译出来的index.html和about.html就知道了
-    // filter：将数据过滤，然后返回符合要求的数据，Object.keys是获取JSON对象中的每个key
-    excludeChunks: Object.keys(pages).filter(item => {
-      return (item != page)
-    })
-  }
-  // 需要生成几个html文件，就配置几个HtmlWebpackPlugin对象
-  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
+var conf = {
+  filename: 'index.html',
+  template: 'index.html', //模板路径
+  inject: true
 }
+// 需要生成几个html文件，就配置几个HtmlWebpackPlugin对象
+webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
 module.exports = webpackConfig;

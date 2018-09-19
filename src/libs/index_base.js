@@ -1,6 +1,9 @@
 //这几个工具类必须在最前面引用，不得删除和更改
 import  $lodash from "./lodash_loader";
 import Vue from "vue";
+import Vuex from 'vuex';
+Vue.use(Vuex);
+import newStore from '../store';
 import mvueToolkit from "mvue-toolkit";
 import vuescroll from 'vuescroll';
 import context from 'libs/context';
@@ -46,6 +49,9 @@ function appStart(initFunc,postStarted) {
         var router = new VueRouter({
           routes: routesData
         });
+        var store = newStore(Vuex);
+        //将vuex store对象设置到全局上下文
+        context.setStore(store);
         //将路由对象设置到全局上下文中
         context.setRouter(router);
         //将路由对象设置到组件上下文中
@@ -66,6 +72,7 @@ function appStart(initFunc,postStarted) {
         var vueApp=new Vue({
           el: '#app',
           router: router,
+          store:store,
           template: '<App/>',
           components: {App},
           created:function () {

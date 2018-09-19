@@ -14,4 +14,5 @@ src/module/tt/
 static/config/config_local.js
 src/config/config_override.js
 yarn.lock
-auto-routes.js
+src/pages/auto-routes.js
+src/pages/auto-page-confs.js

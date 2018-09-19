@@ -247,7 +247,7 @@ function cleanChildrenRoutes(routes, isChild = false) {
   return routes
 }
 
-exports.createRoutes = function createRoutes(files, srcDir, pagesDir) {
+exports.createRoutes = function createRoutes(files, srcDir, pagesDir,pageTmplDir) {
   const routes = []
   files.forEach((file) => {
     const keys = file
@@ -259,8 +259,15 @@ exports.createRoutes = function createRoutes(files, srcDir, pagesDir) {
     const route = { 
       name: '', 
       path: '/pages', 
-      //component: r(srcDir, file) 
       component:file.replace(/\.(vue|js)$/, '')
+    }
+    //js文件对应的组件从模板页面组件产生
+    if(file.endsWith('.js')){
+      const start=file.lastIndexOf('/')+1;
+      const end=file.lastIndexOf('.');
+      const len=end-start;
+      const fileName=file.substr(start,len);
+      route.component=`${pageTmplDir}`;
     }
     let parent = routes
     keys.forEach((key, i) => {

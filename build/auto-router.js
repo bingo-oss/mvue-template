@@ -3,6 +3,7 @@ var nuxtUtils= require('./nuxt-utils');
 const fs = require('fs')
 var path = require('path')
 var chokidar = require('chokidar');
+var autoConfs = require('./auto-confs');
 var watched=false;
 var changedQueue=[];
 function smartRun(i){
@@ -26,7 +27,7 @@ function smartRun(i){
  * 监听pages目录文件夹变化，重新生成路由
  */
 function doWatch(pagesPath){
-    var vueWatcher = chokidar.watch(pagesPath+'/**/*.vue', {ignoreInitial: true ,persistent: true});
+    var vueWatcher = chokidar.watch(pagesPath+'/**/*.@(vue|js)', {ignoreInitial: true ,persistent: true});
     vueWatcher
         .on('add', path => smartRun(1))
         .on('unlink', path => smartRun(4));
@@ -36,47 +37,48 @@ function doWatch(pagesPath){
         .on('unlinkDir', path => smartRun(3));
 }
 /**
- * 自动扫描 src/module/{moduleName}/pages/ 下的所有vue文件按文件名生成默认的路由
+ * 自动扫描 src/pages/ 下的所有vue文件按文件名生成默认的路由
  */
 function run(devMode){
-    var pagesPath='src/module/*/pages';
+    var pagesPath='src/pages';
+    var pageTmplDir=`src/templates/index`;
+    var ignoreFiles=`src/pages/@(auto-page-confs|auto-routes).js`;
     if(devMode&&!watched){
         watched=true;
         doWatch(pagesPath)
     }
-    glob.sync(pagesPath).forEach(modulePageDir=>{
-        //console.log("top:"+modulePageDir);
-        const files = {};
-        glob.sync(modulePageDir+'/**/*.vue').forEach(f=>{
-            //console.log(f);
-            const key = f.replace(/\.(js|vue)$/, '')
-            if (/\.vue$/.test(f) || !files[key]) {
-                files[key] = f.replace(/('|")/g, '\\$1')
-            }
-        });
-        var filesValues=[];
-        for(let key in files) {
-            if (files.hasOwnProperty(key)) {
-                const element = files[key];
-                filesValues.push(element);
-            }
+    const files = {};
+    glob.sync(`${pagesPath}/**/*.@(vue|js)`,{ignore:ignoreFiles}).forEach(f=>{
+        const key = f.replace(/\.(js|vue)$/, '')
+        if (/\.vue$/.test(f) || !files[key]) {
+            files[key] = f.replace(/('|")/g, '\\$1')
         }
-        //console.log(filesValues);
-        var routes=nuxtUtils.createRoutes(
-            filesValues,
-            modulePageDir,
-            modulePageDir
-        )
-        //console.log(JSON.stringify(routes));
-        writeJs(modulePageDir,JSON.stringify(routes,(key,value)=>{
-            if(key=="component"){
-                return `##require_placeholder_begin##('${value}')##require_placeholder_end##`;
-            }else{
-                return value;
-            }
-        },'\t'))
     });
-
+    console.log(files);
+    var filesValues=[];
+    for(let key in files) {
+        if (files.hasOwnProperty(key)) {
+            const element = files[key];
+            filesValues.push(element);
+        }
+    }
+    //console.log(filesValues);
+    var routes=nuxtUtils.createRoutes(
+        filesValues,
+        pagesPath,
+        pagesPath,
+        pageTmplDir
+    )
+    //console.log(JSON.stringify(routes));
+    writeJs(pagesPath,JSON.stringify(routes,(key,value)=>{
+        if(key=="component"){
+            return `##require_placeholder_begin##('${value}')##require_placeholder_end##`;
+        }else{
+            return value;
+        }
+    },'\t'))
+    //动态打包所有的组件配置到一个文件
+    autoConfs.run(pagesPath,ignoreFiles);
 }
 function writeJs(filePath,routes){
     routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');

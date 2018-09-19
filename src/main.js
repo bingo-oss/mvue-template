@@ -5,7 +5,7 @@ import mvueCore from 'mvue-core';
 
 //每一个模块的入口，必须在init时初始化路由和应用入口组件
 indexBase.appStart(function (ctx) {
-  var routesData = require('./router/routers').default;
+  var routesData = require('./router/index').default;
   var appEntry = require('./app.vue');
   window.Utils=ctx.getMvueToolkit().utils;
   Vue.use(mvueCore,{mvueToolkit:ctx.getMvueToolkit()});

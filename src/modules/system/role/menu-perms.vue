@@ -16,8 +16,8 @@
 </template>
 <script>
 import { menuService } from "mvue-components";
-import permService from '../../../../../services/security/perm-service';
-import roleService from '../../../../../services/security/role-service';
+import permService from 'services/security/perm-service';
+import roleService from 'services/security/role-service';
 export default {
     data(){
         return{

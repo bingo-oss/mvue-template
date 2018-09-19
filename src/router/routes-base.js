@@ -4,7 +4,6 @@
 var routers = [
   {
     meta: {
-      module: "default",
       requiresAuth: true
     },
     name: "default",
@@ -71,6 +70,14 @@ var routers = [
         meta: {
           menu: 'system.admin.menu'
         },
+        name: "system.admin.menu.create2",
+        path: "entities/menu/create",
+        component: "system/menu/test/form"
+      },
+      {
+        meta: {
+          menu: 'system.admin.menu'
+        },
         name: "system.admin.menu.create",
         path: "system/menu/create",
         component: "system/menu/create"
@@ -113,9 +120,6 @@ var routers = [
     ]
   },
   {
-    meta: {
-      module: "default"
-    },
     name: "ssoclient",
     component: "common/ssoclient.vue",
     path: "/ssoclient"

@@ -4,7 +4,8 @@ var cachedContext={
     router:null,
     mvueToolkit:null,
     Vue:null,
-    iframeId:null
+    iframeId:null,
+    store:null
 }
 
 function getPageHeight() {
@@ -79,5 +80,11 @@ export default{
     },
     getVue(){
         return cachedContext.Vue;
+    },
+    setStore(store){
+      cachedContext.store=store;
+    },
+    getStore(){
+      return cachedContext.store;
     }
 }
