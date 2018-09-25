@@ -33,6 +33,9 @@ function appStart(initFunc,postStarted) {
       globalComponentsInit(Vue);
       //路由引入
       var routesData=null,appEntry=null;
+      var store = newStore(Vuex);
+      //将vuex store对象设置到全局上下文
+      context.setStore(store);
       var result=initFunc(context);
       if(result&&result.then){
         result.then(function(res){
@@ -49,9 +52,6 @@ function appStart(initFunc,postStarted) {
         var router = new VueRouter({
           routes: routesData
         });
-        var store = newStore(Vuex);
-        //将vuex store对象设置到全局上下文
-        context.setStore(store);
         //将路由对象设置到全局上下文中
         context.setRouter(router);
         //将路由对象设置到组件上下文中

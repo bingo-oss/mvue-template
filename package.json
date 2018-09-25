@@ -25,7 +25,7 @@
     "vue-router": "2.7.0",
     "vuescroll": "^4.6.22",
     "mvue-design": "^1.0.3",
-    "mvue-toolkit": "0.0.14",
+    "mvue-toolkit": "^1.0.0",
     "mvue-components": "^0.1.18",
     "mvue-core": "^2.0.13",
     "vuex": "^3.0.1"
