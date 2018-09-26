@@ -70,14 +70,6 @@ var routers = [
         meta: {
           menu: 'system.admin.menu'
         },
-        name: "system.admin.menu.create2",
-        path: "entities/menu/create",
-        component: "system/menu/test/form"
-      },
-      {
-        meta: {
-          menu: 'system.admin.menu'
-        },
         name: "system.admin.menu.create",
         path: "system/menu/create",
         component: "system/menu/create"
