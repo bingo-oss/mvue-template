@@ -53,11 +53,14 @@
       <b-menu v-if="!hide('left')" :menus="menu"></b-menu>
       <Content>
         <b-router-tab></b-router-tab>
-        <div class="bvue-page-tabcontent">
+        <!--自动生成的页面不缓存组件-->
+        <div class="bvue-page-tabcontent" v-if="isAutoPages()">
+          <router-view :key="$route.fullPath"></router-view>
+        </div>
+        <div class="bvue-page-tabcontent" v-else>
           <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
           </keep-alive>
-
           <router-view v-if="!$route.meta.keepAlive"></router-view>
         </div>
       </Content>
@@ -86,6 +89,13 @@
         }
         types=types.split(",");
         return _.includes(types,type);
+      },
+      isAutoPages(){
+        var key=this.$route.path;
+        if(_.startsWith(key,"/pages/")){
+          return true;
+        }
+        return false;
       }
     }
   }
