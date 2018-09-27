@@ -3,7 +3,7 @@
     <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
     <div class="bvue-page-body">
       <Card>
-        <meta-layout :layout="pageSettings.layout" :key="$route.fullPath"></meta-layout>
+        <meta-layout :layout="pageSettings.layout"></meta-layout>
       </Card>
     </div>
   </div>
@@ -13,7 +13,7 @@
   import mvueCore from 'mvue-core';
   export default {
     data:function(){
-      var key=this.$route.path;
+      var key=this.$route.matched[this.$route.matched.length-1].path;
       var pageSettings=mvueCore.metaLayoutConvertor.convert(confs[key]);
       var header={
         title:pageSettings.title||"未设置",
