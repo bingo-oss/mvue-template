@@ -17,7 +17,7 @@ function resolve (dir) {
 var _excludes=[];
 var webpackConfig={
   //入口文件
-  entry: './src/main.js',
+  entry: {main:'./src/main.js'},
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
