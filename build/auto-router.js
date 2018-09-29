@@ -78,7 +78,7 @@ function run(devMode){
         }
     },'\t'))
     //动态打包所有的组件配置到一个文件
-    autoConfs.run(pagesPath,ignoreFiles);
+    autoConfs.run(pagesPath,routes);
 }
 function writeJs(filePath,routes){
     routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');

@@ -1,122 +1,6 @@
-//import path from 'path'
-//import _ from 'lodash'
 var path= require('path');
 var _=require('lodash');
 
-exports.encodeHtml = function encodeHtml(str) {
-  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-}
-
-exports.getContext = function getContext(req, res) {
-  return { req, res }
-}
-
-exports.waitFor = function waitFor(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms || 0))
-}
-
-// async function promiseFinally(fn, finalFn) {
-//   let result
-//   try {
-//     if (typeof fn === 'function') {
-//       result = await fn()
-//     } else {
-//       result = await fn
-//     }
-//   } finally {
-//     finalFn()
-//   }
-//   return result
-// }
-
-// exports.timeout = function timeout(fn, ms, msg) {
-//   let timerId
-//   const warpPromise = promiseFinally(fn, () => clearTimeout(timerId))
-//   const timerPromise = new Promise((resolve, reject) => {
-//     timerId = setTimeout(() => reject(new Error(msg)), ms)
-//   })
-//   return Promise.race([warpPromise, timerPromise])
-// }
-
-exports.urlJoin = function urlJoin() {
-  return [].slice
-    .call(arguments)
-    .join('/')
-    .replace(/\/+/g, '/')
-    .replace(':/', '://')
-}
-
-exports.isUrl = function isUrl(url) {
-  return url.indexOf('http') === 0 || url.indexOf('//') === 0
-}
-
-exports.promisifyRoute = function promisifyRoute(fn, ...args) {
-  // If routes is an array
-  if (Array.isArray(fn)) {
-    return Promise.resolve(fn)
-  }
-  // If routes is a function expecting a callback
-  if (fn.length === arguments.length) {
-    return new Promise((resolve, reject) => {
-      fn((err, routeParams) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(routeParams)
-      }, ...args)
-    })
-  }
-  let promise = fn(...args)
-  if (
-    !promise ||
-    (!(promise instanceof Promise) && typeof promise.then !== 'function')
-  ) {
-    promise = Promise.resolve(promise)
-  }
-  return promise
-}
-
-exports.sequence = function sequence(tasks, fn) {
-  return tasks.reduce(
-    (promise, task) => promise.then(() => fn(task)),
-    Promise.resolve()
-  )
-}
-
-exports.parallel = function parallel(tasks, fn) {
-  return Promise.all(tasks.map(fn))
-}
-
-exports.chainFn = function chainFn(base, fn) {
-  /* istanbul ignore if */
-  if (typeof fn !== 'function') {
-    return base
-  }
-  return function () {
-    if (typeof base !== 'function') {
-      return fn.apply(this, arguments)
-    }
-    let baseResult = base.apply(this, arguments)
-    // Allow function to mutate the first argument instead of returning the result
-    if (baseResult === undefined) {
-      baseResult = arguments[0]
-    }
-    const fnResult = fn.call(
-      this,
-      baseResult,
-      ...Array.prototype.slice.call(arguments, 1)
-    )
-    // Return mutated argument if no result was returned
-    if (fnResult === undefined) {
-      return baseResult
-    }
-    return fnResult
-  }
-}
-
-exports.isPureObject = function isPureObject(o) {
-  return !Array.isArray(o) && typeof o === 'object'
-}
 
 var isWindows = /^win/.test(process.platform)
 
@@ -124,14 +8,6 @@ function wp(p = '') {
   /* istanbul ignore if */
   if (isWindows) {
     return p.replace(/\\/g, '\\\\')
-  }
-  return p
-}
-
-exports.wChunk = function wChunk(p = '') {
-  /* istanbul ignore if */
-  if (isWindows) {
-    return p.replace(/\//g, '_')
   }
   return p
 }
@@ -151,33 +27,7 @@ function r() {
   return wp(path.resolve(...args.map(normalize)))
 }
 
-exports.relativeTo = function relativeTo() {
-  const args = Array.prototype.slice.apply(arguments)
-  const dir = args.shift()
 
-  // Keep webpack inline loader intact
-  if (args[0].indexOf('!') !== -1) {
-    const loaders = args.shift().split('!')
-
-    return loaders.concat(relativeTo(dir, loaders.pop(), ...args)).join('!')
-  }
-
-  // Resolve path
-  const _path = r(...args)
-
-  // Check if path is an alias
-  if (_path.indexOf('@') === 0 || _path.indexOf('~') === 0) {
-    return _path
-  }
-
-  // Make correct relative path
-  let rp = path.relative(dir, _path)
-  if (rp[0] !== '.') {
-    rp = './' + rp
-  }
-
-  return wp(rp)
-}
 
 exports.flatRoutes = function flatRoutes(router, _path = '', routes = []) {
   router.forEach((r) => {
@@ -268,6 +118,7 @@ exports.createRoutes = function createRoutes(files, srcDir, pagesDir,pageTmplDir
       const len=end-start;
       const fileName=file.substr(start,len);
       route.component=`${pageTmplDir}`;
+      route.meta={type:"js",file:file};
     }
     let parent = routes
     keys.forEach((key, i) => {

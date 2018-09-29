@@ -1,7 +1,7 @@
 {
-  "name": "metad-web",
+  "name": "idm-web",
   "version": "2.0.0",
-  "description": "metad web for vue2",
+  "description": "console for idm service ",
   "author": "bingosoft",
   "private": true,
   "scripts": {
@@ -16,6 +16,10 @@
     "js-base64": "^2.4.0",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.10",
+    "mvue-components": "^0.1.23",
+    "mvue-core": "^2.0.13",
+    "mvue-design": "^1.0.3",
+    "mvue-toolkit": "^1.0.0",
     "path-to-regexp": "1.7.0",
     "qs": "^6.5.2",
     "store2": "^2.5.9",
@@ -24,14 +28,9 @@
     "vue-multiselect": "^2.1.0",
     "vue-router": "2.7.0",
     "vuescroll": "^4.6.22",
-    "mvue-design": "^1.0.3",
-    "mvue-toolkit": "^1.0.0",
-    "mvue-components": "^0.1.18",
-    "mvue-core": "^2.0.13",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "chokidar": "^2.0.4",
     "autoprefixer": "^6.7.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
@@ -44,6 +43,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "babel-register": "^6.22.0",
     "chalk": "^1.1.3",
+    "chokidar": "^2.0.4",
     "connect-history-api-fallback": "^1.3.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",

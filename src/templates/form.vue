@@ -31,14 +31,14 @@ export default {
       toolbar:{
         "editBtns": [
             {
-                "operationType": "common",
+                "type": "common",
                 "termimalType":1,
                 "name": "goback",
                 "title":"取消",
                 "btnType":"default"
             },
             {
-                "operationType": "common",
+                "type": "common",
                 "name": "save",
                 "termimalType":7,
                 "title":"保存"

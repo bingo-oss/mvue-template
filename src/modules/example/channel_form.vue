@@ -34,7 +34,7 @@ export default {
       toolbar:{
         "editBtns": [
             {
-                "operationType": "common",
+                "type": "common",
                 "termimalType":1,
                 "name": "goback",
                 "title":"取消",
@@ -42,14 +42,14 @@ export default {
                 "btnType":"ghost"
             },
             {
-                "operationType": "common",
+                "type": "common",
                 "name": "save",
                 "termimalType":7,
                 "title":"保存",
                 "display":{from:"formEdit"}
             },
             {
-                "operationType": "common",
+                "type": "common",
                 "name": "del",
                 "termimalType":7,
                 "title":"删除",
