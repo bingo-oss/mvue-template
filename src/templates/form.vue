@@ -32,15 +32,13 @@ export default {
         "editBtns": [
             {
                 "type": "common",
-                "termimalType":1,
-                "name": "goback",
+                "name": "cancel",
                 "title":"取消",
                 "btnType":"default"
             },
             {
                 "type": "common",
                 "name": "save",
-                "termimalType":7,
                 "title":"保存"
             }
         ]
