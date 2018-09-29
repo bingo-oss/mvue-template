@@ -4,12 +4,12 @@
 var routers = [
   {
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     },
     name: "default",
     path: "/",
     redirect:{
-      name:'system.admin.menu'
+      name:'tutorial'//system.admin.menu
     },
     component: "home/home.vue",
     children: [

@@ -68,7 +68,10 @@
   </div>
 </template>
 <script>
-  import { menuService } from "mvue-components";
+  //使用后端接口时打开
+  //import { menuService } from "mvue-components";
+  //demo 菜单，使用后端接口时，注释掉
+  import demoMenu from './demo-menu';
   export default {
     data: function () {
       return {
@@ -77,9 +80,13 @@
     },
     mounted: function () {
       const self = this;
+      /** 使用后端接口时打开
       menuService().published({ orderby: "displayOrder asc" }).then(function ({ data }) {
         self.menu = data;
       });
+      */
+      //demo 菜单，使用后端接口时，注释掉
+      self.menu=demoMenu;
     },
     methods:{
       hide(type){

@@ -1,15 +1,14 @@
 {
   "oauth2.serverVersion": "v3",
-  "oauth2.serverUrl": "https://saaslinkdev.projects.bingosoft.net:22283/sso",
+  "oauth2.serverUrl": "",
   "oauth2.flow": "implicit",
-  "oauth2.clientId": "console",
+  "oauth2.clientId": "",
 
-  "apiBaseUrl": "https://developer.bingosoft.net:12000/mvue_engine",
-  "userApiUrl": "https://developer.bingosoft.net:12100/services/tool/user",
-  "orgApiUrl": "https://developer.bingosoft.net:12100/services/tool/organization",
+  "apiBaseUrl": "",
+  "userApiUrl": "",
+  "orgApiUrl": "",
 
-  "service.stream.endpoint": "https://developer.bingosoft.net:12100/services/stream",
-  "service.tool.endpoint": "https://developer.bingosoft.net:12100/services/tool",
-  "service.metabase.endpoint": "https://developer.bingosoft.net:12100/services/metaservice",
-  "service.gateway.endpoint": "https://developer.bingosoft.net:12100"
+  "service.stream.endpoint": "",
+  "service.tool.endpoint": "",
+  "service.metabase.endpoint": ""
 }
