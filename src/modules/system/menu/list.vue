@@ -35,7 +35,7 @@
         toolbar:{
           btnSizeBeforeMore: 2,
           advanceSearchFields:['title'],
-          btns:[{name:"create",to:"/system/config/create"},"batchDelete","export","import"],
+          btns:[{name:"create",to:"/system/menu/create"},"batchDelete","export","import"],
           singleBtns:[{name:"edit",to:"/system/menu/edit/:id"},"del"],
           quicksearch:{
             fields:["title","name"],
