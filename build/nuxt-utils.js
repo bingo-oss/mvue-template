@@ -2,55 +2,6 @@ var path= require('path');
 var _=require('lodash');
 
 
-var isWindows = /^win/.test(process.platform)
-
-function wp(p = '') {
-  /* istanbul ignore if */
-  if (isWindows) {
-    return p.replace(/\\/g, '\\\\')
-  }
-  return p
-}
-
-const reqSep = /\//g
-const sysSep = _.escapeRegExp(path.sep)
-const normalize = string => string.replace(reqSep, sysSep)
-
-function r() {
-  const args = Array.prototype.slice.apply(arguments)
-  const lastArg = _.last(args)
-
-  if (lastArg.indexOf('@') === 0 || lastArg.indexOf('~') === 0) {
-    return wp(lastArg)
-  }
-
-  return wp(path.resolve(...args.map(normalize)))
-}
-
-
-
-exports.flatRoutes = function flatRoutes(router, _path = '', routes = []) {
-  router.forEach((r) => {
-    if (!r.path.includes(':') && !r.path.includes('*')) {
-      /* istanbul ignore if */
-      if (r.children) {
-        if (_path === '' && r.path === '/') {
-          routes.push('/')
-        }
-        flatRoutes(r.children, _path + r.path + '/', routes)
-      } else {
-        _path = _path.replace(/^\/+$/, '/')
-        routes.push(
-          (r.path === '' && _path[_path.length - 1] === '/'
-            ? _path.slice(0, -1)
-            : _path) + r.path
-        )
-      }
-    }
-  })
-  return routes
-}
-
 function cleanChildrenRoutes(routes, isChild = false) {
   let start = -1
   const routesIndex = []
@@ -113,10 +64,6 @@ exports.createRoutes = function createRoutes(files, srcDir, pagesDir,pageTmplDir
     }
     //js文件对应的组件从模板页面组件产生
     if(file.endsWith('.js')){
-      const start=file.lastIndexOf('/')+1;
-      const end=file.lastIndexOf('.');
-      const len=end-start;
-      const fileName=file.substr(start,len);
       route.component=`${pageTmplDir}`;
       route.meta={type:"js",file:file};
     }
