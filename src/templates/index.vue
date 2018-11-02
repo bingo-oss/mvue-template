@@ -11,7 +11,6 @@
 <script>
   import confs from '../pages/auto-page-confs';
   import mvueCore from 'mvue-core';
-  import operations from "../operations/index";
   export default {
     data:function(){
       var self=this;
