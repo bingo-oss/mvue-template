@@ -73,7 +73,7 @@
       },
       isAutoPages(){
         var key=this.$route.path;
-        if(_.startsWith(key,"/pages/")){
+        if(_.startsWith(key,"/pages/") || _.startsWith(key,"/entities/")){
           return true;
         }
         return false;
