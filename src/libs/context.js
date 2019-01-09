@@ -1,4 +1,4 @@
-import serviceUtils from '../services/utils';
+
 import asyncImportAll from '../ai/ref-mods/async/import-all';
 
 var cachedContext={
@@ -44,7 +44,7 @@ function getPageHeight() {
 }
 
 export default {
-  serviceUtils:serviceUtils,
+
   setRouter(router) {
     cachedContext.router = router;
   },
