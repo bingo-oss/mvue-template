@@ -43,6 +43,7 @@ function getPageHeight() {
 }
 
 export default {
+
   setRouter(router) {
     cachedContext.router = router;
   },

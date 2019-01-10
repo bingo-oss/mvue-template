@@ -1,6 +1,6 @@
 export default {
   meta: {
-    requiresAuth: true
+    requiresAuth: false
   },
   name: "default",
   path: "/",

@@ -1,12 +1,9 @@
 import 'vuescroll/dist/vuescroll.css';
 import 'mvue-design/dist/index.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css' ;
-
-require('babel-polyfill');
-
 //这几个工具类必须在最前面引用，不得删除和更改
 import  $lodash from './lodash_loader';
-window.$ = require('libs/zepto');
+require('libs/zepto');
 
 import Vue from 'vue';
 
