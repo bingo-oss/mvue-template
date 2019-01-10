@@ -20,7 +20,7 @@ Vue.use(VueRouter);
 import context from 'libs/context';
 context.setVue(Vue);
 
-import autoPageConfs from '../pages/auto-page-confs';
+import autoPageConfs from '../ai/pages/auto-page-confs';
 context.setAutoPageConfs(autoPageConfs);
 
 import mvueToolkit from 'mvue-toolkit';
@@ -33,6 +33,9 @@ import mvueCore from 'mvue-core';
 mvueToolkit.moduleManager.add(mvueCore);
 
 import newStore from '../store';
+
+import asyncIs from './async-is';
+
 //初始化路由数据，并初始化请求拦截器(登录校验)
 function initRouter(){
   var routesData = require('../router/index').default;
@@ -44,6 +47,15 @@ function initRouter(){
   var session=context.getMvueToolkit().session;
   router.beforeEach(function(to, from, next) {
     session.doFilter(to,from,next);
+  });
+  //拦截异步模块请求
+  router.beforeEach(function(to, from, next) {
+    let unloadedAsyncPath=asyncIs.unloadedAsyncPath(to.path);
+    if(unloadedAsyncPath){
+      next(unloadedAsyncPath);
+    }else{
+      next();
+    }
   });
   router.afterEach(function (transition) {
     // console.log('-----------------Router Start');
