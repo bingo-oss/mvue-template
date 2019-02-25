@@ -4,10 +4,10 @@
     <div class="bvue-page-body">
       <Card >
         <component  v-if="isReady" :is="grid.ctype" ref="gridList" v-bind="grid"></component>
-        <Alert type="warning" v-if="hasError" show-icon style="margin: 20px 200px">
+        <Alert type="warning" v-if="errorObj.has" show-icon style="margin: 20px 200px">
           页面错误
           <template slot="desc">
-            该页面已被禁止访问，请通过配置启用该页面后，再重试！
+            {{ errorObj.message }}
           </template>
         </Alert>
       </Card>
@@ -21,16 +21,27 @@
     data:function(){
       var entityName=this.$route.params.entityName;
       var metaEntity=mvueCore.metaBase.findMetaEntity(entityName);
+      var errorObj={has:false,code:null,message:null};
       if(metaEntity==null){
-        contextHelper.error({
-          content:`实体${entityName}不存在`
+        errorObj=_.assign(errorObj,{
+          has:true,
+          code:"404",
+          message:`实体${entityName}不存在`
         });
-        return;
+        metaEntity={title:"不存在实体"};
+      }else{
+        var hasError=!metaEntity.isUIEnable();
+        if(hasError){
+          errorObj=_.assign(errorObj,{
+            has:true,
+            code:"500",
+            message:`实体${metaEntity.title}列表，已被禁止访问，请通过配置启用该页面后，再重试！`
+          });
+        }
       }
-      var hasError=!metaEntity.isUIEnable();
       return {
         isReady:false,
-        hasError:hasError,
+        errorObj:errorObj,
         header:{
           title:`${metaEntity.title || metaEntity.name}列表`,
           description:metaEntity.description,
@@ -44,7 +55,7 @@
       }
     },
     mounted:function () {
-      if(this.hasError){
+      if(this.errorObj.has){
         return;
       }
       this.metaEntity.getUISettings().then((settings)=>{

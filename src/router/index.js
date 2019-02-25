@@ -59,6 +59,13 @@ routersData[0].children.push({
   name: "defaultEditForm",
   component: require('src/templates/form'),
   path: "entities/:entityName/edit/:id",
+  children:[
+    {
+      name: "defaultEditFormSubPages",
+      path:":subPage",
+      component:require("src/templates/sub-page")
+    }
+  ],
   beforeEnter: function (to, from, next) {
     propsResolve(to);
     next();

@@ -4,17 +4,6 @@
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
     <m-header v-if="!hide('top')" :title="title" :logo="logo">
-      <template slot="right">
-        <ul class="topbar-menu">
-          <li>
-            <Tooltip content="首页" placement="bottom">
-              <router-link :to="{name:'default'}">
-                <Button type="text" icon="ios-home" ></Button>
-              </router-link>
-            </Tooltip>
-          </li>
-        </ul>
-      </template>
     </m-header>
     <Layout :class="'ivu-layout-has-sider'" class="layout-content">
       <m-menu v-if="!hide('left') && menuLoaded" v-bind="menu" ref="navMenuRef" @on-menu-selected="handleOnMenuSelected"></m-menu>
