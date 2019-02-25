@@ -1,17 +1,21 @@
 <template>
-  <div class="bvue-page" v-if="isReady" :key="$route.fullPath"  :id="'default-form-uuid-'+metaEntity.name">
-    <b-childheader v-if="isForm" :title="childheader.title"></b-childheader>
-    <div class="bvue-page-body">
-      <Card v-if="isForm">
+  <div class="bvue-page"  :key="$route.fullPath"  :id="'default-form-uuid-'+metaEntity.name">
+    <b-childheader v-if="isForm()" :title="header.title"></b-childheader>
+    <div v-if="isReady" class="bvue-page-body" >
+      <Card v-if="isForm()">
         <meta-layout  :layout="layout"></meta-layout>
       </Card>
       <meta-layout v-else :layout="layout"></meta-layout>
-        <Alert type="warning" v-if="errorObj.has" show-icon style="margin: 20px 200px">
+    </div>
+    <div v-if="errorObj.has" class="bvue-page-body" >
+      <Card>
+        <Alert type="warning"  show-icon style="margin: 20px 200px">
           页面错误
           <template slot="desc">
             {{ errorObj.message}}
           </template>
         </Alert>
+      </Card>
     </div>
   </div>
 </template>
@@ -36,14 +40,14 @@
           errorObj=_.assign(errorObj,{
             has:true,
             code:"500",
-            message:`实体${metaEntity.title}表单，已被禁止访问，请通过配置启用该页面后，再重试！`
+            message:`[${metaEntity.title}]表单，已被禁止访问，请通过配置启用该页面后，再重试！`
           });
         }
       }
       return {
         isReady:false,
         errorObj:errorObj,
-        childheader:{
+        header:{
           title:"",
         },
         recordId:id,
@@ -61,6 +65,7 @@
         return utils.formActions.view===action;
       },
       layout() {
+        var self=this;
         var pageSettings = mvueCore.metaLayoutConvertor.convert(this.form, self);
         var layout=pageSettings.layout;
         _.forEach(layout,com=>{
@@ -70,35 +75,48 @@
           }
         });
         return layout;
-      },
-      isForm(){
-        return this.form.ctype=="m-form";
       }
     },
     mounted(){
       var prefix='';
-      var action="create";
+      var action=this.$route.params.action;
       if(this.isViewMode){
         prefix='查看';
-        action="view";
       }else if(this.form.recordId){
         prefix='编辑';
-        action="edit";
       }else{
         prefix='新建';
       }
-      this.childheader.title=`${prefix}${this.metaEntity.title}`;
+      this.header.title=`${prefix}${this.metaEntity.title}`;
       if(this.errorObj.has){
         return;
       }
-      this.metaEntity.getFormSettings(action).then(st=>{
+      this.metaEntity.getPage(action).then(st=>{
         if(st==null){
-          this.hasError=true;
+          this.errorObj.has=true;
+          this.errorObj.message=`[${this.metaEntity.title}]编辑表单，已被禁止访问，请通过配置启用该页面后，再重试！`;
           return;
         }
         this.form=this.metaEntity.extendUISettings(this.form,st || {});
+        if(this.form && this.form.title){
+          this.header.title=this.form.title;
+        }
         this.isReady=true;
       });
-    }
+    },
+    methods:{
+      isForm(){
+        let matched= this.form.ctype=="m-form";
+        if(!matched && this.form.layout){
+          _.forEach(this.form.layout,(c,index)=>{
+            if(c.ctype=="m-form"){
+              matched=true;
+              return false;
+            }
+          });
+        }
+        return matched;
+      }
+    },
   }
 </script>

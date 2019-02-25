@@ -24,18 +24,22 @@
       var self=this;
       var entityName=this.$route.params.entityName;
       var subPage=this.$route.params.subPage;
-       var recordId=this.$route.params.id;
+      var recordId=this.$route.params.id;
       var metaEntity=mvueCore.metaBase.findMetaEntity(entityName);
-      var url=`${entityName}/$relations/${subPage}/_ui.json`;
-      //var url="/config/group_member.json";
-        try{
+      if(metaEntity==null){
+        this.errorObj.has=true;
+        this.errorObj.message=`实体${entityName}不存在`;
+        return;
+      }
+       try{
           var settings=null;
           if(metaEntity){
-            settings=await metaEntity.getFormSettings(subPage);
+            settings=await metaEntity.getPage(subPage);
           }
           if(_.isEmpty(settings)){
-            settings=await self.$http.get(url);
-              settings=settings.data;
+            this.$router.push({path:this.$route.path+"/list",query:this.$route.query});
+            return;
+            //settings=await metaEntity.getRelationPage(subPage,"list");
           }
           this.pageSettings=mvueCore.metaLayoutConvertor.convert(settings,self);
           _.forEach(this.pageSettings.layout,com=>{
