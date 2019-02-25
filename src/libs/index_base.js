@@ -17,7 +17,7 @@ Vue.use(VueRouter);
 import context from 'libs/context';
 context.setVue(Vue);
 
-import autoPageConfs from '../pages/auto-page-confs';
+import autoPageConfs from '../ai/pages/auto-page-confs';
 context.setAutoPageConfs(autoPageConfs);
 
 import mvueToolkit from 'mvue-toolkit';
@@ -53,13 +53,6 @@ function initRouter(){
     }else{
       next();
     }
-  });
-  //对url参数x_mode作处理
-  router.beforeEach(function(to, from, next) {
-    if(to.query.x_mode){
-      context.getStore().commit('core/setXMode',to.query.x_mode);
-    }
-    next();
   });
   router.afterEach(function (transition) {
     // console.log('-----------------Router Start');

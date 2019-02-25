@@ -4,11 +4,13 @@
       "targets": {
         "browsers":["ie > 10","Chrome > 46"]
       },
-      "modules": false
+      "modules": "false",
+      "loose":true,
+      "forceAllTransforms":true
     }]
   ],
   "plugins": ["lodash","@babel/plugin-syntax-dynamic-import","@babel/plugin-transform-runtime"],
-  "comments": false,
+  "comments": true,
   "sourceType":"unambiguous",
   "env": {
     "test": {

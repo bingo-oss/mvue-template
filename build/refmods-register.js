@@ -3,8 +3,8 @@ const fs = require('fs')
 var path = require('path')
 var chokidar = require('chokidar');
 var modsDef = require('../config/mods-def');
-const aiBasePath = '../src/ai';
-const basePath = `${aiBasePath}/ref-mods`;
+const aiBasePath = path.join(__dirname,'../src/ai');
+const basePath = path.join(aiBasePath,`ref-mods`)
 const importPrefix = '../../../';
 
 function writeModsDef(){
@@ -22,7 +22,7 @@ function writeModsDef(){
 ];
 export default refmods;
     `
-    let modsDefFile=path.join(__dirname,`${basePath}/index.js`);
+    let modsDefFile=path.join(basePath,`index.js`);
     fs.writeFileSync(modsDefFile,modsDefContent);
 }
 function writeSyncMod(syncMods){
@@ -33,20 +33,20 @@ function writeSyncMod(syncMods){
     });
     var jsContent=`import context from '${importPrefix}libs/context';
 ${scripts.join('\r\n')}
-    `;
-    var outputFile=path.join(__dirname,`${basePath}/sync/index.js`);
+export default {}`;
+    var outputFile=path.join(basePath,`sync/index.js`);
     fs.writeFileSync(outputFile,jsContent);
     console.log("##同步模块注册逻辑已生成--_--##");
 }
 function writeAsyncMod(asyncMods){
     //1 写初次导入异步模块的入口路由组件
     //先做清理，删除旧的vue文件
-    glob.sync(`${__dirname}/${basePath}/async/*.vue`).forEach(f=>{
+    glob.sync(path.join(basePath,`async/*.vue`)).forEach(f=>{
         fs.unlinkSync(f);
     });
     asyncMods.forEach(mod => {
         let key=mod.routePrefix;
-        let asyncVueFile=path.join(__dirname,`${basePath}/async/${key}.vue`);
+        let asyncVueFile=path.join(basePath,`async/${key}.vue`);
         let vueContent=`<template>
     <div></div>
 </template>
@@ -68,7 +68,7 @@ export default {
         fs.writeFileSync(asyncVueFile,vueContent);
     });
     //2 写异步路由定义文件
-    var asyncRouteFile=path.join(__dirname,`${basePath}/async/routes.js`);
+    var asyncRouteFile=path.join(basePath,`async/routes.js`);
     let routesArray=[];
     asyncMods.forEach(mod => {
         let key=mod.routePrefix;
@@ -86,7 +86,7 @@ export default refmodsRoutes;
     `;
     fs.writeFileSync(asyncRouteFile,routesContent);
     //3 写异步导入所有异步模块import-all.js
-    var asyncImportAllFile=path.join(__dirname,`${basePath}/async/import-all.js`);
+    var asyncImportAllFile=path.join(basePath,`async/import-all.js`);
     var loadFunc=`return Promise.resolve();`;
     if(asyncMods.length>0){
         let loadFuncImportArray=[],loadFuncParamsArray=[],loadFuncBodyArray=[];
@@ -123,17 +123,15 @@ export default {
 }
 function run(){
     let syncMods=[],asyncMods=[];
-    let realAiBasePath=path.join(__dirname,aiBasePath);
-    let aiBasePathExists=fs.existsSync(realAiBasePath);
+    let aiBasePathExists=fs.existsSync(aiBasePath);
     if(!aiBasePathExists){
-        fs.mkdirSync(realAiBasePath);
+        fs.mkdirSync(aiBasePath);
     }
-    let realBasePath=path.join(__dirname,basePath);
-    let basePathExists=fs.existsSync(realBasePath);
+    let basePathExists=fs.existsSync(basePath);
     if(!basePathExists){
-        fs.mkdirSync(realBasePath);
-        fs.mkdirSync(`${realBasePath}/async`);
-        fs.mkdirSync(`${realBasePath}/sync`);
+        fs.mkdirSync(basePath);
+        fs.mkdirSync(path.join(basePath,'async'));
+        fs.mkdirSync(path.join(basePath,'sync'));
     }
     writeModsDef();
     modsDef.forEach(mod => {

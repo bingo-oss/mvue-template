@@ -1,6 +1,6 @@
 import routesBase from "./routes-base";
 import mvueToolkit from "mvue-toolkit";
-import autoRoutes from '../pages/auto-routes';
+import autoRoutes from '../ai/pages/auto-routes';
 import asyncRoutes from '../ai/ref-mods/async/routes';
 var routersData = mvueToolkit.router.toRealRoutes(routesBase,function (component) {
   return require('src/modules/' + component);
