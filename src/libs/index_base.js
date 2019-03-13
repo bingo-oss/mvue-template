@@ -37,7 +37,7 @@ import asyncIs from './async-is';
 function initRouter(){
   var routesData = require('../router/index').default;
   var router = new VueRouter({
-    routes: routesData
+    routes: routesData.initRouters()
   });
   //将路由对象设置到全局上下文中
   context.setRouter(router);
