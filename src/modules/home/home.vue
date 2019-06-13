@@ -9,11 +9,8 @@
       <m-menu v-if="!hide('left') && menuLoaded" v-bind="menu" ref="navMenuRef" @on-menu-selected="handleOnMenuSelected"></m-menu>
       <Content>
         <b-router-tab></b-router-tab>
-        <!--自动生成的页面不缓存组件-->
-        <div class="bvue-page-tabcontent" v-if="isAutoPages()">
-          <router-view :key="$route.fullPath"></router-view>
-        </div>
-        <div class="bvue-page-tabcontent" v-else>
+
+        <div class="bvue-page-tabcontent">
           <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
           </keep-alive>
@@ -26,6 +23,7 @@
 <script>
   import { menuService,productService } from "mvue-components";
   import  mvueCore from 'mvue-toolkit';
+  import context from '../../libs/context';
   export default {
     data: function () {
       return {
@@ -54,7 +52,7 @@
     },
     computed:{
       flatNavUrls(){
-        let _menus={}; 
+        let _menus={};
         if(this.menu&&this.menu.menus){
           this.mapAll(_menus,this.menu.menus);
         }
@@ -161,7 +159,7 @@
         let toPath = to.path;
         let urls=this.flatNavUrls;
         if(urls[`#${toPath}`]){
-          this.$store.commit('core/setTopEntityRow','');
+          //context.getMvueCore().topEntityService.removeAll();
         }
       }
     },

@@ -56,9 +56,9 @@ exports.createRoutes = function createRoutes(files, srcDir, pagesDir,pageTmplDir
       .replace(/\/{2,}/g, '/')
       .split('/')
       .slice(1)
-    const route = {
-      name: '',
-      path: '/pages',
+    const route = { 
+      name: '', 
+      path: '/pages', 
       component:file.replace(/\.(vue|js)$/, '')
     }
     //js文件对应的组件从模板页面组件产生
