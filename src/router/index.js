@@ -34,7 +34,7 @@ setComponent(_routes);
 let _autoRoutes=_routes.concat(autoRoutes,asyncRoutes);
 //将自动生成的路由附加到根路由上
 routersData[0].children=routersData[0].children.concat(_autoRoutes);
-
+let formIndex=require('src/templates/form');
 let metaUIRouters=[
   {
     meta: {
@@ -53,7 +53,7 @@ let metaUIRouters=[
       requireAuth: true
     },
     name: "defaultCreateForm",
-    component: require('src/templates/form'),
+    component: _.assign({},formIndex),
     path: "entities/:entityName/:action",
     beforeEnter: function (to, from, next) {
       propsResolve(to);
@@ -65,7 +65,7 @@ let metaUIRouters=[
       requireAuth: true
     },
     name: "defaultEditForm",
-    component: require('src/templates/form'),
+    component: _.assign({},formIndex),
     path: "entities/:entityName/:id/:action",
     children:[
       {
@@ -144,12 +144,12 @@ export default {
       children: [
         {
           name: "dynamicPage2",
-          component: require('src/templates/dync-page'),
+          component: _.assign({},dyncPage),
           path: ":page2",
           children: [
             {
               name: "dynamicPage3",
-              component: require('src/templates/dync-page'),
+              component: _.assign({},dyncPage),
               path: ":page3",
             }
           ]

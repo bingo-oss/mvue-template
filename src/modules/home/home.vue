@@ -23,7 +23,6 @@
 <script>
   import { menuService,productService } from "mvue-components";
   import  mvueCore from 'mvue-toolkit';
-  import context from '../../libs/context';
   export default {
     data: function () {
       return {
@@ -153,26 +152,16 @@
           return true;
         }
         return false;
-      },
-      clearTopEntityRow(to){
-        let menus=this.menu.menus;
-        let toPath = to.path;
-        let urls=this.flatNavUrls;
-        if(urls[`#${toPath}`]){
-          //context.getMvueCore().topEntityService.removeAll();
-        }
       }
     },
     beforeRouteEnter (to, from, next) {
       next(vm=>{
         vm.loadMenu().then(()=>{
-            vm.clearTopEntityRow(to);
             vm.autoIndexPage();
         });
       });
     },
     beforeRouteUpdate (to, from, next) {
-      this.clearTopEntityRow(to);
       next();
     }
   }
